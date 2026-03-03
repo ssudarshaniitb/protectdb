@@ -5,6 +5,9 @@ This repository contains the source code of ProtectDB, i.e., the deterministic c
 ## Compile and install
 
 ```sh
+./configure --prefix=${POSTGRES_INSTALLDIR} --enable-debug --without-icu
+make   
+make install
 ```
 
 ## Run a sample workload (single machine)
@@ -24,12 +27,6 @@ postgres -D /tmp/safedir
 
 ```sh
 createdb safedb
-psql -d safedb < 
-```
-
-4. Run the workload
-
-```sh
-psql -d safedb < 
+psql -d safedb < ycsb-bb-pgdump-12k.sql
 ```
 
