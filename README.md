@@ -1,40 +1,35 @@
-# AriaBC
+# ProtectDB 
 
-This repository contains the source code of AriaBC, i.e., the Aria deterministic concurrency control implemented on PostgreSQL.
+This repository contains the source code of ProtectDB, i.e., the deterministic concurrency control implemented on top of AriaBC implementation of PostgreSQL provided by authors of HarmonyBC, available at github.com/zllai/AriaBC .
 
 ## Compile and install
 
 ```sh
-./configure
-make -j
-make install
 ```
 
 ## Run a sample workload (single machine)
 
-1. Prepare the blockchain database file
 
 ```sh
-initdb -D /tmp/ycsb
+initdb -D /tmp/safedir
 ```
 
 2. Launch the database engine
 
 ```sh
-postgres -D /tmp/ycsb
+postgres -D /tmp/safedir
 ```
 
 3. Create the database and initialize the state
 
 ```sh
-createdb ycsb
-psql -d ycsb < src/benchmark/samples/ycsb_setup
+createdb safedb
+psql -d safedb < 
 ```
 
 4. Run the workload
 
 ```sh
-psql -d ycsb < src/benchmark/samples/ycsb_tx_blocks
+psql -d safedb < 
 ```
 
-See src/benchmark/samples/ycsb_tx_blocks for more details on how to submit a block of transactions.
