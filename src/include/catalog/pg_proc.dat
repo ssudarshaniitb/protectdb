@@ -909,6 +909,47 @@
   prorettype => 'void', proargtypes => 'regclass int8',
   prosrc => 'brin_desummarize_range' },
 
+# Merkle tree integrity index access method
+{ oid => '9901', descr => 'merkle index access method handler',
+  proname => 'merklehandler', provolatile => 'v',
+  prorettype => 'index_am_handler', proargtypes => 'internal',
+  prosrc => 'merklehandler' },
+{ oid => '9902', descr => 'verify merkle tree integrity',
+  proname => 'merkle_verify', provolatile => 'v',
+  prorettype => 'bool', proargtypes => 'regclass',
+  prosrc => 'merkle_verify' },
+{ oid => '9903', descr => 'get merkle tree root hash',
+  proname => 'merkle_root_hash', provolatile => 'v',
+  prorettype => 'text', proargtypes => 'regclass',
+  prosrc => 'merkle_root_hash' },
+{ oid => '9904', descr => 'get merkle tree statistics',
+  proname => 'merkle_tree_stats', provolatile => 'v',
+  prorettype => 'text', proargtypes => 'regclass',
+  prosrc => 'merkle_tree_stats' },
+{ oid => '9905', descr => 'view all merkle tree node hashes',
+  proname => 'merkle_node_hash', provolatile => 'v',
+  proretset => 't', prorows => '665',
+  prorettype => 'record', proargtypes => 'regclass',
+  proallargtypes => '{regclass,text,int4,int4,bool,int4,text}',
+  proargmodes => '{i,o,o,o,o,o,o}',
+  proargnames => '{tablename,nodeid,partition,node_in_partition,is_leaf,leaf_id,hash}',
+  prosrc => 'merkle_node_hash' },
+{ oid => '9906', descr => 'view tuple-to-leaf bucketing',
+  proname => 'merkle_leaf_tuples', provolatile => 'v',
+  proretset => 't', prorows => '380',
+  prorettype => 'record', proargtypes => 'regclass',
+  proallargtypes => '{regclass,int4,int4,text}',
+  proargmodes => '{i,o,o,o}',
+  proargnames => '{tablename,leaf_id,tuple_count,keys}',
+  prosrc => 'merkle_leaf_tuples' },
+{ oid => '9907', descr => 'compute merkle leaf bucket ID for key value(s)',
+  proname => 'merkle_leaf_id', provolatile => 's', provariadic => 'any',
+  prorettype => 'record', proargtypes => 'regclass any',
+  proallargtypes => '{regclass,any,int4,int4,int4}',
+  proargmodes => '{i,v,o,o,o}',
+  proargnames => '{tablename,keys,leaf_id,partition,node_in_partition}',
+  prosrc => 'merkle_leaf_id' },
+
 { oid => '338', descr => 'validate an operator class',
   proname => 'amvalidate', provolatile => 'v', prorettype => 'bool',
   proargtypes => 'oid', prosrc => 'amvalidate' },
@@ -10734,10 +10775,6 @@
 proname => 'bcdb_init', prorettype => 'bool',
 proargtypes => 'bool int4', prosrc => 'bcdb_init' },
 
-{ oid => '7102', descr => 'BCDB init2',
-proname => 'bcdb_init2', prorettype => 'bool',
-proargtypes => 'bool int4 int4 int4', prosrc => 'bcdb_init2' },
-
 # bcdb function
 { oid => '7003', descr => 'BCDB tx submit',
 proname => 'bcdb_tx_submit', prorettype => 'int4',
@@ -10769,12 +10806,8 @@ proname => 'bcdb_check_block_status', prorettype => 'cstring',
 proargtypes => 'int4', prosrc => 'bcdb_check_block_status' }
 
 # bcdb function
-{ oid => '7109', descr => 'BCDB block submit',
-proname => 'bcdb_block_submit2', prorettype => 'bool',
-proargtypes => 'cstring', prosrc => 'bcdb_block_submit2' },
-
 { oid => '7009', descr => 'BCDB block submit',
-proname => 'bcdb_block_submit', prorettype => 'cstring',
+proname => 'bcdb_block_submit', prorettype => 'bool',
 proargtypes => 'cstring', prosrc => 'bcdb_block_submit' },
 
 # bcdb function
@@ -10790,6 +10823,11 @@ proargtypes => '', prosrc => 'bcdb_num_committed' },
 # bcdb function
 { oid => '7012', descr => 'BCDB verify signature',
 proname => 'bcdb_verify', prorettype => 'bool',
-proargtypes => 'text text text', prosrc => 'bcdb_verify' }
+proargtypes => 'text text text', prosrc => 'bcdb_verify' },
+
+# bcdb function
+{ oid => '7013', descr => 'BCDB last committed txid (deterministic counter)',
+proname => 'bcdb_last_committed_txid', prorettype => 'int4',
+proargtypes => '', prosrc => 'bcdb_last_committed_txid' }
 
 ]

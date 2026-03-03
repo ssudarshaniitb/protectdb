@@ -34,10 +34,18 @@ extern int32         worker_id;
 //#define FIRST_WRITER_WINS
 #define WAIT_GDB while(gdb_pause_sig == 0) {set_ps_display("waiting gdb", false); sleep(1);}
 #define PGDBG 0
-#define SAFEDBG 1
+#ifndef SAFEDBG
+#define SAFEDBG 0
+#endif
+#ifndef SAFEDBG1
 #define SAFEDBG1 0
+#endif
+#ifndef SAFEDBG2
 #define SAFEDBG2 0
+#endif
+#ifndef SAFEDBG3
 #define SAFEDBG3 0
+#endif
 #define BCDBInvalidBid -1
 #define BCDBMaxBid     0x7FFFFFFF
 #define BCDBInvalidTid -1

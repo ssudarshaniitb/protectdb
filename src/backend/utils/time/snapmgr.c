@@ -1112,6 +1112,8 @@ AtEOXact_Snapshot(bool isCommit, bool resetXmin)
 	{
 		Assert(FirstXactSnapshot->regd_count > 0);
 		Assert(!pairingheap_is_empty(&RegisteredSnapshots));
+		/* Decrement regd_count before removing from heap to prevent leak warnings */
+		FirstXactSnapshot->regd_count--;
 		pairingheap_remove(&RegisteredSnapshots, &FirstXactSnapshot->ph_node);
 	}
 	FirstXactSnapshot = NULL;

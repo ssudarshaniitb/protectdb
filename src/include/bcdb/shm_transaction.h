@@ -25,6 +25,7 @@
 #include <semaphore.h>
 #include "storage/spin.h"
 #include "openssl/sha.h"
+#include "access/merkle.h"
 
 typedef enum 
 {
@@ -81,6 +82,8 @@ typedef struct _OptimWriteEntry
     CmdType         operation;
     TupleTableSlot  *slot;
     ItemPointerData old_tid;
+    Oid             relOid;     /* relation OID, used for CMD_DELETE */
+    int32           keyval;     /* primary key value for deferred DELETE-0 reexec */
     CommandId       cid;
     SIMPLEQ_ENTRY(_OptimWriteEntry) link;
 } OptimWriteEntry;
@@ -182,6 +185,20 @@ typedef struct _WSTableEntryRecord
 
 typedef LIST_HEAD(_WSTableRecord, _WSTableEntryRecord) WSTableRecord;
 
+/*
+ * Merkle Change Set structures for batched Merkle updates
+ */
+typedef struct _PendingMerkleUpdate
+{
+    Oid         indexOid;
+    int         partitionId;
+    MerkleHash  hash;
+    bool        is_insert;  /* true = XOR in, false = XOR out */
+    LIST_ENTRY(_PendingMerkleUpdate) link;
+} PendingMerkleUpdate;
+
+typedef LIST_HEAD(_MerkleChangeSet, _PendingMerkleUpdate) MerkleChangeSet;
+
 extern BCDBShmXact  *activeTx;
 extern slock_t      *restart_counter_lock;
 
@@ -197,31 +214,32 @@ extern void         create_tx_pool(void);
 extern void         clear_tx_pool(void);
 extern Size         tx_pool_size(void);
 extern BCDBShmXact* get_tx_by_hash(const char *hash);
-extern BCDBShmXact* get_tx_by_xid(TransactionId xid);
+/* get_tx_by_xid and get_tx_by_xid_locked removed — no callers; see shm_transaction.c */
 extern void         add_tx_xid_map(TransactionId id, BCDBShmXact *tx);
 extern void         remove_tx_xid_map(TransactionId id);
 extern BCDBShmXact* create_tx(char *hash, char *sql, BCTxID tx_id, BCBlockID snapshot_block, int isolation, bool pred_lock);
 extern void         delete_tx(BCDBShmXact* tx);
 
-extern uint32 compose_tuple_hash(Oid relation_id, ItemPointer tid);
-extern uint32 compose_index_hash(Oid relation_id, IndexTuple itup);
-extern void  compose_tx_hash(BCBlockID bid, BCTxID tx_id, char* out_hash);
-extern BCDBShmXact* get_tx_by_xid_locked(TransactionId xid, bool exclusive);
+/* compose_tuple_hash, compose_index_hash, compose_tx_hash removed — no callers */
 
 extern uint32 dummy_hash(const void *key, Size key_size);
 extern void store_optim_update(TupleTableSlot* slot, ItemPointer old_tid);
 extern void store_optim_insert(TupleTableSlot* slot);
+extern void store_optim_delete(Oid relOid, ItemPointer tupleid, TupleTableSlot *slot);
+extern void store_optim_delete_by_key(Oid relOid, int32 keyval, CommandId cid);
 extern void apply_optim_update(ItemPointer tid, TupleTableSlot* slot, CommandId cid);
-extern void apply_optim_insert(TupleTableSlot* slot, CommandId cid);
-extern void apply_optim_writes(void);
-extern bool check_stale_read(void);
-extern void clean_ws_table_record(void);
+extern bool apply_optim_insert(TupleTableSlot* slot, CommandId cid);
+extern void apply_optim_delete(Oid relOid, ItemPointer tupleid, TupleTableSlot *storedSlot, CommandId cid);
+extern void apply_deferred_delete_by_key(Oid relOid, int keyval);
+extern bool apply_optim_writes(void);
+/* check_stale_read removed — SSI stale-read check that was never called; see shm_transaction.c */
+/* clean_ws_table_record, clean_rs_table_record removed — non-DT per-entry cleanup with no callers;
+ * use clean_rs_ws_table() (bulk clear) instead */
 extern bool rs_table_check(PREDICATELOCKTARGETTAG *tag);
-extern void clean_rs_table_record(void);
 extern void clean_rs_ws_table(void);
 
-extern void rs_table_reserve(const PREDICATELOCKTARGETTAG *tag);
-extern void ws_table_reserve(PREDICATELOCKTARGETTAG *tag);
+/* ws_table_reserve, rs_table_reserve removed — non-DT variants with no callers;
+ * use ws_table_reserveDT / rs_table_reserveDT instead */
 extern bool ws_table_check(PREDICATELOCKTARGETTAG *tag);
 extern void conflict_check(void);
 
@@ -230,5 +248,9 @@ extern void ws_table_reserveDT( PREDICATELOCKTARGETTAG *tag);
 extern bool ws_table_checkDT(PREDICATELOCKTARGETTAG *tag);
 extern int conflict_checkDT(void);
 extern void publish_ws_tableDT(int id);
+
+/* Merkle change set functions */
+extern void merkle_record_update(Oid indexOid, int partitionId, MerkleHash *hash, bool is_insert);
+extern void apply_merkle_changeset(MerkleChangeSet *changeset);
 
 #endif

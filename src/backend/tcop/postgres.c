@@ -4038,19 +4038,18 @@ PostgresMain(int argc, char *argv[],
 		 * returns to outer loop.  This seems safer than forcing exit in the
 		 * midst of output during who-knows-what operation...
 		 */
-		pqsignal(SIGPIPE, SIG_IGN);
-		pqsignal(SIGUSR1, procsignal_sigusr1_handler);
-		pqsignal(SIGUSR2, SIG_IGN);
-		pqsignal(SIGFPE, FloatExceptionHandler);
-		pqsignal(SIGSEGV, FloatExceptionHandler);
+			pqsignal(SIGPIPE, SIG_IGN);
+			pqsignal(SIGUSR1, procsignal_sigusr1_handler);
+			pqsignal(SIGUSR2, SIG_IGN);
+			pqsignal(SIGFPE, FloatExceptionHandler);
 
-		/*
-		 * Reset some signals that are accepted by postmaster but not by
-		 * backend
-		 */
-		pqsignal(SIGCHLD, SIG_DFL); /* system() requires this on some
-									 * platforms */
-	}
+			/*
+			 * Reset some signals that are accepted by postmaster but not by
+			 * backend
+			 */
+			pqsignal(SIGCHLD, SIG_DFL); /* system() requires this on some
+										 * platforms */
+		}
 
 	pqinitmask();
 
@@ -4607,9 +4606,25 @@ PostgresMain(int argc, char *argv[],
     printf("msg abracadabra sig valid: %d\n", valid);
 */
 
-					if((query_string[0] == 's') &&
-					(query_string[1] == ' ') &&
-					(query_string[2] == '0')) {
+					bool is_bcdb_hashed_det = false;
+					int qlen = strlen(query_string);
+					if (qlen >= 11 && query_string[0] == 's' && query_string[1] == ' ')
+					{
+						is_bcdb_hashed_det = true;
+						for (int j = 2; j < 10; j++)
+						{
+							char c = query_string[j];
+							if (c < '0' || c > '9')
+							{
+								is_bcdb_hashed_det = false;
+								break;
+							}
+						}
+						if (is_bcdb_hashed_det && query_string[10] != ' ')
+							is_bcdb_hashed_det = false;
+					}
+
+					if (is_bcdb_hashed_det) {
     set_blksz(1);
 					strncpy(pfx_str, query_string+2, 8);
 					pfx_str[8] = '\0';
@@ -4624,7 +4639,26 @@ PostgresMain(int argc, char *argv[],
      else 
        strcpy(query_string2, (const char *) (query_string+10));
 					
-					BCDBShmXact *tx = create_tx(pfx_str, query_string2, pfx_id, bid, XACT_SERIALIZABLE, true ); 
+					BCDBShmXact *tx = NULL;
+					int tx_retry = 0;
+					const int tx_retry_limit = 400;
+
+						while ((tx = create_tx(pfx_str, query_string2, pfx_id, bid,
+											   XACT_SERIALIZABLE, false)) == NULL)
+						{
+							if (tx_retry == 0)
+								elog(WARNING, "create_tx returned NULL for hash %s, retrying", pfx_str);
+
+							CHECK_FOR_INTERRUPTS();
+							pg_usleep(5000L);
+							tx_retry++;
+
+							if (tx_retry >= tx_retry_limit)
+								ereport(ERROR,
+										(errcode(ERRCODE_CONFIGURATION_LIMIT_EXCEEDED),
+										 errmsg("unable to allocate BCDB transaction slot for hash %s after %d retries", pfx_str, tx_retry_limit),
+										 errhint("Increase BCDB tx-pool capacity or reduce client concurrency.")));
+						}
 #if SAFEDBG3
 	printf("safeDbg %s : %s: %d pfx_hash= %s txid= %d q= %s\n", __FILE__, __FUNCTION__, __LINE__ , pfx_str, pfx_id, (query_string2) );
 #endif
@@ -4644,7 +4678,7 @@ PostgresMain(int argc, char *argv[],
     		gettimeofday(&tv1, NULL);
      if(sign == 1) {
        strncpy(qsig, query_string+2, i-2); // in-tx start with "s "
-       printf("qmsg %s && qsig: %s\n", query_string2, qsig);
+       //printf("qmsg %s && qsig: %s\n", query_string2, qsig);
        valid = verify_signature_b64key( publicKey2, query_string2, qsig);
        if(valid != 1) 
          printf("qmsg %s qsig valid: %d\n", query_string2, valid);

@@ -1,9 +1,0 @@
-Name: libpq
-Description: PostgreSQL libpq library
-Url: http://www.postgresql.org/
-Version: 13devel
-Requires: 
-Requires.private: 
-Cflags: -I/home/anant2040/git/pgSafedb/install/include
-Libs: -L/home/anant2040/git/pgSafedb/install/lib -lpq
-Libs.private:  -lm

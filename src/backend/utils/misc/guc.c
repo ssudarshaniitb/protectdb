@@ -28,6 +28,7 @@
 
 #include "access/commit_ts.h"
 #include "access/gin.h"
+#include "access/merkle.h"
 #include "access/rmgr.h"
 #include "access/tableam.h"
 #include "access/transam.h"
@@ -888,6 +889,33 @@ static const unit_conversion time_unit_conversion_table[] =
 
 static struct config_bool ConfigureNamesBool[] =
 {
+	{
+		{"enable_merkle_index", PGC_USERSET, DEVELOPER_OPTIONS,
+			gettext_noop("Enables Merkle index maintenance operations."),
+			gettext_noop("When disabled, Merkle indexes will not be updated by data modifications, leading to inconsistency. Use with caution.")
+		},
+		&enable_merkle_index,
+		true,
+		NULL, NULL, NULL
+	},
+	{
+		{"merkle_update_detection", PGC_USERSET, DEVELOPER_OPTIONS,
+			gettext_noop("Emit NOTICE lines for touched Merkle nodes on commit."),
+			gettext_noop("When enabled, INSERT/UPDATE/DELETE that touch Merkle indexes will emit a table of updated (partition, node_in_partition) hashes at transaction commit.")
+		},
+		&merkle_update_detection,
+		false,
+		NULL, NULL, NULL
+	},
+	{
+		{"merkle_update_detection_suppress", PGC_USERSET, DEVELOPER_OPTIONS,
+			gettext_noop("Suppress Merkle update-detection output during index builds."),
+			gettext_noop("When enabled, CREATE INDEX/REINDEX for Merkle indexes will not emit the touched-node NOTICE report even if merkle_update_detection is on. Set this to off to see the updated nodes during a build.")
+		},
+		&merkle_update_detection_suppress,
+		true,
+		NULL, NULL, NULL
+	},
 	{
 		{"is_bcdb_master", PGC_BACKEND, CLIENT_CONN,
 			gettext_noop("Start a bcdb master."),

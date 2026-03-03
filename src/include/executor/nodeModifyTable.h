@@ -14,8 +14,11 @@
 #define NODEMODIFYTABLE_H
 
 #include "nodes/execnodes.h"
+#include "utils/rel.h"
 
 extern void ExecComputeStoredGenerated(EState *estate, TupleTableSlot *slot);
+extern void ExecInsertMerkleIndexes(Relation heapRel, TupleTableSlot *slot);
+extern void ExecDeleteMerkleIndexes(Relation heapRel, ItemPointer tupleid);
 
 extern ModifyTableState *ExecInitModifyTable(ModifyTable *node, EState *estate, int eflags);
 extern void ExecEndModifyTable(ModifyTableState *node);

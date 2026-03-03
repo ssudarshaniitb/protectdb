@@ -1218,8 +1218,8 @@ ResourceOwnerForgetSnapshot(ResourceOwner owner, Snapshot snapshot)
 static void
 PrintSnapshotLeakWarning(Snapshot snapshot)
 {
-	elog(WARNING, "Snapshot reference leak: Snapshot %p still referenced",
-		 snapshot);
+	elog(WARNING, "Snapshot reference leak: Snapshot %p still referenced (xmin %u, xmax %u)",
+		 snapshot, snapshot->xmin, snapshot->xmax);
 }
 
 

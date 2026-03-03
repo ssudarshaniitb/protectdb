@@ -1,1 +1,0 @@
-src/backend/bcdb/utils/sysinfo.o src/backend/bcdb/utils/cJSON.o src/backend/bcdb/utils/aligned_heap.o src/backend/bcdb/utils/func.o

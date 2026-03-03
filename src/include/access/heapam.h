@@ -112,6 +112,14 @@ typedef enum
 #define HeapScanIsValid(scan) PointerIsValid(scan)
 
 extern void heap_apply_index(Relation relation, TupleTableSlot *slot, bool conflict_check, bool unique_check);
+
+/* Phase constants for heap_apply_index_phase */
+#define HEAP_INDEX_ALL         0   /* process all indexes */
+#define HEAP_INDEX_NO_MERKLE   1   /* skip merkle indexes */
+
+extern void heap_apply_index_phase(Relation relation, TupleTableSlot *slot,
+								   bool conflict_check, bool unique_check, int phase);
+
 extern TableScanDesc heap_beginscan(Relation relation, Snapshot snapshot,
 									int nkeys, ScanKey key,
 									ParallelTableScanDesc parallel_scan,

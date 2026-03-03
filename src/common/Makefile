@@ -48,6 +48,9 @@ LIBS += $(PTHREAD_LIBS)
 
 OBJS_COMMON = \
 	base64.o \
+	blake3.o \
+	blake3_dispatch.o \
+	blake3_portable.o \
 	config_info.o \
 	controldata_utils.o \
 	d2s.o \
@@ -165,6 +168,12 @@ RYU_FILES = d2s.o f2s.o
 RYU_OBJS = $(RYU_FILES) $(RYU_FILES:%.o=%_shlib.o) $(RYU_FILES:%.o=%_srv.o)
 
 $(RYU_OBJS): CFLAGS += $(PERMIT_DECLARATION_AFTER_STATEMENT)
+
+# BLAKE3 portable-only build - disable all SIMD extensions for simplicity
+BLAKE3_FILES = blake3.o blake3_dispatch.o blake3_portable.o
+BLAKE3_OBJS = $(BLAKE3_FILES) $(BLAKE3_FILES:%.o=%_shlib.o) $(BLAKE3_FILES:%.o=%_srv.o)
+
+$(BLAKE3_OBJS): CFLAGS += -DBLAKE3_NO_SSE2 -DBLAKE3_NO_SSE41 -DBLAKE3_NO_AVX2 -DBLAKE3_NO_AVX512
 
 # kwlist_d.h is in the distribution tarball, so it is not cleaned here.
 clean distclean:

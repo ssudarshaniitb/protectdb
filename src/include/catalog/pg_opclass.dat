@@ -343,4 +343,14 @@
 
 # no brin opclass for the geometric types except box
 
+# Merkle opclasses
+{ opcmethod => 'merkle', opcname => 'text_ops', opcfamily => 'merkle/text_ops',
+  opcintype => 'text', opcdefault => 't' },
+{ opcmethod => 'merkle', opcname => 'varchar_ops', opcfamily => 'merkle/varchar_ops',
+  opcintype => 'varchar', opcdefault => 't' },
+{ opcmethod => 'merkle', opcname => 'int4_ops', opcfamily => 'merkle/int4_ops',
+  opcintype => 'int4', opcdefault => 't' },
+{ opcmethod => 'merkle', opcname => 'int8_ops', opcfamily => 'merkle/int8_ops',
+  opcintype => 'int8', opcdefault => 't' },
+
 ]

@@ -172,24 +172,11 @@ bcdb_block_submit(PG_FUNCTION_ARGS)
 {
     char	   *bcdb_query = PG_GETARG_CSTRING(0);
 
-    char *output = bcdb_middleware_submit_block(bcdb_query);
+    bcdb_middleware_submit_block(bcdb_query);
 #if SAFEDBG
 	printf("ariaMyDbg %s : %s: %d \n", __FILE__, __FUNCTION__, __LINE__ );
     print_trace();
-	printf("ariaMyDbg %s : %s: %d out = %s\n", __FILE__, __FUNCTION__, __LINE__ , output);
 #endif
-
-    PG_RETURN_CSTRING(output);
-    //PG_RETURN_BOOL(true);
-}
-
-Datum
-bcdb_block_submit2(PG_FUNCTION_ARGS)
-{
-    char	   *bcdb_query = PG_GETARG_CSTRING(0);
-
-	printf("ariaMyDbg %s : %s: %d \n", __FILE__, __FUNCTION__, __LINE__ );
-    bcdb_middleware_submit_block2(bcdb_query);
 
     PG_RETURN_BOOL(true);
 }
@@ -203,7 +190,7 @@ bcdb_add_tx_with_block_id(PG_FUNCTION_ARGS)
     bcdb_middleware_set_txs_committed_block(tx_hash, block_id);
 
     PG_RETURN_BOOL(true);
-
+ 
 }
 
 Datum
@@ -261,15 +248,32 @@ Datum
 bcdb_num_committed(PG_FUNCTION_ARGS)
 {
     ereport(LOG, (errmsg("[ZL] num committed: %d", (int)block_meta->num_committed)));
-	printf("\nariaMyDbg %s : %s: %d \n", __FILE__, __FUNCTION__, __LINE__ );
-	printf("ariaMyDbg %s : %s: %d \n\n", __FILE__, __FUNCTION__, __LINE__ );
+#if SAFEDBG
+    printf("\nariaMyDbg %s : %s: %d \n", __FILE__, __FUNCTION__, __LINE__ );
+    printf("ariaMyDbg %s : %s: %d \n\n", __FILE__, __FUNCTION__, __LINE__ );
+#endif
     PG_RETURN_INT32((int)block_meta->num_committed);
+}
+
+Datum
+bcdb_last_committed_txid(PG_FUNCTION_ARGS)
+{
+    /*
+     * Return the commit-order counter used by deterministic BCDB execution.
+     *
+     * IMPORTANT: Ensure the sentinel block (bid=1) exists so callers can use
+     * this value even before any deterministic tx has run.
+     */
+    (void) get_block_by_id(1, true);
+    PG_RETURN_INT32((int) get_last_committed_txid(NULL));
 }
 
 Datum
 bcdb_reset(PG_FUNCTION_ARGS)
 {
-	printf("ariaMyDbg %s : %s: %d \n", __FILE__, __FUNCTION__, __LINE__ );
+#if SAFEDBG
+    printf("ariaMyDbg %s : %s: %d \n", __FILE__, __FUNCTION__, __LINE__ );
+#endif
     bcdb_clear_block_txs_store();
     PG_RETURN_BOOL(true);
 }
@@ -277,7 +281,9 @@ bcdb_reset(PG_FUNCTION_ARGS)
 Datum
 bcdb_init(PG_FUNCTION_ARGS)
 {
-	printf("ariaMyDbg %s : %s: %d \n", __FILE__, __FUNCTION__, __LINE__ );
+#if SAFEDBG
+    printf("ariaMyDbg %s : %s: %d \n", __FILE__, __FUNCTION__, __LINE__ );
+#endif
 
     bool is_oep_mode = PG_GETARG_BOOL(0);
     int32 block_size = PG_GETARG_INT32(1);
@@ -288,7 +294,9 @@ bcdb_init(PG_FUNCTION_ARGS)
 Datum
 bcdb_init2(PG_FUNCTION_ARGS)
 {
-	printf("ariaMyDbg %s : %s: %d \n", __FILE__, __FUNCTION__, __LINE__ );
+#if SAFEDBG
+    printf("ariaMyDbg %s : %s: %d \n", __FILE__, __FUNCTION__, __LINE__ );
+#endif
 
     bool is_oep_mode = PG_GETARG_BOOL(0);
     int32 block_size = PG_GETARG_INT32(1);

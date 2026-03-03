@@ -69,6 +69,7 @@
 #include "utils/snapmgr.h"
 #include "utils/spccache.h"
 #include "catalog/index.h"
+#include "catalog/pg_am_d.h"
 #include "access/htup_details.h"
 #include "bcdb/worker.h"
 
@@ -1851,43 +1852,92 @@ ReleaseBulkInsertStatePin(BulkInsertState bistate)
 void
 heap_apply_index(Relation relation, TupleTableSlot *slot, bool conflict_check, bool unique_check)
 {
-	ListCell       *index_cell;
+	heap_apply_index_phase(relation, slot, conflict_check, unique_check, HEAP_INDEX_ALL);
+}
 
+/*
+ * heap_apply_index_phase - insert into indexes with phase control.
+ *
+ * phase controls which indexes are processed:
+ *   HEAP_INDEX_ALL        - all indexes (default, same as heap_apply_index)
+ *   HEAP_INDEX_NO_MERKLE  - skip merkle indexes
+ *
+ * Some BCDB paths maintain Merkle indexes separately (e.g. UPDATE must
+ * reflect changes even for HOT updates where update_indexes is false), so
+ * they may call with HEAP_INDEX_NO_MERKLE to avoid double-applying Merkle
+ * maintenance here.
+ *
+ * Merkle index updates mutate shared buffers directly, but are rollback-safe
+ * via merkleutil.c's xact/subxact undo callbacks.
+ */
+void
+heap_apply_index_phase(Relation relation, TupleTableSlot *slot,
+					   bool conflict_check, bool unique_check, int phase)
+{
+	List          *indexList;
+	ListCell      *index_cell;
+	bool			save_skip_conflict_checking;
+
+	indexList = NIL;
+	save_skip_conflict_checking = skip_conflict_checking;
 	skip_conflict_checking = conflict_check;
-    foreach(index_cell, relation->rd_indexlist)
+
+	PG_TRY();
 	{
-        Oid 		indexOid;
-        Relation 	indexRelation;
-        IndexInfo  *indexInfo;
-        Datum   	index_values[INDEX_MAX_KEYS];
-        bool 		isNull[INDEX_MAX_KEYS];
-        IndexUniqueCheck indexUniqueCheck;
+		indexList = RelationGetIndexList(relation);
 
-        indexOid = index_cell->oid_value;
-        indexRelation = RelationIdGetRelation(indexOid);
-        indexInfo = BuildIndexInfo(indexRelation);
+		foreach(index_cell, indexList)
+		{
+			Oid 		indexOid;
+			Relation 	indexRelation;
+			IndexInfo  *indexInfo;
+			Datum   	index_values[INDEX_MAX_KEYS];
+			bool 		isNull[INDEX_MAX_KEYS];
+			IndexUniqueCheck indexUniqueCheck;
+			bool        is_merkle;
 
-		if (unique_check && indexRelation->rd_index->indisunique)
-			indexUniqueCheck = UNIQUE_CHECK_YES;
-		else
-			indexUniqueCheck = UNIQUE_CHECK_NO;
+			indexOid = lfirst_oid(index_cell);
+			indexRelation = RelationIdGetRelation(indexOid);
 
-        FormIndexDatum(indexInfo,
-                slot,
-                NULL,
-                index_values,
-                isNull);
+			is_merkle = (indexRelation->rd_rel->relam == MERKLE_AM_OID);
 
-        index_insert(indexRelation,
-                index_values,
-                isNull,
-                &(slot->tts_tid),
-                relation,
-                indexUniqueCheck,
-                indexInfo);
-        RelationClose(indexRelation);
-    }
-	skip_conflict_checking = false;
+			/* Skip based on phase */
+			if (phase == HEAP_INDEX_NO_MERKLE && is_merkle)
+			{
+				RelationClose(indexRelation);
+				continue;
+			}
+
+			indexInfo = BuildIndexInfo(indexRelation);
+
+			if (unique_check && indexRelation->rd_index->indisunique)
+				indexUniqueCheck = UNIQUE_CHECK_YES;
+			else
+				indexUniqueCheck = UNIQUE_CHECK_NO;
+
+			FormIndexDatum(indexInfo,
+					slot,
+					NULL,
+					index_values,
+					isNull);
+
+			index_insert(indexRelation,
+					index_values,
+					isNull,
+					&(slot->tts_tid),
+					relation,
+					indexUniqueCheck,
+					indexInfo);
+			RelationClose(indexRelation);
+		}
+	}
+	PG_FINALLY();
+	{
+		if (indexList != NIL)
+			list_free(indexList);
+		skip_conflict_checking = save_skip_conflict_checking;
+	}
+	PG_END_TRY();
 }
 
 /*

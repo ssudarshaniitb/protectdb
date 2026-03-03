@@ -220,6 +220,44 @@ void
 NoticeProcessor(void *arg, const char *message)
 {
 	(void) arg;					/* not used */
+	/*
+	 * Capture Merkle root-hash output and attach it to the command status line.
+	 *
+	 * The backend emits a single NOTICE of the form:
+	 *   "NOTICE:  BCDB_MERKLE_ROOTS: (p, <hex>) ..."
+	 *
+	 * We suppress printing that NOTICE and instead append the payload to the
+	 * subsequent command tag line (e.g. "UPDATE 1 , (p, <hex>)").
+	 */
+	{
+		const char *tag = "BCDB_MERKLE_ROOTS:";
+		const char *p;
+
+		if (message)
+		{
+			p = strstr(message, tag);
+			if (p != NULL)
+			{
+				size_t		len;
+				char	   *copy;
+
+				p += strlen(tag);
+				while (*p == ' ' || *p == '\t')
+					p++;
+
+				len = strcspn(p, "\r\n");
+				copy = pg_malloc(len + 1);
+				memcpy(copy, p, len);
+				copy[len] = '\0';
+
+				/* Stash in pset.vars so PrintQueryStatus can pick it up. */
+				SetVariable(pset.vars, "MERKLE_ROOTS", copy);
+				pg_free(copy);
+				return;
+			}
+		}
+	}
+
 	pg_log_info("%s", message);
 }
 
@@ -1074,6 +1112,8 @@ static void
 PrintQueryStatus(PGresult *results)
 {
 	char		buf[16];
+	const char *merkle_roots = GetVariable(pset.vars, "MERKLE_ROOTS");
+	bool		have_merkle_roots = (merkle_roots && merkle_roots[0] != '\0');
 
 	if (!pset.quiet)
 	{
@@ -1083,12 +1123,22 @@ PrintQueryStatus(PGresult *results)
 			html_escaped_print(PQcmdStatus(results), pset.queryFout);
 			fputs("</p>\n", pset.queryFout);
 		}
+		else if (have_merkle_roots)
+			fprintf(pset.queryFout, "%s , %s\n", PQcmdStatus(results), merkle_roots);
 		else
 			fprintf(pset.queryFout, "%s\n", PQcmdStatus(results));
 	}
 
 	if (pset.logfile)
-		fprintf(pset.logfile, "%s\n", PQcmdStatus(results));
+	{
+		if (have_merkle_roots)
+			fprintf(pset.logfile, "%s , %s\n", PQcmdStatus(results), merkle_roots);
+		else
+			fprintf(pset.logfile, "%s\n", PQcmdStatus(results));
+	}
+
+	if (have_merkle_roots)
+		SetVariable(pset.vars, "MERKLE_ROOTS", NULL);
 
 	snprintf(buf, sizeof(buf), "%u", (unsigned int) PQoidValue(results));
 	SetVariable(pset.vars, "LASTOID", buf);

@@ -74,7 +74,9 @@ bcdb_middleware_init2(bool is_oep_mode, int32 block_size, int32 numTx, int32 tim
     old_context = MemoryContextSwitchTo(bcdb_middleware_context);
     idle_worker_list_init(block_size);
     MemoryContextSwitchTo(old_context);
-	printf("ariaMyDbg %s : %s: %d pid %d \n", __FILE__, __FUNCTION__, __LINE__ , getpid());
+#if SAFEDBG
+    printf("ariaMyDbg %s : %s: %d pid %d \n", __FILE__, __FUNCTION__, __LINE__ , getpid());
+#endif
 
     start_time = bcdb_get_time();
 }
@@ -107,7 +109,9 @@ parse_tx(const char* json)
 
     tx = create_tx(hash->valuestring, sql->valuestring, BCDBInvalidTid, BCDBInvalidBid, isolation, pred_lock);
 
-	printf("ariaMyDbg %s : %s: %d pid %d \n", __FILE__, __FUNCTION__, __LINE__ , getpid());
+#if SAFEDBG
+    printf("ariaMyDbg %s : %s: %d pid %d \n", __FILE__, __FUNCTION__, __LINE__ , getpid());
+#endif
     create_time = cJSON_GetObjectItemCaseSensitive(parsed, "create_ts");
 
     if (cJSON_IsString(create_time))
@@ -234,7 +238,9 @@ bcdb_middleware_submit_tx(const char* tx_string)
     BCDBShmXact *tx;
     tx = parse_tx(tx_string);
     tx_queue_insert(tx, tx_num++);
-	printf("ariaMyDbg %s : %s: %d pid %d \n", __FILE__, __FUNCTION__, __LINE__ , getpid());
+#if SAFEDBG
+    printf("ariaMyDbg %s : %s: %d pid %d \n", __FILE__, __FUNCTION__, __LINE__ , getpid());
+#endif
     return 0;
 }
 
@@ -259,9 +265,11 @@ print_trace();
 } else { return NULL; }
 */
 #if SAFEDBG
-	printf("ariaMyDbg %s : %s: %d pid %d txnum %d txnum2 %d next_tx_id %d blk-numtx %d \n", __FILE__, __FUNCTION__, __LINE__ , getpid(), tx_num, tx_num2, next_tx_id, block->num_tx);
+		printf("ariaMyDbg %s : %s: %d pid %d txnum %d txnum2 %d next_tx_id %d blk-numtx %d \n", __FILE__, __FUNCTION__, __LINE__ , getpid(), tx_num, tx_num2, next_tx_id, block->num_tx);
 #endif
-	printf("ariaMyDbg %s : %s: %d pid %d tx %s \n", __FILE__, __FUNCTION__, __LINE__ , getpid(), block->txs[tx_num2]->sql);
+#if SAFEDBG
+        printf("ariaMyDbg %s : %s: %d pid %d tx %s \n", __FILE__, __FUNCTION__, __LINE__ , getpid(), block->txs[tx_num2]->sql);
+#endif
     for (int i= 0; i < block->num_tx; i++, next_tx_id++)
     {
       tx_queue_insert(block->txs[tx_num2], tx_num2);
@@ -284,14 +292,14 @@ print_trace();
 /*
 */
 #if SAFEDBG
-		gettimeofday(&tv1, NULL);
-		printf("\n\n\t time= %ld.%ld  getpid %d\n", tv1.tv_sec, tv1.tv_usec, getpid());
-        printf("blkmid read result at %d= %s\n", ((tx_num2-1)%(2*block->blksize)), block->result[(tx_num2-1)%(2*block->blksize)]);
-        printf("\n\t *** safeDB completed txid %d pid %d %s : %s: %d *** \n\n",
-               tx_num2, getpid(), __FILE__, __FUNCTION__, __LINE__ );
+			gettimeofday(&tv1, NULL);
+			printf("\n\n\t time= %ld.%ld  getpid %d\n", tv1.tv_sec, tv1.tv_usec, getpid());
+	        printf("blkmid read result at %d= %s\n", ((tx_num2-1)%(2*block->blksize)), block->result[(tx_num2-1)%(2*block->blksize)]);
+	        printf("\n\t *** safeDB completed txid %d pid %d %s : %s: %d *** \n\n",
+	               tx_num2, getpid(), __FILE__, __FUNCTION__, __LINE__ );
+	        printf("\n\t *** safeDB txid %d pid %d result %s file %s : %s: %d *** \n\n", 
+	               tx_num2, getpid(), &block->result[tx_num2-1],__FILE__, __FUNCTION__, __LINE__ );
 #endif
-        printf("\n\t *** safeDB txid %d pid %d result %s file %s : %s: %d *** \n\n", 
-               tx_num2, getpid(), &block->result[tx_num2-1],__FILE__, __FUNCTION__, __LINE__ );
 //ereport(INFO, (errmsg(&block->result[tx_num2-1])));
 // TODO -- another way to convey results...
 // wait-to-finish() ?? or 
@@ -309,19 +317,25 @@ bcdb_middleware_submit_block2(const char* block_json)
     tv1.tv_sec = 0; tv1.tv_usec = 0;
 
     ++block_meta->global_bmax;
-	printf("ariaMyDbg %s : %s: %d pid %d \n", __FILE__, __FUNCTION__, __LINE__ , getpid());
+#if SAFEDBG
+    printf("ariaMyDbg %s : %s: %d pid %d \n", __FILE__, __FUNCTION__, __LINE__ , getpid());
+#endif
     block = parse_block_with_txs(block_json);
     for (int i=0; i < block->num_tx; i++)
     {
       tx_queue_insert(block->txs[i], tx_num++);
-	  if( (i % numTxBurst == 0)&&(i > 0)) {
-		gettimeofday(&tv1, NULL);
-		printf("\n\n\t time= %ld.%ld  getpid %d\n", tv1.tv_sec, tv1.tv_usec, getpid());
-		printf("\t ariaMyDbg %s : %s: %d pid %d  sleeping %dms next burstSz %d from tx %d\n\n", __FILE__, __FUNCTION__, __LINE__ , getpid() ,burstTime, numTxBurst, i );
-		usleep(burstTime);
-	  }
+		  if( (i % numTxBurst == 0)&&(i > 0)) {
+			gettimeofday(&tv1, NULL);
+#if SAFEDBG
+			printf("\n\n\t time= %ld.%ld  getpid %d\n", tv1.tv_sec, tv1.tv_usec, getpid());
+			printf("\t ariaMyDbg %s : %s: %d pid %d  sleeping %dms next burstSz %d from tx %d\n\n", __FILE__, __FUNCTION__, __LINE__ , getpid() ,burstTime, numTxBurst, i );
+#endif
+			usleep(burstTime);
+		  }
     }
-	printf("ariaMyDbg %s : %s: %d pid %d \n", __FILE__, __FUNCTION__, __LINE__ , getpid());
+#if SAFEDBG
+    printf("ariaMyDbg %s : %s: %d pid %d \n", __FILE__, __FUNCTION__, __LINE__ , getpid());
+#endif
 }
 
 void 
@@ -366,8 +380,10 @@ block_cleaning(BCBlockID current_block_id)
     uint64 cur_report_ts = bcdb_get_time();
     int32  cur_num_committed = block_meta->num_committed;
     float abort_rate = (float)block_meta->num_aborted / (block_meta->num_aborted + block_meta->num_committed);
-	printf("\nariaMyDbg %s : %s: %d \n", __FILE__, __FUNCTION__, __LINE__ );
-	printf("ariaMyDbg %s : %s: %d \n\n", __FILE__, __FUNCTION__, __LINE__ );
+#if SAFEDBG
+    printf("\nariaMyDbg %s : %s: %d \n", __FILE__, __FUNCTION__, __LINE__ );
+    printf("ariaMyDbg %s : %s: %d \n\n", __FILE__, __FUNCTION__, __LINE__ );
+#endif
 
     if (current_block_id > CLEANING_DELAY_BLOCKS)
     {
@@ -443,8 +459,10 @@ bool bcdb_is_tx_commited(char * tx_hash){
 void 
 bcdb_clear_block_txs_store()
 {
-	printf("\nariaMyDbg %s : %s: %d \n", __FILE__, __FUNCTION__, __LINE__ );
-	printf("ariaMyDbg %s : %s: %d \n\n", __FILE__, __FUNCTION__, __LINE__ );
+#if SAFEDBG
+    printf("\nariaMyDbg %s : %s: %d \n", __FILE__, __FUNCTION__, __LINE__ );
+    printf("ariaMyDbg %s : %s: %d \n\n", __FILE__, __FUNCTION__, __LINE__ );
+#endif
     shm_hash_clear(block_pool, MAX_NUM_BLOCKS);
     clear_tx_pool();
     block_meta->global_bmin = 1;
@@ -480,4 +498,3 @@ void bcdb_middleware_dummy_submit_tx(const char* file_path){
 */
 
 //Return false if 1)no tx with that hash or 2) tx is not finish execution
-

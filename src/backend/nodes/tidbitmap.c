@@ -383,10 +383,25 @@ tbm_add_tuples(TIDBitmap *tbm, const ItemPointer tids, int ntids,
 	Assert(tbm->iterating == TBM_NOT_ITERATING);
 	for (i = 0; i < ntids; i++)
 	{
-		BlockNumber blk = ItemPointerGetBlockNumber(tids + i);
-		OffsetNumber off = ItemPointerGetOffsetNumber(tids + i);
+		BlockNumber blk;
+		OffsetNumber off;
 		int			wordnum,
 					bitnum;
+
+		/*
+		 * CRITICAL FIX: Validate ItemPointer before use.
+		 * Invalid ItemPointers (with offset=0) can occur during BCDB worker
+		 * operations or transaction rollbacks, and cause "tuple offset out of range"
+		 * errors. Skip invalid pointers instead of crashing.
+		 */
+		if (!ItemPointerIsValid(tids + i))
+		{
+			elog(WARNING, "tbm_add_tuples: skipping invalid ItemPointer at index %d", i);
+			continue;
+		}
+
+		blk = ItemPointerGetBlockNumber(tids + i);
+		off = ItemPointerGetOffsetNumber(tids + i);
 
 		/* safety check to ensure we don't overrun bit array bounds */
 		if (off < 1 || off > MAX_TUPLES_PER_PAGE)

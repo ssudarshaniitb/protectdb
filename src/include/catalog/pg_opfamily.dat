@@ -227,4 +227,10 @@
 { oid => '5008',
   opfmethod => 'spgist', opfname => 'poly_ops' },
 
+# Merkle opfamilies
+{ oid => '9910', opfmethod => 'merkle', opfname => 'text_ops' },
+{ oid => '9911', opfmethod => 'merkle', opfname => 'varchar_ops' },
+{ oid => '9912', opfmethod => 'merkle', opfname => 'int4_ops' },
+{ oid => '9913', opfmethod => 'merkle', opfname => 'int8_ops' },
+
 ]

@@ -760,3 +760,8 @@ max_pred_locks_per_page =  512           # min 0
 #------------------------------------------------------------------------------
 
 # Add settings for extensions here
+
+# AriaBC / Merkle index options
+#enable_merkle_index = on			# update Merkle indexes on DML
+#merkle_update_detection = off		# emit touched-node hash report at commit
+#merkle_update_detection_suppress = on	# suppress report during CREATE INDEX/REINDEX
