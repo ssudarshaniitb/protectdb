@@ -1,0 +1,2 @@
+src/backend/bcdb/utils/sysinfo.o src/backend/bcdb/utils/cJSON.o src/backend/bcdb/utils/aligned_heap.o src/backend/bcdb/utils/func.o
+src/backend/bcdb/globals.o src/backend/bcdb/shm_block.o src/backend/bcdb/shm_transaction.o src/backend/bcdb/worker_controller.o src/backend/bcdb/worker.o src/backend/bcdb/middleware.o src/backend/bcdb/func.o src/backend/bcdb/bcdb_dsa.o

@@ -1,0 +1,9 @@
+Name: libecpg
+Description: PostgreSQL libecpg library
+Url: http://www.postgresql.org/
+Version: 13devel
+Requires: 
+Requires.private: libpq libpgtypes
+Cflags: -I/home/anant2040/git/pgSafedb/install/include
+Libs: -L/home/anant2040/git/pgSafedb/install/lib -lecpg
+Libs.private:  -lm

@@ -1,0 +1,9 @@
+Name: libecpg_compat
+Description: PostgreSQL libecpg_compat library
+Url: http://www.postgresql.org/
+Version: 13devel
+Requires: 
+Requires.private: libecpg libpgtypes
+Cflags: -I/home/anant2040/git/pgSafedb/install/include
+Libs: -L/home/anant2040/git/pgSafedb/install/lib -lecpg_compat
+Libs.private:  -lm
