@@ -10,7 +10,7 @@ make
 make install
 ```
 
-## Run a sample workload (single machine)
+## Setup database on a single machine
 
 
 ```sh
