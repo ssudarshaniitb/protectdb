@@ -1,4 +1,12 @@
 
+Changes:
+
+(1) Deterministic execution: ROOT/src/backend/* and ROOT/src/include
+
+(2) Add merkle index: ROOT/backend/access/merkle/*
+
+(3) Hash tuples with Blake3: ROOT/src/common
+
 Files changed:
 
 /src/backend/access/common/printtup.c
