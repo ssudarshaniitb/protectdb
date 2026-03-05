@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.0.0 http://maven.apache.org/xsd/assembly-2.0.0.xsd">
+  <!--
+  /**
+   * Licensed to the Apache Software Foundation (ASF) under one
+   * or more contributor license agreements.  See the NOTICE file
+   * distributed with this work for additional information
+   * regarding copyright ownership.  The ASF licenses this file
+   * to you under the Apache License, Version 2.0 (the
+   * "License"); you may not use this file except in compliance
+   * with the License.  You may obtain a copy of the License at
+   *
+   *     http://www.apache.org/licenses/LICENSE-2.0
+   *
+   * Unless required by applicable law or agreed to in writing, software
+   * distributed under the License is distributed on an "AS IS" BASIS,
+   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   * See the License for the specific language governing permissions and
+   * limitations under the License.
+   */
+  -->
+  <id>bin</id>
+  <baseDirectory>apache-ratis-${project.version}-bin</baseDirectory>
+  <formats>
+    <format>tar.gz</format>
+  </formats>
+  <dependencySets>
+    <dependencySet>
+      <includes>
+        <include>org.apache.ratis:ratis-examples</include>
+      </includes>
+      <outputDirectory>examples/lib</outputDirectory>
+    </dependencySet>
+  </dependencySets>
+  <moduleSets>
+    <moduleSet>
+      <useAllReactorProjects>true</useAllReactorProjects>
+      <includes>
+        <include>org.apache.ratis:ratis-assembly</include>
+        <include>org.apache.ratis:ratis-client</include>
+        <include>org.apache.ratis:ratis-common</include>
+        <include>org.apache.ratis:ratis-grpc</include>
+        <include>org.apache.ratis:ratis-netty</include>
+        <include>org.apache.ratis:ratis-proto</include>
+        <include>org.apache.ratis:ratis-replicated-map</include>
+        <include>org.apache.ratis:ratis-server-api</include>
+        <include>org.apache.ratis:ratis-server</include>
+        <include>org.apache.ratis:ratis-test</include>
+        <include>org.apache.ratis:ratis-metrics-api</include>
+        <include>org.apache.ratis:ratis-metrics-default</include>
+        <include>org.apache.ratis:ratis-metrics-dropwizard3</include>
+        <include>org.apache.ratis:ratis-shell</include>
+        <include>org.apache.ratis:ratis-tools</include>
+        <include>org.apache.ratis:ratis-resource-bundle</include>
+      </includes>
+      <binaries>
+        <outputDirectory>jars</outputDirectory>
+        <includeDependencies>false</includeDependencies>
+        <unpack>false</unpack>
+      </binaries>
+    </moduleSet>
+  </moduleSets>
+  <fileSets>
+    <fileSet>
+      <directory>${project.basedir}/src/main/resources</directory>
+      <outputDirectory>.</outputDirectory>
+      <includes>
+        <include>README.md</include>
+        <include>LICENSE</include>
+        <include>NOTICE</include>
+      </includes>
+      <fileMode>0644</fileMode>
+    </fileSet>
+    <!-- aggregate BOM from root module -->
+    <fileSet>
+      <directory>${project.basedir}/../target</directory>
+      <outputDirectory>.</outputDirectory>
+      <includes>
+        <include>bom.json</include>
+        <include>bom.xml</include>
+      </includes>
+      <fileMode>0644</fileMode>
+    </fileSet>
+    <fileSet>
+      <directory>${project.basedir}/../ratis-docs/target/classes/docs
+      </directory>
+      <outputDirectory>docs</outputDirectory>
+      <fileMode>0644</fileMode>
+      <directoryMode>0755</directoryMode>
+    </fileSet>
+    <fileSet>
+      <directory>${project.basedir}/../ratis-shell/src/main/bin</directory>
+      <outputDirectory>bin</outputDirectory>
+      <fileMode>0755</fileMode>
+    </fileSet>
+    <fileSet>
+      <directory>${project.basedir}/../ratis-shell/src/main/libexec</directory>
+      <outputDirectory>libexec</outputDirectory>
+      <fileMode>0755</fileMode>
+      <directoryMode>0755</directoryMode>
+    </fileSet>
+    <fileSet>
+      <directory>${project.basedir}/../ratis-shell/src/main/conf</directory>
+      <outputDirectory>conf</outputDirectory>
+      <fileMode>644</fileMode>
+    </fileSet>
+    <fileSet>
+      <directory>${project.basedir}/../ratis-shell/target/lib/</directory>
+      <outputDirectory>jars</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>${project.basedir}/../ratis-examples</directory>
+      <outputDirectory>examples</outputDirectory>
+      <includes>
+        <include>README.md</include>
+      </includes>
+      <fileMode>0644</fileMode>
+    </fileSet>
+    <fileSet>
+      <directory>${project.basedir}/../ratis-examples/src/main/bin</directory>
+      <outputDirectory>examples/bin</outputDirectory>
+      <includes>
+        <include>*.*</include>
+      </includes>
+      <fileMode>0755</fileMode>
+    </fileSet>
+    <fileSet>
+      <directory>${project.basedir}/../ratis-examples/src/main/resources</directory>
+      <outputDirectory>examples/conf</outputDirectory>
+      <includes>
+        <include>conf.properties</include>
+        <include>log4j.properties</include>
+      </includes>
+      <fileMode>644</fileMode>
+    </fileSet>
+  </fileSets>
+</assembly>

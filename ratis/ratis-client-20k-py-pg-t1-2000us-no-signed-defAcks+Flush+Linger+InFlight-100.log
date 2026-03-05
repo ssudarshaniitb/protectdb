@@ -1,0 +1,1544 @@
+Found /home/anant2040/git/ratis/ratis-examples/target/ratis-examples-3.2.0-SNAPSHOT.jar
+Starting Async write now 
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@55b699ef size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=868;">
+2026-01-01 16:35:38 INFO  ProducerConfig:370 - ProducerConfig values: 
+	acks = -1
+	auto.include.jmx.reporter = true
+	batch.size = 16384
+	bootstrap.servers = [10.129.148.129:9092]
+	buffer.memory = 33554432
+	client.dns.lookup = use_all_dns_ips
+	client.id = producer-1
+	compression.type = none
+	connections.max.idle.ms = 540000
+	delivery.timeout.ms = 120000
+	enable.idempotence = true
+	enable.metrics.push = true
+	interceptor.classes = []
+	key.serializer = class org.apache.kafka.common.serialization.StringSerializer
+	linger.ms = 0
+	max.block.ms = 60000
+	max.in.flight.requests.per.connection = 5
+	max.request.size = 1048576
+	metadata.max.age.ms = 300000
+	metadata.max.idle.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partitioner.adaptive.partitioning.enable = true
+	partitioner.availability.timeout.ms = 0
+	partitioner.class = null
+	partitioner.ignore.keys = false
+	receive.buffer.bytes = 32768
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retries = 2147483647
+	retry.backoff.max.ms = 1000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	transaction.timeout.ms = 60000
+	transactional.id = null
+	value.serializer = class org.apache.kafka.common.serialization.StringSerializer
+
+2026-01-01 16:35:38 INFO  KafkaMetricsCollector:297 - initializing Kafka metrics collector
+2026-01-01 16:35:38 INFO  KafkaProducer:597 - [Producer clientId=producer-1] Instantiated an idempotent producer.
+2026-01-01 16:35:38 INFO  AppInfoParser:124 - Kafka version: 3.7.0
+2026-01-01 16:35:38 INFO  AppInfoParser:125 - Kafka commitId: 2ae524ed625438c5
+2026-01-01 16:35:38 INFO  AppInfoParser:126 - Kafka startTimeMs: 1767265538624
+2026-01-01 16:35:38 INFO  ConsumerConfig:370 - ConsumerConfig values: 
+	allow.auto.create.topics = true
+	auto.commit.interval.ms = 5000
+	auto.include.jmx.reporter = true
+	auto.offset.reset = latest
+	bootstrap.servers = [10.129.148.129:9092]
+	check.crcs = true
+	client.dns.lookup = use_all_dns_ips
+	client.id = consumer-my-group-1
+	client.rack = 
+	connections.max.idle.ms = 540000
+	default.api.timeout.ms = 60000
+	enable.auto.commit = true
+	enable.metrics.push = true
+	exclude.internal.topics = true
+	fetch.max.bytes = 52428800
+	fetch.max.wait.ms = 500
+	fetch.min.bytes = 1
+	group.id = my-group
+	group.instance.id = null
+	group.protocol = classic
+	group.remote.assignor = null
+	heartbeat.interval.ms = 3000
+	interceptor.classes = []
+	internal.leave.group.on.close = true
+	internal.throw.on.fetch.stable.offset.unsupported = false
+	isolation.level = read_uncommitted
+	key.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+	max.partition.fetch.bytes = 1048576
+	max.poll.interval.ms = 300000
+	max.poll.records = 500
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partition.assignment.strategy = [class org.apache.kafka.clients.consumer.RangeAssignor, class org.apache.kafka.clients.consumer.CooperativeStickyAssignor]
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retry.backoff.max.ms = 1000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	session.timeout.ms = 45000
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	value.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+
+2026-01-01 16:35:38 INFO  KafkaMetricsCollector:297 - initializing Kafka metrics collector
+2026-01-01 16:35:38 INFO  AppInfoParser:124 - Kafka version: 3.7.0
+2026-01-01 16:35:38 INFO  AppInfoParser:125 - Kafka commitId: 2ae524ed625438c5
+2026-01-01 16:35:38 INFO  AppInfoParser:126 - Kafka startTimeMs: 1767265538662
+2026-01-01 16:35:38 INFO  LegacyKafkaConsumer:475 - [Consumer clientId=consumer-my-group-1, groupId=my-group] Subscribed to topic(s): topic2
+2026-01-01 16:35:38 INFO  Metadata:349 - [Producer clientId=producer-1] Cluster ID: KnaY91erT92QN5ly-M942w
+2026-01-01 16:35:38 INFO  TransactionManager:502 - [Producer clientId=producer-1] ProducerId set to 110 with epoch 0
+2026-01-01 16:35:38 INFO  Metadata:349 - [Consumer clientId=consumer-my-group-1, groupId=my-group] Cluster ID: KnaY91erT92QN5ly-M942w
+2026-01-01 16:35:38 INFO  ConsumerCoordinator:936 - [Consumer clientId=consumer-my-group-1, groupId=my-group] Discovered group coordinator 10.129.148.129:9092 (id: 2147483647 rack: null)
+2026-01-01 16:35:38 INFO  ConsumerCoordinator:604 - [Consumer clientId=consumer-my-group-1, groupId=my-group] (Re-)joining group
+2026-01-01 16:35:38 INFO  ConsumerCoordinator:1102 - [Consumer clientId=consumer-my-group-1, groupId=my-group] Request joining group due to: need to re-join with the given member-id: consumer-my-group-1-964b2204-ad34-4c32-907e-015ac496b469
+2026-01-01 16:35:38 INFO  ConsumerCoordinator:604 - [Consumer clientId=consumer-my-group-1, groupId=my-group] (Re-)joining group
+2026-01-01 16:35:38 INFO  ConsumerCoordinator:665 - [Consumer clientId=consumer-my-group-1, groupId=my-group] Successfully joined group with generation Generation{generationId=100, memberId='consumer-my-group-1-964b2204-ad34-4c32-907e-015ac496b469', protocol='range'}
+2026-01-01 16:35:38 INFO  ConsumerCoordinator:659 - [Consumer clientId=consumer-my-group-1, groupId=my-group] Finished assignment for group at generation 100: {consumer-my-group-1-964b2204-ad34-4c32-907e-015ac496b469=Assignment(partitions=[topic2-0])}
+2026-01-01 16:35:38 INFO  ConsumerCoordinator:842 - [Consumer clientId=consumer-my-group-1, groupId=my-group] Successfully synced group in generation Generation{generationId=100, memberId='consumer-my-group-1-964b2204-ad34-4c32-907e-015ac496b469', protocol='range'}
+2026-01-01 16:35:38 INFO  ConsumerCoordinator:319 - [Consumer clientId=consumer-my-group-1, groupId=my-group] Notifying assignor about the new Assignment(partitions=[topic2-0])
+2026-01-01 16:35:38 INFO  ConsumerRebalanceListenerInvoker:56 - [Consumer clientId=consumer-my-group-1, groupId=my-group] Adding newly assigned partitions: topic2-0
+2026-01-01 16:35:38 INFO  ConsumerUtils:199 - Setting offset for partition topic2-0 to the committed offset FetchPosition{offset=768408, offsetEpoch=Optional[0], currentLeader=LeaderAndEpoch{leader=Optional[10.129.148.129:9092 (id: 0 rack: null)], epoch=0}}
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@13f95696 size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=831;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=41 cap=41] &&& <ByteString@32193bea size=41 contents="DELETE FROM usertable where YCSB_KEY=937;">
+
+ pt... Kafka Consumer Record in braces:(c2-1 0 SELECT 1 [(868, 'YwxtTWAHiqkOJNCihsBi', '68hkO95VmWsHWqwEyvWD', 'ertD1y5XruMYqIVAbN4p', 'x72FhUdKhULL7PFl8jMg', '10kTAB7ZfkrMMMwectK9', '4z3KiFW7OK4bLco9jXcu', 'aC29VqWNockytVzCITZJ', 'wCuelaxKgrZqgDveTGHy', 'esmVd3TOseRzfXZk0Fdr', 'Gklz3kbbmkonscUr6Y8W')])
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@758705fa size=43 contents="SELECT * FROM usertable where YCSB_KEY=473;">
+
+ pt... Kafka Consumer Record in braces:(c2-2 0 SELECT 1 [(831, 's4INFaeA6LzaaxIRWxtC', 'QjL9cSTEKeIlQLV77wFA', 'Exuy5KkWLB8rFy4pzi6S', 'fsfhTB3ip0PwJfUf4Tz5', 'wu7lOQO8tNp7Mhf2XOR0', 'fEgWlS8VKsAChsL9Kl5z', 'EWah3XklTdDi2zv2YBxu', 'qvaIBrrh03PVPcASIOWY', 'jVqeVpzOviXtLJuFmfJ1', 'yFXrzDekuLPImOZNeCD0')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-3 0 DELETE 1)
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=41 cap=41] &&& <ByteString@49d3c823 size=41 contents="DELETE FROM usertable WHERE YCSB_KEY=473;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@604c5de8 size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=778;">
+
+ pt... Kafka Consumer Record in braces:(c2-4 0 SELECT 1 [(473, '68hkO95VmWsHWqwEyvWD', 'ertD1y5XruMYqIVAbN4p', 'x72FhUdKhULL7PFl8jMg', '10kTAB7ZfkrMMMwectK9', '4z3KiFW7OK4bLco9jXcu', 'aC29VqWNockytVzCITZJ', 'wCuelaxKgrZqgDveTGHy', 'esmVd3TOseRzfXZk0Fdr', 'Gklz3kbbmkonscUr6Y8W', 'YwxtTWAHiqkOJNCihsBi')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-5 0 DELETE 1)
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@57abad67 size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=144;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@52851b44 size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=833;">
+
+ pt... Kafka Consumer Record in braces:(c2-6 0 SELECT 1 [(778, 'DFSXMjXMm7WOlJYm16Lh', 'fi4oLP4GFL6eZecBOOU0', 'GDD6CPsRXx3nHQuc6Bmp', 'EdiIUOzbXZf1nMY7m4lK', 'SSVYHQw9iTaEq1g8W0Cr', 'TJ3Uh2da4RUMWi0VUJ0A', 'e5II1aBjMPE7D6e6blJy', 'dMD56PvWGbYiuqJPvrew', 'VZlWaLtCrTWw96p0YiBz', 'OUYjBJs9nTn50QKYNjNG')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-7 0 SELECT 1 [(144, 'nmx7GE5CKM1Nu6BG8jUM', 'yi5vYi29fcgMkiWQgOJ7', 'Lv32oPfiCp2PbbrrTxVn', 'PiVHklyaSIizoaohlbvc', 'HDnxwu8OwFQK9VPhCg3t', 'WjscGgls57VyrVNNp8jm', 'N5uuALd8nIzlYgEOf0Gb', '2P00POI0ca3tes83Wpwi', 'AcOVcTCY6AEuP3oHvbEm', 'REsp1540XTtTXZ3Wpbss')])
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=44 cap=44] &&& <ByteString@576f63f6 size=44 contents="SELECT * FROM usertable WHERE YCSB_KEY=1082;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=41 cap=41] &&& <ByteString@ff684e1 size=41 contents="DELETE FROM usertable WHERE YCSB_KEY=950;">
+
+ pt... Kafka Consumer Record in braces:(c2-8 0 SELECT 1 [(833, 'qdHRKWTvyu3vWL1NtbH2', 'atewT1tRLsGl9S8yQFBJ', 'KxhmVwhLexPXg6C7fzqM', 'VBBwN0H6zvLNV4y8M6Vv', 'mTbI42RW0D13S8elby9F', '4Ok4z07TmbHqdet7kmsb', 'KOgCmFK4R2EbGZIRzAbj', 'Sa1OO8mDSamb43JTEUb4', 'AWcTp7yrp7iMJfya5l8K', 'PFywAKwyJC3IDKNL4frf')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-9 0 SELECT 1 [(1082, 'FykI6Vojnpq36vV17CNY', 'AzVJcluVnJZqGxVlBLkc', 'xf5NzUHVLBkh9JbkIRZi', 'gWe2Rj8drLe3QonSqq41', 'ixy1x3cRWZu6zdy5SzY1', 'dYPbDle2Wbrt50N4ukh0', 'lPcA1zVpWqGoFG5HaPJF', 'H78oA3t2m0PP9Df7rSV0', 'H2MGKdu2YXRdbXmnKurF', 'Sfq0eKZkTpb1BS7I20zR')])
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@55dfebeb size=43 contents="SELECT * FROM usertable where YCSB_KEY=848;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=41 cap=41] &&& <ByteString@77b14724 size=41 contents="DELETE FROM usertable WHERE YCSB_KEY=848;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@604f2bd2 size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=196;">
+
+ pt... Kafka Consumer Record in braces:(c2-10 0 DELETE 1)
+
+
+ pt... Kafka Consumer Record in braces:(c2-11 0 SELECT 1 [(848, 'mEqyAkNWO7lsa7Lcozjk', '2MgVc4w4XrmYIvtUL0eX', 'XIchnV38BjGTAl7wP5eo', 'qWiommUSlF7xuLhufNft', 'VXTk4n9A6EFvIOS2r0IR', 'iibPrbo7ur2UG7UvP0fZ', 'g1S1DBixpVvVthj4cllh', 'BchwAOc1ybmy1J7HvPut', 'd3O9jM5LZgPxlPHgzpmJ', 'QEaOq5yIkrwTUtNgsvut')])
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=367 cap=367] &&& <ByteString@7b84fcf8 size=367 contents="INSERT INTO usertable (ycsb_key, FIELD10, FIELD...">
+
+ pt... Kafka Consumer Record in braces:(c2-12 0 DELETE 1)
+
+
+ pt... Kafka Consumer Record in braces:(c2-13 0 SELECT 1 [(196, 'YwxtTWAHiqkOJNCihsBi', '68hkO95VmWsHWqwEyvWD', 'ertD1y5XruMYqIVAbN4p', 'x72FhUdKhULL7PFl8jMg', '10kTAB7ZfkrMMMwectK9', '4z3KiFW7OK4bLco9jXcu', 'aC29VqWNockytVzCITZJ', 'wCuelaxKgrZqgDveTGHy', 'esmVd3TOseRzfXZk0Fdr', 'Gklz3kbbmkonscUr6Y8W')])
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@366ac49b size=43 contents="SELECT * FROM usertable where YCSB_KEY=947;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=41 cap=41] &&& <ByteString@62e20a76 size=41 contents="DELETE FROM usertable WHERE YCSB_KEY=947;">
+
+ pt... Kafka Consumer Record in braces:(c2-14 0 INSERT 0 1)
+
+
+ pt... Kafka Consumer Record in braces:(c2-15 0 SELECT 1 [(947, '5tNzYtVQU5Q90sGwal3L', 'NiUUo0VAUggcRjwbpCYN', 'vQJWWSHUwdfUF9l4mQhh', 'DgxtrkanoatSTKQc6sGF', 'DvpSEnKOMuTaY7JSYk3j', 'TIUchMe4tf2TUs7oxEVz', 'LV51NTz2fbj3YkNoEE6Y', 'eJiVH5nz6K0A25r0fjMZ', 'pNF39IaZXtNeoIj3hAUv', '0dZNavJwV4MeWJtyPYS6')])
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@1477089c size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=858;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@59d2400d size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=808;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=367 cap=367] &&& <ByteString@5b202a3a size=367 contents="INSERT INTO usertable (ycsb_key, FIELD10, FIELD...">
+
+ pt... Kafka Consumer Record in braces:(c2-16 0 DELETE 1)
+
+
+ pt... Kafka Consumer Record in braces:(c2-17 0 SELECT 1 [(858, 'YwxtTWAHiqkOJNCihsBi', '68hkO95VmWsHWqwEyvWD', 'ertD1y5XruMYqIVAbN4p', 'x72FhUdKhULL7PFl8jMg', '10kTAB7ZfkrMMMwectK9', '4z3KiFW7OK4bLco9jXcu', 'aC29VqWNockytVzCITZJ', 'wCuelaxKgrZqgDveTGHy', 'esmVd3TOseRzfXZk0Fdr', 'Gklz3kbbmkonscUr6Y8W')])
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=41 cap=41] &&& <ByteString@34cdeda2 size=41 contents="DELETE FROM usertable WHERE YCSB_KEY=763;">
+
+ pt... Kafka Consumer Record in braces:(c2-18 0 SELECT 1 [(808, 'FBV0uy09qCs49C0eMYwV', 'JypERKVf4acO8UwC7Yo9', '2mJn7gtZ578zB6CSWC7y', 'qk8lGbwmeRIUbvbKGf1h', 'sEFwZ21pXrWfwLJ0vF40', 'v3nxHVlCd7LvwT4Ju5nL', '8YdJsKBu7uPWBwGHlsZW', 'gDstyhUjtPk2lQKg4mP5', '2etVaiZxvvvlYVkR2Wo4', '6ZW4yliESm78jqngycQD')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-19 0 INSERT 0 1)
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@4535b6d5 size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=336;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=367 cap=367] &&& <ByteString@232a7d73 size=367 contents="INSERT INTO usertable (ycsb_key, FIELD10, FIELD...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@74960bfa size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=197;">
+
+ pt... Kafka Consumer Record in braces:(c2-20 0 DELETE 1)
+
+
+ pt... Kafka Consumer Record in braces:(c2-21 0 SELECT 1 [(336, 'BJX4oN9XAD2SH5y2BdFG', 'DwumNKINdhaSE7dRkyyu', 'u922kl5FyPBHT3b0L5Ts', 'BXtGNIiiEk7P3PU4wnke', '4h3pnJ2J3Ks8qR30IJEd', 'h2Pq7O1QsZQwGdSEGkd1', 'rUCeUo1rivA7ulGVePSW', 'lCCsMUjwB2EMqEVwK0Eu', 'HH7H79giGaVkqIVIVE1C', 'JvFEDUcCP2Obfo3Fg9gY')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-22 0 INSERT 0 1)
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@1f6c9cd8 size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=165;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@447a020 size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=406;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@6d23017e size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=590;">
+
+ pt... Kafka Consumer Record in braces:(c2-23 0 SELECT 1 [(197, 'iW8vPNS8myVJUmK2aGmz', 'FA4yKkXFjSa2CR2XYiqC', 'hkb9NAPOS1Ak64xBVnnc', '2nLtypu569zeAIf4Ag8b', 'yJdqL6hBb56NsnBxTSn2', '0lfLop6t4v8VDAjEEsZs', 'AiguRQ5FWzqdZIMiBANP', 'lqcx7CubOdP8V8GHEgC3', '6kLcAUSImKBu3dqZItQp', 'yU9gxAdBvR3kDX8lNpW9')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-24 0 SELECT 1 [(165, 'spSjsi8nUQllWK4SDMqP', 'suaFTA8PNJDbFcmTsKCU', 'Fsd8IQ4R8lePnShhlFiM', 'N5Bdq8DCElW5JygqnqY9', 'qgPr4b7CfEoiIwYINStD', '3BZT8PNUci0mZDXwtD4b', 'OdPstxr9rJcL1KFTYpjB', 'Aub12s3h6VzsX5JrWSJm', 'n4cb9pkcuVdyB5x9DdYW', 'U28skGOcSThnizIrq05w')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-25 0 SELECT 1 [(406, '0mviiJNrfyUPRLUcKX5Z', 'syljE6forSG96imYb4RP', 'KwJb8UGZ2jWMJCWqCAkH', 'LZXg0jO3IXyPtF98UCVa', 'pjkLIbFlJQIHfFI7xPR0', 'U9pWn0ut7qeQ7zoNP2q8', 'hWtQPcQGqGyRXXGgnfdn', 'L4wmDvfmQLbC7jOuzl9r', 'g5e6hkCrR4OBJE0bz3aW', 'uxtiFoMCj5RtRIOZFsYG')])
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=367 cap=367] &&& <ByteString@767e20cf size=367 contents="INSERT INTO usertable (ycsb_key, FIELD10, FIELD...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=42 cap=42] &&& <ByteString@17a1e4ca size=42 contents="SELECT * FROM usertable where YCSB_KEY=96;">
+
+ pt... Kafka Consumer Record in braces:(c2-26 0 SELECT 1 [(590, 'tmbNwe8Bli8qxDLDYw4V', 'AFz14MQWe7ZGzIsBMSfL', 'yGZcgWgucveb3Rrbw9Ds', 'FcUk9VSrHMKgdljzRC9m', 'CfMKRDUg8XR5MBZpBLy3', '4UNvPwrsgzsfS0U0XI0G', 'WqG7mxPjlUSNdyZMxCFB', 'cuvqQ32TfZK8LgPOPOMB', 'Rfwi7e3enaX00zKE3sht', 'xNcUvsCdivc5Hfcd87w9')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-27 0 INSERT 0 1)
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=40 cap=40] &&& <ByteString@4a194c39 size=40 contents="DELETE FROM usertable WHERE YCSB_KEY=96;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=267 cap=267] &&& <ByteString@56113384 size=267 contents="INSERT INTO usertable VALUES (12001,\'A1vCDlW9TS...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@5f9678e1 size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=967;">
+
+ pt... Kafka Consumer Record in braces:(c2-28 0 SELECT 1 [(96, 'SM0swvRU5YcEv5Lff7gu', 'E3T3BZ5JkwrGdJsxOAWi', 'oA7bCM6aglY7BqniqYt7', 'nmW5gbFnWmIS0TSiSWgQ', '0eUh3o5WN9ecMxhnJ1op', 'L4kNJKSGTGHes81I8nef', 'uwK1hwJIpfaB3ftXtvFU', 'CnA2HJqh0G1gF17TflXo', '4cbHmPml5RTnZryJDTlT', 'HjA2FC3qVg9Vw1GHFNGN')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-29 0 DELETE 1)
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@5a9d6f02 size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=388;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=367 cap=367] &&& <ByteString@5ccbeb64 size=367 contents="INSERT INTO usertable (ycsb_key, FIELD10, FIELD...">
+
+ pt... Kafka Consumer Record in braces:(c2-30 0 INSERT 0 1)
+
+
+ pt... Kafka Consumer Record in braces:(c2-31 0 SELECT 1 [(967, '33zu3yDe9A88jvYNvvXZ', '7S9QzfcMbrcxrcVSaBgt', 'bYpq8VqAZ2lSLOGmPpCx', '2L0P6oqfGTV7SiSQxehn', 'REsi4tu0PmowYhJmy4Zl', '09VSpl98sOLZhRvUJUsO', 'fnCowdfLvQ0wv8mHCSVO', '2F1GSxmKXL9gisetm5wU', 'KdsiZYscpmTKehsWDuWq', 'G7SMNJx5p2KVfd2JXJgI')])
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=44 cap=44] &&& <ByteString@31d0e481 size=44 contents="SELECT * FROM usertable WHERE YCSB_KEY=1579;">
+
+ pt... Kafka Consumer Record in braces:(c2-32 0 SELECT 1 [(388, 'bzYyqJJthizyRe3tbTT2', 'QEXOYVo8V0q1ZGiMMBTK', 'yTtBUjq4lCGgzKktVcaw', 'kdTuBYH0avlsUblrPW4g', '0dwyKdAm14yDTz1trdxH', 'tawNCkkUev1iHpGVjZFK', 'EZZ4vjOZR3Jo1AQGAI0v', 'fKkQfPrk0bD6XqVd5mZj', 'uqlw3Tio3NPO2zQDOmUJ', 's3wHgKxnxgEk9O2QQJ7M')])
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=42 cap=42] &&& <ByteString@542e560f size=42 contents="SELECT * FROM usertable where YCSB_KEY=30;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=40 cap=40] &&& <ByteString@1d730606 size=40 contents="DELETE FROM usertable WHERE YCSB_KEY=30;">
+
+ pt... Kafka Consumer Record in braces:(c2-33 0 INSERT 0 1)
+
+
+ pt... Kafka Consumer Record in braces:(c2-34 0 SELECT 1 [(1579, 'iXF070rocHLVGtGS9aSO', 'wsegP2kZrfSwD54lRbHD', 'SErlj33V3cqLu3sqEipv', 'gOnnKwg7r0sVU6ieiEjX', 'Ey98MgXQdEh1dowq2S8H', 'oN01mFUAc3BDSRYU38UU', '53Xfr5ozgvou2nV9711d', '1sEHDxkCVHgG5pCJU8LC', '01Dqnj2Zfsn6fQWUOUeY', '8TROylOjmBvw0noHllso')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-35 0 SELECT 1 [(30, 'hwVmWeltuBVYD33PQt2b', '26aaKqQ2PnoBiXiJNLos', 'NT2d51e3ieYOhmMvwREw', 'YTxQ6VIVlHgLdoR4l8oB', 'QOrEUdCAyUHOvNSSI0W7', 'z99nupDQ7rDhVJklaL4b', 'VLQSn424TY4bXLePMsmq', 'tB4gAeIzdG8R0G7KMaWG', 'InIoEifVrF6Bw5pLik42', 'KxU5yW3KLtZtvk3rW6CD')])
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=40 cap=40] &&& <ByteString@3016fd5e size=40 contents="DELETE FROM usertable where YCSB_KEY=41;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=41 cap=41] &&& <ByteString@6c45ee6e size=41 contents="DELETE FROM usertable WHERE YCSB_KEY=751;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@1338fb5 size=43 contents="SELECT * FROM usertable where YCSB_KEY=419;">
+
+ pt... Kafka Consumer Record in braces:(c2-36 0 DELETE 1)
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=366 cap=366] &&& <ByteString@61f05988 size=366 contents="INSERT INTO usertable (ycsb_key, FIELD10, FIELD...">
+
+ pt... Kafka Consumer Record in braces:(c2-37 0 DELETE 1)
+
+
+ pt... Kafka Consumer Record in braces:(c2-38 0 DELETE 1)
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=41 cap=41] &&& <ByteString@67c2e933 size=41 contents="DELETE FROM usertable WHERE YCSB_KEY=419;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@178213b size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=549;">
+
+ pt... Kafka Consumer Record in braces:(c2-39 0 SELECT 1 [(419, 'MfItaZb2oBnDwBJMjbgQ', 'YDpLdGgx8Nx5YKWNr5fS', 'pJFOENrxNr0UshkF3rye', 'kB39IABe0uZIc9pXkU81', '06t0gI1LlIZmkcydq1xY', '8Pa7NBwN1FinP0C13dn9', 'cOYo7z3zPMTp13gTbYMO', 'XxFGIDwqVbnNiAN4Rnfu', 'QFkNR58deERLHjDcCynN', 'Rmo1BA17qzWjuSmXaqyt')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-40 0 INSERT 0 1)
+
+
+ pt... Kafka Consumer Record in braces:(c2-41 0 DELETE 1)
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@2e8e8225 size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=658;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@2807bdeb size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=400;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=366 cap=366] &&& <ByteString@2c5529ab size=366 contents="INSERT INTO usertable (ycsb_key, FIELD10, FIELD...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=42 cap=42] &&& <ByteString@2c532cd8 size=42 contents="SELECT * FROM usertable WHERE YCSB_KEY=15;">
+
+ pt... Kafka Consumer Record in braces:(c2-42 0 SELECT 1 [(549, 'rDbzevsBZ1MESvfTB0PA', 'IXGAChciIfuYD6ehJaAi', 'jYR3f0J1L7TlnEjxiYC0', '5gP86xLmQKtA0MqP5ihm', 'Mo73cW3f1tB88Zw3Ds6S', 'NXUMgn87nMVAByXLHaCz', 'gfkRXWPOXYdxj6uJxck0', 'QjtaQMpzFeTCt4x2s8yT', '7HDVenHXKMJVM0doaGtf', 'ipxjUE4jHqaMcYAOe3OY')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-43 0 SELECT 1 [(658, '7magKRjdJAvWK24LrmHq', '0oGOpc3X8fK56abfDQsC', 'dqtTHQXB6LsPVoZW3G5h', '7DNmRVFPxT3XeaiJu2ld', '4ybTg20CRuor4nraO6eh', 'QlBe1bVqGLsBvKWxtcPl', '2ZzMURhBD41BlBZWzPOA', 'XqugP4yLrz2fClAjiAmu', 'icTDdXnrl8lix0tA1iDf', 'Rm7TRp2HruKiNJaWuuzq')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-44 0 SELECT 1 [(400, 'vAz9hAtgfbtc6vK3GGbX', '3wVsS8qFO2TQP6YnbvjM', 'YtQyeg645JUbaXJYpDrj', 'IPtkjyLYgD8KXNyBWm22', 'SLhY0ViuZWDPAjYoQQQz', 'RNqyruhi7XN3dPMFvlln', 'YOt4dvcGeiaQB5INwR2H', 'f1PTe49QTMsZMsAGljjj', 'CJevwJ96HVXlK4boC57b', 'aTBvKdfEm6rS3tH7YL1g')])
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=44 cap=44] &&& <ByteString@3700ec9c size=44 contents="SELECT * FROM usertable WHERE YCSB_KEY=1404;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=41 cap=41] &&& <ByteString@31000e60 size=41 contents="DELETE FROM usertable where YCSB_KEY=291;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=367 cap=367] &&& <ByteString@54c62d71 size=367 contents="INSERT INTO usertable (ycsb_key, FIELD10, FIELD...">
+
+ pt... Kafka Consumer Record in braces:(c2-45 0 INSERT 0 1)
+
+
+ pt... Kafka Consumer Record in braces:(c2-46 0 SELECT 1 [(15, '2QnwWsddRuYhY9DkMhqU', 'x6656t4KeWEOyFG16cNh', 'j6gDJCX599XGcyLcZk7a', 'OYDXpqoBB9D623RMiCDg', 'AOQlr95RzpyBiuG4pooR', 'ZZUk8vTGBj20IlU1fkt7', 'Q2KZb2oYrRY4Y8FCI82D', 'faD2sDhwNue2rTZ2cL6S', '7aaMkthgNiW6hmH1GfbK', 'POQn8zBEl2E8r6MJaqOw')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-47 0 SELECT 1 [(1404, 'X3PiXz1XjCtzYinSr7C4', '0KsO8IG3uTAakrS4ntfQ', 'HHOsP5eWBTgLlgtLhEZj', '6JjgwvdToUstQwwAaPFm', '3yXumVaL8rQuy9EHr731', 'dp0sU87Fo305KfCD51VZ', 'MspAnIFqCGu9ZTaGArEz', 'RUOFUgRMLaIq66NKDNXz', 'viHOb1IOTtmB5bulvL0V', 'kmddM1KHWW9NVKw2Dzxz')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-48 0 DELETE 1)
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=44 cap=44] &&& <ByteString@2d1dee39 size=44 contents="SELECT * FROM usertable WHERE YCSB_KEY=1099;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@6ff65192 size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=838;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=41 cap=41] &&& <ByteString@57ea113a size=41 contents="DELETE FROM usertable WHERE YCSB_KEY=859;">
+
+ pt... Kafka Consumer Record in braces:(c2-49 0 INSERT 0 1)
+
+
+ pt... Kafka Consumer Record in braces:(c2-50 0 SELECT 1 [(1099, 'o6eXZupUtVr1vxGij8Gn', 'r349bcnAF1P9mKodFWsg', 'Ews5uuW5nXX3IHbyatJV', '4qG1yHIDmWSx2YMusrdy', 'IlzjZKt6qNA4omzqFAqi', '3cJ8hzVPdKrZNSzCDi6T', 'GKkkcD8QYhcUxOJbE7EW', 'YXwHeemh3Rh7fnMcT1S0', 'zFMB7c0sn0AEJBw8X6Q1', 'Z9lJoX6hLf8wJ9RwUacX')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-51 0 SELECT 1 [(838, 'YwxtTWAHiqkOJNCihsBi', '68hkO95VmWsHWqwEyvWD', 'ertD1y5XruMYqIVAbN4p', 'x72FhUdKhULL7PFl8jMg', '10kTAB7ZfkrMMMwectK9', '4z3KiFW7OK4bLco9jXcu', 'aC29VqWNockytVzCITZJ', 'wCuelaxKgrZqgDveTGHy', 'esmVd3TOseRzfXZk0Fdr', 'Gklz3kbbmkonscUr6Y8W')])
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=367 cap=367] &&& <ByteString@2b0f373b size=367 contents="INSERT INTO usertable (ycsb_key, FIELD10, FIELD...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=267 cap=267] &&& <ByteString@7216fb24 size=267 contents="INSERT INTO usertable VALUES (12002,\'51OAI4dGn0...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=41 cap=41] &&& <ByteString@35a9782c size=41 contents="DELETE FROM usertable WHERE YCSB_KEY=497;">
+
+ pt... Kafka Consumer Record in braces:(c2-52 0 DELETE 1)
+
+
+ pt... Kafka Consumer Record in braces:(c2-53 0 INSERT 0 1)
+
+
+ pt... Kafka Consumer Record in braces:(c2-54 0 INSERT 0 1)
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@732f29af size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=565;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@299321e2 size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=655;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@158a3b2e size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=429;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=44 cap=44] &&& <ByteString@6b00f608 size=44 contents="SELECT * FROM usertable WHERE YCSB_KEY=1539;">
+
+ pt... Kafka Consumer Record in braces:(c2-55 0 DELETE 1)
+
+
+ pt... Kafka Consumer Record in braces:(c2-56 0 SELECT 1 [(565, 'BlKuxloGsR5vnHpd2amN', 'XQi4YZKDxD5DGw7D4jWX', 'IptHuuLPxnPQQdHnAsdJ', '1IF3Ty9lbuztGGHfSDsh', '7uwWrBT2gnjnkr1pSg9H', 'YKJeK7OJ95W9K1pBwKAk', 'M1wyNhLCxqBpIC5mTWdI', 'LnvfyI62NYr9xijFxs6w', 'kaJBnznNXbbVPfPs0bLB', '8C6OJLe7mmwhU3BdwI5J')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-57 0 SELECT 1 [(655, 'H3ymyVGcxDCywARYf1r6', '64AU1u1iDbwRRwhkL5la', 'YF5iixEJrMf92CFASUEV', '2OiVKsZ1Q2UF0AxgmoWK', 'W3AmxBFzITFFvz4nlu2s', 'Jk4LwoAlZfwsirGd2QYP', 'Xs5ddRt0jV2gRoY1gZXm', 'cw4yrZjqoxRtWVCoMS3S', 'hUfBc9n8zIuUWPhok4aX', 'yCWpRkgpg01Xcvy4EOa8')])
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@1d131e1b size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=631;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@4fce136b size=43 contents="SELECT * FROM usertable where YCSB_KEY=851;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=41 cap=41] &&& <ByteString@260e86a1 size=41 contents="DELETE FROM usertable WHERE YCSB_KEY=851;">
+
+ pt... Kafka Consumer Record in braces:(c2-58 0 SELECT 1 [(429, 'Zco96Doc8Z3qxrwW8iGu', 'bwnGGoxKOCJs9InNJrIB', 'JwzIbUGU4Gvr4jIayd2y', 'NdTFuyhzucoIYUfQ3pXP', '7hLEJv5gAZJce8AYiNz7', 'IsfP78icN2mMfZDeZ8I4', 'GiHuvTpP2RAT5fmBDClW', 'WbOOHyTrhDVKOdralrCh', 'r8Ii5Mo91t6Pa0VyIOK8', 'KfVyGSOmxkEFNtvcwRQ2')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-59 0 SELECT 1 [(1539, 'iWpVmIuWma3XY72WFyw3', 'BRG9k4bccxA7yWfG5dmT', '6eiUnkiQuaroSuX78RqB', 'JOpVFTuXsfJmOGUqcLQM', 'np7peCACuutL7M65vV0M', 'gZwCqpyWMeUfJvXb0a7b', 'PKAGRXFhicARl6i3ukNm', 'vIQNRtQO55osvwGgAcBC', '21x130wQ2o5rBuk6Lw7g', '6Ard2BWzNAcGgpopggu7')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-60 0 SELECT 1 [(631, 'VZNGy9bqJ9FJpGCaydqV', 'snvYCygMCz7FyisWF0EV', 'pMV5J28ohXRN1PBS7wp1', '4IcNLBeJxX5tcRL2yWCe', 'c8xKpytjwGLtzpW1Fkwr', 'io2C3bzjOQrWuOlecvoo', 'n295lNmtcInAfMI1kY2S', 'ovepr3y1Ik1foztVlNAu', 'NYLAPJK6ggh8ym16Jvi9', 'jR4gkCgWWE7yyNnXympv')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-61 0 SELECT 1 [(851, 'qq1m1VLAGVcXvRpgygL0', '2R1Ml54fF8cCmyzZfWwl', 'X2Oyjv0L0nf2c0x4Ghtv', 'RWX3vG8lGEfkp8L6zboo', 'u548yVXsYxeShYWfQixZ', '4PswqJRs43q6bktn5435', 'dhtO0rZGoGSFE4Z1JSlg', 'GYbz4rwUXWFNBiLmou6R', 'sxWBgpW9pcwwkgZD6wzx', 'VKUDvcbrJ8Jn3uyjDuSk')])
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=367 cap=367] &&& <ByteString@61e94def size=367 contents="INSERT INTO usertable (ycsb_key, FIELD10, FIELD...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@70ab2d48 size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=574;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=40 cap=40] &&& <ByteString@3a393455 size=40 contents="DELETE FROM usertable WHERE YCSB_KEY=48;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=367 cap=367] &&& <ByteString@3a6f2de3 size=367 contents="INSERT INTO usertable (ycsb_key, FIELD10, FIELD...">
+
+ pt... Kafka Consumer Record in braces:(c2-62 0 DELETE 1)
+
+
+ pt... Kafka Consumer Record in braces:(c2-63 0 INSERT 0 1)
+
+
+ pt... Kafka Consumer Record in braces:(c2-64 0 SELECT 1 [(574, 'xVwcbn7AYAwXPjDzZ2lr', 'GNV8eb1cFmS0q5DTBIl6', 'ljidmEA1dL7BdqjR7gGp', 'EXBtEHx9G9lfaOm24uOM', '1tNblwGZGg9wLxRqhmee', 'NTunroZaxVQh0R1ewIxH', 'qPGHJF6AkWiRQdDoZSJ8', 'LUdxThcEVL60iAj5kxBP', 'x0UckDQe4iIenhQMKhU5', 'qIjBfpvwpg5CFll1TXzg')])
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@4b2a01d4 size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=766;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=41 cap=41] &&& <ByteString@753432a2 size=41 contents="DELETE FROM usertable WHERE YCSB_KEY=368;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@44e3a2b2 size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=774;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@1d2bd371 size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=602;">
+
+ pt... Kafka Consumer Record in braces:(c2-65 0 DELETE 1)
+
+
+ pt... Kafka Consumer Record in braces:(c2-66 0 INSERT 0 1)
+
+
+ pt... Kafka Consumer Record in braces:(c2-67 0 SELECT 1 [(766, 'YwxtTWAHiqkOJNCihsBi', '68hkO95VmWsHWqwEyvWD', 'ertD1y5XruMYqIVAbN4p', 'x72FhUdKhULL7PFl8jMg', '10kTAB7ZfkrMMMwectK9', '4z3KiFW7OK4bLco9jXcu', 'aC29VqWNockytVzCITZJ', 'wCuelaxKgrZqgDveTGHy', 'esmVd3TOseRzfXZk0Fdr', 'Gklz3kbbmkonscUr6Y8W')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-68 0 DELETE 1)
+
+
+ pt... Kafka Consumer Record in braces:(c2-69 0 SELECT 1 [(774, 'k14ecdyVJf4z44QBw9tM', 'Fnjjg4kbylCnwrsb6sJb', 'veCjlNsjkmBS2xx2PQLq', 'SoUUdFJPOd9zzVWvGQ0g', 's0gNa5LQ7mPzchfQHUZW', 'jjY3DJRmerWYk38gYYnX', '05saBMWSoNpgBssNGIIr', 'IUneIabbanxugCmS2R5Q', 'aeLb1j21PvSyxP3Mkg8A', 'wu9AqxDrHjdhbE5HfoG8')])
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@18bc345 size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=740;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@3724af13 size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=966;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=367 cap=367] &&& <ByteString@340da44c size=367 contents="INSERT INTO usertable (ycsb_key, FIELD10, FIELD...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@2320fa6f size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=324;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@53f0a4cb size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=136;">
+
+ pt... Kafka Consumer Record in braces:(c2-70 0 SELECT 1 [(602, 'aSmiQhzCoNTe0IWlF7SM', '24eUwRuMhUFn4uLntECw', 'J366TDpnm7OtQSttu6GZ', 'kx0zYNjgipj4SdXAandh', 'xwqBYxxsi50eyeztfMdY', '25xKdSanMH5hdnNDhRVb', 'gBZiFqoxzDmpH8X4PRYn', 'atuzI8fISDBVnR9jxEay', 'lF2Hn5RpuAU7kJIWDbGc', 't0r19fY2IZfi3uDE6drY')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-71 0 SELECT 1 [(740, 'aM9FilSzZ90vzPOOtXEk', '5hXIWPNm3wdIIX4ksLlY', 'D96zCESwBeOWVsxGwFhO', 'Na9iwFbJ8NehEwJV36BU', 'gYAun56cMH0eGfoQCYVt', 'MbmdrzVK3wcu4k9Re1TN', 'HbYRGQVgzoDbo6cQ8jQv', 'VysBIm5mHqDVDc9lQQvF', '8y2sJfDSWMXYj8x1s74H', 'ceIWlF2by3yioR9Me9eg')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-72 0 SELECT 1 [(966, 'YwxtTWAHiqkOJNCihsBi', '68hkO95VmWsHWqwEyvWD', 'ertD1y5XruMYqIVAbN4p', 'x72FhUdKhULL7PFl8jMg', '10kTAB7ZfkrMMMwectK9', '4z3KiFW7OK4bLco9jXcu', 'aC29VqWNockytVzCITZJ', 'wCuelaxKgrZqgDveTGHy', 'esmVd3TOseRzfXZk0Fdr', 'Gklz3kbbmkonscUr6Y8W')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-73 0 INSERT 0 1)
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@616fe72b size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=416;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=366 cap=366] &&& <ByteString@293a5f75 size=366 contents="INSERT INTO usertable (ycsb_key, FIELD10, FIELD...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=41 cap=41] &&& <ByteString@56e8b606 size=41 contents="DELETE FROM usertable WHERE YCSB_KEY=343;">
+
+ pt... Kafka Consumer Record in braces:(c2-74 0 SELECT 1 [(324, 'roohS5JfnUqhd1gNKI1m', 'QnVfH4GdXjQ9ErtUfMBe', 'js9TMlut5EG9bqpiFelr', 'j2HT45i5fPgpfS9394xe', 'g8Kk7Ck5Uv8ThBZi2UKk', '9uzoj2qNxdo7qU9BaJi2', '8hArAUSlRThzMn8o8Hr4', 'WgPvjAUjjBwwkBbmothN', 'QBU43Da3aNanGB6r9erS', 'E8j7iB0HI74y1YH4NOge')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-75 0 SELECT 1 [(136, 'HjNKDxgcRRiVrGDOFGEq', 'kd2NzgolBR3uPHPl0h0g', 'rGdvCR9a1iLQojgMFcRE', 'jWVpTaIxO7Q8xaoHdmB5', '4BiXNuVOdGGekgEIhTvJ', 'Op2ufFCWUKHQZPuSfD4Y', 'hueSNiOlyb0t0UyHPbkF', 'gwHYmx4gL6IsigMhBcUj', 'dzsRin7Z9aruiXhtIITH', 'my3mXQLyIKoEuV2EafvD')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-76 0 SELECT 1 [(416, 'FgMxgwVuCOhjtLAGJOIK', 'Ha9CUtr3yfkSbVm29wvn', 'bTetTEgnIVRshBcttYVc', 'RXguh8VijWiNtT6WW7bO', 'rYDW2PPCt0bWUYJwsicB', '06mSEyFx8JNikNhDoSoy', 'EkZcfaZfras1M7xR1GSQ', 'e8rMhEIV7auTpLcb8J4x', 'hf3slshMMh0k0DerM1FL', 'zHE4XhQVTtnN8gAV1e1A')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-77 0 INSERT 0 1)
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=367 cap=367] &&& <ByteString@53142455 size=367 contents="INSERT INTO usertable (ycsb_key, FIELD10, FIELD...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=41 cap=41] &&& <ByteString@60975100 size=41 contents="DELETE FROM usertable WHERE YCSB_KEY=993;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@61c9c3fd size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=409;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=42 cap=42] &&& <ByteString@2c7b5824 size=42 contents="SELECT * FROM usertable WHERE YCSB_KEY=67;">
+
+ pt... Kafka Consumer Record in braces:(c2-78 0 DELETE 1)
+
+
+ pt... Kafka Consumer Record in braces:(c2-79 0 INSERT 0 1)
+
+
+ pt... Kafka Consumer Record in braces:(c2-80 0 DELETE 1)
+
+
+ pt... Kafka Consumer Record in braces:(c2-81 0 SELECT 1 [(409, 'skn8M18lQM9oc7rolm5w', '86USzQ3EbEpmatRb0q8B', '4comhmcTsneO39lyrm1g', 'un0GG4AWnwwLQhUZ2Qhw', 'TuArCcbxxbLihD5PurCR', '55vuiMpI4JHOGFZW51Wb', 'uoCUQOJliAM0momlZCWI', 'T8thLA9tebS0hQCQ0SyG', 'VDquq2mXPxjpIEy6l0Jh', 'RLtFIRJyTdbq0tOtrqbv')])
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@8c11eee size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=855;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=41 cap=41] &&& <ByteString@5cbe877d size=41 contents="DELETE FROM usertable where YCSB_KEY=763;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=41 cap=41] &&& <ByteString@708400f6 size=41 contents="DELETE FROM usertable WHERE YCSB_KEY=975;">
+
+ pt... Kafka Consumer Record in braces:(c2-82 0 SELECT 1 [(67, 'OEzL4azQNppWqWpl98Gq', 'mKLAGbWZamwgppjBab3R', 'ignqMwyxVhFAcv0Jqjti', 'RTiDpvBRfBfLF254EIK1', 'wHB4se7fusy0zGyGPdCH', 'ShT9Lq9ah9grsf8N9GX3', 'zhpCgex6r8iExNits4o3', 'lyP7E1V527iGsIePfJoX', 'bzIrNe5MzOmO5EsRYrtR', '3jXE371aA1sYJ6p5U3v7')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-83 0 SELECT 1 [(855, 'YwxtTWAHiqkOJNCihsBi', '68hkO95VmWsHWqwEyvWD', 'ertD1y5XruMYqIVAbN4p', 'x72FhUdKhULL7PFl8jMg', '10kTAB7ZfkrMMMwectK9', '4z3KiFW7OK4bLco9jXcu', 'aC29VqWNockytVzCITZJ', 'wCuelaxKgrZqgDveTGHy', 'esmVd3TOseRzfXZk0Fdr', 'Gklz3kbbmkonscUr6Y8W')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-84 0 DELETE 1)
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=267 cap=267] &&& <ByteString@4bff64c2 size=267 contents="INSERT INTO usertable VALUES (12003,\'rt8DejuOkV...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@c2db68f size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=686;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@61ce23ac size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=123;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=367 cap=367] &&& <ByteString@6f2cfcc2 size=367 contents="INSERT INTO usertable (ycsb_key, FIELD10, FIELD...">
+
+ pt... Kafka Consumer Record in braces:(c2-85 0 DELETE 1)
+
+
+ pt... Kafka Consumer Record in braces:(c2-86 0 INSERT 0 1)
+
+
+ pt... Kafka Consumer Record in braces:(c2-87 0 SELECT 1 [(686, 'g6rRGMOpYE6TBYNvNdt5', 'Q10HGBbFZW5SXkj2nf2n', '7wi6K9RHBKihlkAJzc3w', 'CVCDAAq1zkEBu7GUhv25', 'oQZJttiZOi1p9w1s08Gf', 'Rvmgrbg0zio22PRkcOZ9', 'c1aQZh3yyIeAVCvNDH86', 'wytzigKtbuL6ylu2WaUR', 'wmOpnb2SlowXRnpjgWzi', '2QLy8kfSWOkWhCnz5Zyo')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-88 0 SELECT 1 [(123, 'tVTmokFeqaits7gt9DtX', 'QDmPK2LzJCFzJVbGloA1', '8qRuDyZxQjDkMnOX5OyO', 'goKD3DrQuawba5mhtjim', 'aVGr35hYycDzhpvZSnIO', 'IAJZrgvskU3BzRUVvlvz', '3YtETl3rh2nxLjrkbMZ3', 'VviMCGqLWPZDCKBEYLhq', '91nmQrwFvxWXwET5lJDR', 'Ud4g2sOuDYpF1skhk6nR')])
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@ccb4b1b size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=296;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@2a5b3fee size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=603;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=367 cap=367] &&& <ByteString@52d645b1 size=367 contents="INSERT INTO usertable (ycsb_key, FIELD10, FIELD...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=42 cap=42] &&& <ByteString@710b18a6 size=42 contents="SELECT * FROM usertable WHERE YCSB_KEY=33;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@c055c54 size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=891;">
+
+ pt... Kafka Consumer Record in braces:(c2-89 0 INSERT 0 1)
+
+
+ pt... Kafka Consumer Record in braces:(c2-90 0 SELECT 1 [(296, 'nuysA71tONFW0pAPaT7u', 'bwR9ZYewu40MbqfCq8iD', 'RmsxXxL6HU4rmN4S1Zve', 'kzmJNuWScXL29KZilb1Y', 'Kx8g84tZibxLEQS5UYbd', 'MGA3XMKmCBNYKeCXgjsi', '6jdEI8gX0rV9wZsdOHEO', 'JH0vWDDnFGhYbMWdITw7', 'Xnm6anTcfp4oPpCeTrSO', 'x0uqNa0JFhmvTcoIdzRh')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-91 0 SELECT 1 [(603, 'QdspTp1IbvlsoLhrd4BI', 'bHFYyjYZug2tlOIuPUru', '487dt2mLKelHKbeIV0tq', 'Bti04CYf6Okx4jkzIMj0', 'boaJP6fma3dJykEXWV1x', 'UeZFYJzYwrbxTi3rGtIA', 'BWz33W0zoMLQFth4H5J7', 'VzZ1QFwjxsn37WyMNN7m', 'jfxIdKc26VIeyWJjnOlu', 'NhoM4inCciDq2Io4dH8K')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-92 0 INSERT 0 1)
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@73173f63 size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=807;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=41 cap=41] &&& <ByteString@7e276594 size=41 contents="DELETE FROM usertable WHERE YCSB_KEY=194;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=41 cap=41] &&& <ByteString@4233e892 size=41 contents="DELETE FROM usertable WHERE YCSB_KEY=895;">
+
+ pt... Kafka Consumer Record in braces:(c2-93 0 SELECT 1 [(33, '6QqvTaTEP3FgBmbYyOvw', '3JxxLMoMr1rMl3V6Ua6A', 'Nk65QNejXqHnQtEERIej', 'W55x20vPfQ4AePGFKFWR', '7IjFq4dVZhNdg0hk42gw', 'Uu5jrhmg1KxH3lDWTFKn', '0bTDUWkBWDGtxFMxHlIn', 'jXr4TrJQCDyocv1d4u0v', 'Euc6MIYIxQtbZXrWpJNH', 'SE3h6YK7F3yMHhQNhftu')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-94 0 SELECT 1 [(891, 'dUlZNLcD44yxFFzsaGGJ', 'E2K5GECVJFc4MDPoHXl9', 'GbpQqT0NZ7UsnvN241nR', 'nlT6hiC75OWYEHG5nAYh', 'UOEKGBEgP9LRmQS0VIrQ', 's2tMOWTnzyUsWeTec2Ly', 'te2XsO4ZszvopcZBDMDh', 'TCqFlPfw4AXmnPcXKMj6', 'q0pXyoFXSaISycgy24Yv', 'xjwXZCd7lRqtDQpJ2Uch')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-95 0 SELECT 1 [(807, 'umqYLaOXyP33XegYqFWe', 'turQ1UJWZr3LR6Z2U7Dd', 'wCaO1t0SQaERkq9l5QvY', 'fhD4nGYiKmnbntLAzOZM', '4vorUXAzJTlXzjGwaGFS', 'LZVh2ysEDB1xypldADuY', 'QsYzl48zeTjpPU7gKczD', 'AiRI6DmzbLfiRYkOzMDf', 'Oe2xJu2vkSmzXHkJmnUf', 'BMs6DckhsfrXaPwxeZ2w')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-96 0 DELETE 1)
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=367 cap=367] &&& <ByteString@58ffcbd7 size=367 contents="INSERT INTO usertable (ycsb_key, FIELD10, FIELD...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=44 cap=44] &&& <ByteString@3c9bfddc size=44 contents="SELECT * FROM usertable WHERE YCSB_KEY=1170;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@4c5474f5 size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=881;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@3bd418e4 size=43 contents="SELECT * FROM usertable where YCSB_KEY=897;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=41 cap=41] &&& <ByteString@2e61d218 size=41 contents="DELETE FROM usertable WHERE YCSB_KEY=897;">
+
+ pt... Kafka Consumer Record in braces:(c2-97 0 DELETE 1)
+
+
+ pt... Kafka Consumer Record in braces:(c2-98 0 INSERT 0 1)
+
+
+ pt... Kafka Consumer Record in braces:(c2-99 0 SELECT 1 [(1170, 'j8E0AkSR9RHyaXhUiucK', 'f5THj3q6AZSSH71HBl4t', 'tLTrgsofAQ6Sx0aspiFj', 'yyQ1FmpfzhmgoDH4SgMH', 'CK5liqSA5iTtCFK773K6', 'eOSAi1MYkKawgQSF0F2k', '0grkEDisLV6HNkE402Q8', 'WnExaRyYTYAvbqi3Ii9l', '9Vyegn2mX9KyVTswzJEW', '4PXVfjOcz7ZEtFwdwcEn')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-100 0 SELECT 1 [(881, 'SUETgGPJjxqcUc6Q34zC', '1mpxfz5VEkx7Q5WjcORg', 'J2DfWnljG0PbcvdFLXLB', '9HXOzNYxo5qqZY2Jy1Lk', 'SkEXGhfvVVTwxn2tu9tj', 'speKPMoaa58kTcN9FzHB', 'Dg4cKNvVrRqN5EhC2BkL', 'Fir1bAALCAgsmHnnu4us', '9ZEs8ZY50ypag8rC1sXG', 'InAaipoe5AHlIZ2EufQr')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-101 0 SELECT 1 [(897, 'ajcj5pWPeNonuqpwOO9U', 'uROj16zxPZM4jTehyVjm', 'NK7CF7OgM2T8RSGwW6kc', 'RFPzf9HTmoSnhk7sk4uQ', 'DQMTmxX5hvrEzv5HLZSz', 'AXgKcGculKAqgAl13u17', 'UsGfdmBVXw406R0T2TR2', 'a8bpz6qpS5mbDDVCbKs0', 'EcEXHn0wOIO9FZRFGMpj', 'xkIdx3SDEnGFzB5mDJfT')])
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@e84a8e1 size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=739;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=41 cap=41] &&& <ByteString@7d42c224 size=41 contents="DELETE FROM usertable where YCSB_KEY=815;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=367 cap=367] &&& <ByteString@35390ee3 size=367 contents="INSERT INTO usertable (ycsb_key, FIELD10, FIELD...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@5ee2b6f9 size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=884;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=367 cap=367] &&& <ByteString@58fb7731 size=367 contents="INSERT INTO usertable (ycsb_key, FIELD10, FIELD...">
+
+ pt... Kafka Consumer Record in braces:(c2-102 0 DELETE 1)
+
+
+ pt... Kafka Consumer Record in braces:(c2-103 0 SELECT 1 [(739, 'l0UmQHB206BYVq5yKMaB', 'dLvZyoVanFb2h2bQPuS6', '8c5BC9dpFICrzQfeE7MD', 'NCNtFqyBkwZx0QMDR1Gz', 'lZfUFnPf8xsFaQDkjmSe', '7RFlbru0F5GEU0EXoSzg', 'dCfGwpdr1YAiv0MTB2fb', 'P1jyNEej2SVZ3auuffAK', 'EcoGHpYXnllYV4ParHPL', 'RkfLvNeSkBFC95haubLo')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-104 0 DELETE 1)
+
+
+ pt... Kafka Consumer Record in braces:(c2-105 0 INSERT 0 1)
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@37ddb69a size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=723;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@4b9df8a size=43 contents="SELECT * FROM usertable where YCSB_KEY=198;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=41 cap=41] &&& <ByteString@6955cb39 size=41 contents="DELETE FROM usertable WHERE YCSB_KEY=198;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@5f7b97da size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=413;">
+
+ pt... Kafka Consumer Record in braces:(c2-106 0 SELECT 1 [(884, '3OLHOssJnNSUzMSkyOEE', 'b7KkNIegSUQhch9M073w', 'CpHnpWHGOUeuYaa1sjCa', 'PFDQSvFLp88EPR4XKfER', 'nV247TGiheRAmD2ROsTp', 'N2OeZLVfmkq9PyOfIthQ', 'BAgxlEGLEdRzRzwYBMkZ', 'LA7qo7bpn7dITgvzqPJK', 'MOa08X6vGlbmB1VIlhRz', 'FEFujxblOnPCqhGJI9Pj')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-107 0 INSERT 0 1)
+
+
+ pt... Kafka Consumer Record in braces:(c2-108 0 SELECT 1 [(723, 'yO1vLqZrqY35SXIwuBh3', 'KFZdZ8BjjiRG6Tj6HYII', 'Jn4wLRn4Ns0XLqNtlW9O', 'bjYZiXkMAM9li8OI4QSR', 'kBSHgZXGz3VdaYqVlXJx', '6rVUbjx7N0MX3gi0piAe', 'i4j8KTO1Rezgz9y97DYP', 'agiMPaeuL2sDesl3sQkj', 'F2Zqf7JeCwxYVNHhlk9T', 'ug8ZAK3ksxrbvKLUvfYA')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-109 0 SELECT 1 [(198, 'dpPYllWFs3wDxXcRxASw', 'VqZmpl3hhP2AxPZaXFn3', '91L3WhWu6Tq5ugzWsqsE', 'm4d3OBsxYHZMeD0GSxyG', 'lhc2i2NOXsmnqUjP6EeS', 'NQmG0NP4u5b3R9gPmoPO', 'Alk2NrxkcfdMS6AqCNJ3', 'xi1aw9LM4iDb1sJN1KGt', 'owEZ9sjl5XNwewx1gTQ2', 'y6SP9nVy1tz3SLxK6yYH')])
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=367 cap=367] &&& <ByteString@3a1dd365 size=367 contents="INSERT INTO usertable (ycsb_key, FIELD10, FIELD...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@315f43d5 size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=411;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@2f05be7f size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=811;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@7ac2e39b size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=129;">
+
+ pt... Kafka Consumer Record in braces:(c2-110 0 DELETE 1)
+
+
+ pt... Kafka Consumer Record in braces:(c2-111 0 SELECT 1 [(413, 'LrTEk7mipprirrDWmcok', 'Ezv1avKN3Bw8uwjU24SR', 'G1tKbeHPPdZHsg74DfDa', '8LcWP0oe36Izl75uod14', '68EPc3xZMD0IJTYbr9F5', '5i2kXlDIKftoOu3VAz2X', 'cZ5FblScvOMtV5GcRzJV', 'JPIWGwg1Pt0rnpZg7rr9', 'EslzDqc8zQU99row4nKW', 'js7YA012rWALhorJ0qjs')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-112 0 INSERT 0 1)
+
+
+ pt... Kafka Consumer Record in braces:(c2-113 0 SELECT 1 [(411, '898q09eREeGG0AqNuGff', 'pUatsRfqjg54g4lyQNF9', 'BtQkzUT3aeOotJ9hX2kt', 'R8FzpIOL5L6TNNpIGaV4', 'bAU2hA5fNxGOohQFSsKZ', 'k9KdKWFzwspN8dNRCPIR', 'NFTKcE8HqQk1Z1a8tHeW', 'Go50XnwZCsDsHpbU8FGK', 'Tl41a5VKujgtYegSplw7', '03xMrOP7cwzXolxMcaIc')])
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=267 cap=267] &&& <ByteString@3f6db3fb size=267 contents="INSERT INTO usertable VALUES (12004,\'SRg4mUoOlA...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@3a0d172f size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=173;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=267 cap=267] &&& <ByteString@2a79d4b1 size=267 contents="INSERT INTO usertable VALUES (12005,\'SdguMjKrpF...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@1755e85b size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=124;">
+
+ pt... Kafka Consumer Record in braces:(c2-114 0 SELECT 1 [(811, 'YwxtTWAHiqkOJNCihsBi', '68hkO95VmWsHWqwEyvWD', 'ertD1y5XruMYqIVAbN4p', 'x72FhUdKhULL7PFl8jMg', '10kTAB7ZfkrMMMwectK9', '4z3KiFW7OK4bLco9jXcu', 'aC29VqWNockytVzCITZJ', 'wCuelaxKgrZqgDveTGHy', 'esmVd3TOseRzfXZk0Fdr', 'Gklz3kbbmkonscUr6Y8W')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-115 0 SELECT 1 [(129, 'sb21zxXFMh8iUjyR2sz8', 'M3fg5o5NEjGZI9yMqU3P', 'Cy2EgAslyqodQb33Bojm', 'g7vUT9ENDW5ZqL9OebcO', 'dS9xJRaNa0enjvqXKFyh', 'Jc5TMcv1jFIEQSAZ2jm8', 'FmriJOBWXJT53kl4sjrc', 'JVFyLvIlIkOmHnB54IJz', 'EaL71eqaybBxuCN4XYDL', 'hOoxHKkzAGfkvz8e9eZp')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-116 0 INSERT 0 1)
+
+
+ pt... Kafka Consumer Record in braces:(c2-117 0 SELECT 1 [(173, 'jt7htX0nY7pJ9qHEfJfx', 'vjS8PS2zpLgjvP9RQk0j', 'xTjAGn8srNjxPP8GGSAc', '6mHXDQG2FXpZ2fC8I6mJ', 'DpPu1Asxdd41H9h3ODc1', 'krFIrmMF7BMQ4vCYssB6', 'GZOQI4UcWAzmwvd9YHJG', 'I46DSz1Xxj0WeYFkhRJg', 'YWYvRycNwKKqrjdtKCuO', 'H1vneIO42kBzRMjCjlDW')])
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=44 cap=44] &&& <ByteString@5b529706 size=44 contents="SELECT * FROM usertable WHERE YCSB_KEY=1198;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@5553d0f5 size=43 contents="SELECT * FROM usertable where YCSB_KEY=135;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=41 cap=41] &&& <ByteString@3f390d63 size=41 contents="DELETE FROM usertable WHERE YCSB_KEY=135;">
+
+ pt... Kafka Consumer Record in braces:(c2-118 0 INSERT 0 1)
+
+
+ pt... Kafka Consumer Record in braces:(c2-119 0 SELECT 1 [(124, '1vmNSmTW6Ao3ciJb9aYP', '54hxoxjDD6NOqJQJSKaV', 'XITlOBL9uyChEO5jQPb2', 'pBTiJKf982KAaAPpn9J5', 'L7b4x5DHaoLAQ8dIsOuS', 'tXfGZeoGn9LzrvXXlwwX', 'Zstmhm6fMNwJocm05lAt', '3xSthnJv5gxFvKYl0VYd', 'SkiCVoIXi7XO9JYGtuRR', 'fyJpuMDUMKPGPQt51SGh')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-120 0 SELECT 1 [(1198, 'gcX5yib0vQaGlKbG3NRI', '9CF0MLYWSi0OjYuufOeO', '6Ov9XJJTIKVOAMn5TiZM', 'AKfPtRZAqwnbv1IZJAug', 'j208PwXRvGGQJRBm6oNJ', 'LQ8FeDA0uN3GC5iHj5JK', 'hQ32rIo9tp3WXOV47CQW', 'hmxS0S3uNftIcq1VZRTX', 'PCsnp0Qk03dsqtWc44Fz', 'B69m5lM3DRycPPBunwbc')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-121 0 SELECT 1 [(135, 'P1oXGksI70bTtfzVlulz', 'VIm6EAJCrQjtSIP5Cpgv', 'o1CWBQYJcBLy83WqFqA7', 'OGoWJcCfv1NMQ8sfIPal', 'cfANcelxOlqXVfF4NBar', 'MBv3yuthNMTwE03FpXYV', 'e1PcSJMjFv7Rd3nYlO1X', 'kqkRKr61AIxppfltZjHm', 'jib6s5cBRU4979tJ5BUY', 'vTjIprdUIo5jNT3j6WJw')])
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=367 cap=367] &&& <ByteString@2374d36a size=367 contents="INSERT INTO usertable (ycsb_key, FIELD10, FIELD...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@47a5b70d size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=896;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@38f116f6 size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=633;">
+
+ pt... Kafka Consumer Record in braces:(c2-122 0 DELETE 1)
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@5c530d1e size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=505;">
+
+ pt... Kafka Consumer Record in braces:(c2-123 0 INSERT 0 1)
+
+
+ pt... Kafka Consumer Record in braces:(c2-124 0 SELECT 1 [(896, 'XDjMmgcD8XyzQPY6VFcL', 'Z9853RDVhI0dSTIE9OMx', 'ztmLLykgxg2F4zIYczrA', 'kQu1QfXtLN5RunWWCNJR', '0t5F85NnbWZlruuBh00h', 'vdM9qIwKu7TutfPQ07tx', 'nMeicdO6bWWTRzwBzQqF', '8TGmmJ1AtLbN5PynO8wJ', 'Vhp8kmuv1xoCgJR8JllU', 'RpBm5OI0Xbqtv9tFcJPQ')])
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@c5ee75e size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=847;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=41 cap=41] &&& <ByteString@70efb718 size=41 contents="DELETE FROM usertable where YCSB_KEY=276;">
+
+ pt... Kafka Consumer Record in braces:(c2-125 0 SELECT 1 [(633, 'YwxtTWAHiqkOJNCihsBi', '68hkO95VmWsHWqwEyvWD', 'ertD1y5XruMYqIVAbN4p', 'x72FhUdKhULL7PFl8jMg', '10kTAB7ZfkrMMMwectK9', '4z3KiFW7OK4bLco9jXcu', 'aC29VqWNockytVzCITZJ', 'wCuelaxKgrZqgDveTGHy', 'esmVd3TOseRzfXZk0Fdr', 'Gklz3kbbmkonscUr6Y8W')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-126 0 SELECT 1 [(505, 'UfxMHCE0e3gSEI3BnHdh', 'hxhDoD3vJFrx0DfTEBS3', 'KZs12WwSeES6JmWbp9Ix', 'lLR0mtrNfTfECGTssgI8', 'RNgfCdehgCbP273FYZZx', 'wiNcPfmNkRL3TYhLipt0', 'DKk7BO6QpRNZgIRwUB59', 'UrVKW6gnl09Amguivp9R', 'ExOzRSzlc1dR85fHqxco', 'CaRvxl4v0x6fvNP9PRra')])
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@4e858e0a size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=807;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=41 cap=41] &&& <ByteString@b7838a9 size=41 contents="DELETE FROM usertable WHERE YCSB_KEY=821;">
+
+ pt... Kafka Consumer Record in braces:(c2-127 0 SELECT 1 [(847, 'CrvSZKCgYwfmHMxrLlef', '3O8GNReSGRYF5z3KdxmV', 'qJz2BywxIxCAMReRLWdk', 'qVD9lBYmq8YHEXzPR6N8', 'D38OFZmz3VBdcERIrHlv', 'lDSuW5GhqV2wOTfXThJ7', 'nGROS7U55IhHGnTJ1Bw0', '1NevxbTErq1z1ipaBMjq', 'tDef0wtvO9kPcPUajD7Z', 'sWXsfTpwds2sQ7RxWQI7')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-128 0 DELETE 1)
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=44 cap=44] &&& <ByteString@1c3146bc size=44 contents="SELECT * FROM usertable WHERE YCSB_KEY=1665;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@f478a81 size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=703;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=367 cap=367] &&& <ByteString@7fe7c640 size=367 contents="INSERT INTO usertable (ycsb_key, FIELD10, FIELD...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=41 cap=41] &&& <ByteString@32c8e539 size=41 contents="DELETE FROM usertable WHERE YCSB_KEY=822;">
+
+ pt... Kafka Consumer Record in braces:(c2-129 0 SELECT 1 [(807, 'umqYLaOXyP33XegYqFWe', 'turQ1UJWZr3LR6Z2U7Dd', 'wCaO1t0SQaERkq9l5QvY', 'fhD4nGYiKmnbntLAzOZM', '4vorUXAzJTlXzjGwaGFS', 'LZVh2ysEDB1xypldADuY', 'QsYzl48zeTjpPU7gKczD', 'AiRI6DmzbLfiRYkOzMDf', 'Oe2xJu2vkSmzXHkJmnUf', 'BMs6DckhsfrXaPwxeZ2w')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-130 0 DELETE 1)
+
+
+ pt... Kafka Consumer Record in braces:(c2-131 0 SELECT 1 [(1665, 'N2z1DkAdMwUSMA9xV0vv', 'DJVy8RkygyUUh9IcSojY', 'eTnL8Ysiyk2uIyl56S0R', 'iqwBfCKgbEuFdtJNwizF', 'wzcJJszU4iPTANOIWmLg', 'VrfW8igpfZKIkJju6zkv', 'u2XSCPLQweaQ86MJou3R', 'A66d0UQ0LC8oSxHH2pkK', 'JNsgB1DLlVH6mybvhDLN', 'zRT9kfoKOKqGdWHewmtR')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-132 0 SELECT 1 [(703, '3mKmmoKFZPORnaVQ5WVj', 'P94kZHTpZzb5SOdnT9lB', 'HO5UCr1jLWW97l2g3hU0', 'npF5A5BzMacCB2OuRfII', 'y1pWjodhZEe8XGj0u9cn', 'Kr7oCgDFJD0SZRCVK8Jc', 'TeEG4EOcs4TLcEVZmZlm', 'r6umhM9TsILDU2ZaPl5d', 'yE2K65CdFzGrgHDtW8S1', 'rkG8lNDxARrUFcuILJBW')])
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@32811494 size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=706;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=42 cap=42] &&& <ByteString@14d14731 size=42 contents="SELECT * FROM usertable WHERE YCSB_KEY=25;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=44 cap=44] &&& <ByteString@42f33b5d size=44 contents="SELECT * FROM usertable WHERE YCSB_KEY=1767;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=43 cap=43] &&& <ByteString@6475472c size=43 contents="SELECT * FROM usertable WHERE YCSB_KEY=848;">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=41 cap=41] &&& <ByteString@7096b474 size=41 contents="SELECT * FROM usertable WHERE YCSB_KEY=7;">
+
+ pt... Kafka Consumer Record in braces:(c2-133 0 INSERT 0 1)
+
+
+ pt... Kafka Consumer Record in braces:(c2-134 0 DELETE 1)
+
+
+ pt... Kafka Consumer Record in braces:(c2-135 0 SELECT 1 [(706, '5riWRgaceQ8IfrqAMS2z', '4i8kom9l5xXzREWhFJ3h', 'rzrLJ6wYPn7MsnDlvgMM', 'ZMzByYFfnBjGoegEDTOm', 'WlrVPsnRQoZdaJRMQ6Va', 'clnP1Xa93dpqZuMcdQ9n', 'Ptsrknpvow1awsfphgny', 'ViAdDPLrU6vUg4PvGnwF', 'YCxfKbQpHNkLUSB84kVW', 'rTtk8N8emyZXZoxpAygG')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-136 0 SELECT 1 [(25, 'nvQxxw8hphP9iuA5VmL1', 'L5jERfirJ0uRIamD1Uha', 'Rv8e6W2Iob0V9SdvN5JI', 'JYyAVwlL4XVRrgSYnkCV', '4r0olokeLOxRdIZU0k07', 'J5FYbw2QPAosBCPpEcMV', 'aoPvzpsveHXel5YbTEO2', '8RNJ1awNhCWEvsWPKmk1', 'NahmROLqSXv2b83JIqjF', 'NrvV58mfnnfQZ6ePWPjs')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-137 0 SELECT 1 [(1767, 'nZAvNknj93NyDUAKbkTa', 'fJE52UG0QcHUr6AjlZEP', 'E6poNwJZONEQQRg60koh', 'KmeQJqJHGHZpikV2B84R', 'cnqtidC9a6TsvczkwNAL', 'UgIVQfhJyK9WcgaTTlI5', '6gd9sLF6bOG50GPmkC8n', '0WcKUGEbL176b5qCtND9', '9NeNACsNnUpW8b8tFaRb', 'skoY90ETGauaoUtKXehV')])
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=44 cap=44] &&& <ByteString@784b990c size=44 contents="SELECT * FROM usertable WHERE YCSB_KEY=1016;">
+
+ txReplies num keys sz= 137
+2026-01-01 16:35:39 DEBUG RaftClient:484 - close client-B6F8E30B7C01
+
+ pt... Kafka Consumer Record in braces:(c2-138 0 SELECT 1 [(848, 'mEqyAkNWO7lsa7Lcozjk', '2MgVc4w4XrmYIvtUL0eX', 'XIchnV38BjGTAl7wP5eo', 'qWiommUSlF7xuLhufNft', 'VXTk4n9A6EFvIOS2r0IR', 'iibPrbo7ur2UG7UvP0fZ', 'g1S1DBixpVvVthj4cllh', 'BchwAOc1ybmy1J7HvPut', 'd3O9jM5LZgPxlPHgzpmJ', 'QEaOq5yIkrwTUtNgsvut')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-139 0 SELECT 1 [(7, 'EsJ8hkgdZDu3m4Dp6rFF', 'zwTTeJVmIvhfYLDjJxc7', '7QXYdi5Uyxh7OygEe1Ua', 'oXsBUIQEyOi84IzdR4G8', 'LJQROzxK07FPz0B1knaT', 'eySKTWGJDQkEwv1UfPaU', 'faIpVZsfn40C6knDjRKs', 'yJZX8EaV7OBPjw3hZHc4', 'W1l1jzGMK6xEo4TKSXOf', 'hqEODOkI6rsSzI1yyYz6')])
+
+
+ pt... Kafka Consumer Record in braces:(c2-140 0 SELECT 1 [(1016, '0cTfkSVENLV2qheh51hL', 'HKoaWj4fHqJZ0scUWxiy', '2c1lkTLtQmvMAOdDGQiS', 'xrXQmyOJryzkZciKTb6U', 'sioBGLra9d8cE0RIorbN', 'K9COoUWFMTYp4Dm8raXk', 'lkl2yhdAkvF0gLhd1qMv', 'ogyLkb72BaW2M6dFiTXl', '1Ho9Gc2QYbC6MDhPdhby', 'LJrvJ46ij8vluk8Wgkr9')])
+
+ Waiting for request 1767265539
+
+ Waiting for request 1767265539
+
+ Waiting for request 1767265539
+
+ Waiting for request 1767265539
+
+ Waiting for request 1767265540
+
+ Waiting for request 1767265540
+
+ Waiting for request 1767265540
+
+ Waiting for request 1767265540
+
+ Waiting for request 1767265540
+
+ Waiting for request 1767265540
+
+ Waiting for request 1767265540
+
+ Waiting for request 1767265540
+
+ Waiting for request 1767265540
+
+ Waiting for request 1767265541
+
+ Waiting for request 1767265541
+
+ Waiting for request 1767265541
+
+ Waiting for request 1767265541
+
+ Waiting for request 1767265541
+
+ Waiting for request 1767265541
+
+ Waiting for request 1767265541
+
+ Waiting for request 1767265541
+
+ Waiting for request 1767265541
+
+ Waiting for request 1767265542
+
+ Waiting for request 1767265542
+
+ Waiting for request 1767265542
+
+ Waiting for request 1767265542
+
+ Waiting for request 1767265542
+
+ Waiting for request 1767265542
+
+ Waiting for request 1767265542
+
+ Waiting for request 1767265542
+
+ Waiting for request 1767265542
+
+ Waiting for request 1767265543
+
+ Waiting for request 1767265543
+
+ Waiting for request 1767265543
+
+ Waiting for request 1767265543
+
+ Waiting for request 1767265543
+
+ Waiting for request 1767265543
+
+ Waiting for request 1767265543
+
+ Waiting for request 1767265543
+
+ Waiting for request 1767265543
+
+ Waiting for request 1767265544
+
+ Waiting for request 1767265544
+
+ Waiting for request 1767265544
+
+ Waiting for request 1767265544
+
+ Waiting for request 1767265544
+
+ Waiting for request 1767265544
+
+ Waiting for request 1767265544
+
+ Waiting for request 1767265544
+
+ Waiting for request 1767265544
+
+ Waiting for request 1767265544
+
+ Waiting for request 1767265545
+
+ Waiting for request 1767265545
+
+ Waiting for request 1767265545
+
+ Waiting for request 1767265545
+
+ Waiting for request 1767265545
+
+ Waiting for request 1767265545
+
+ Waiting for request 1767265545
+
+ Waiting for request 1767265545
+
+ Waiting for request 1767265545
+
+ Waiting for request 1767265546
+
+ Waiting for request 1767265546
+
+ Waiting for request 1767265546
+
+ Waiting for request 1767265546
+
+ Waiting for request 1767265546
+
+ Waiting for request 1767265546
+
+ Waiting for request 1767265546
+
+ Waiting for request 1767265546
+
+ Waiting for request 1767265546
+
+ Waiting for request 1767265547
+
+ Waiting for request 1767265547
+
+ Waiting for request 1767265547
+
+ Waiting for request 1767265547
+
+ Waiting for request 1767265547
+
+ Waiting for request 1767265547
+
+ Waiting for request 1767265547
+
+ Waiting for request 1767265547
+
+ Waiting for request 1767265547
+
+ Waiting for request 1767265548
+
+ Waiting for request 1767265548
+
+ Waiting for request 1767265548
+
+ Waiting for request 1767265548
+
+ Waiting for request 1767265548
+
+ Waiting for request 1767265548
+
+ Waiting for request 1767265548
+
+ Waiting for request 1767265548
+
+ Waiting for request 1767265548
+
+ Waiting for request 1767265549
+
+ Waiting for request 1767265549
+
+ Waiting for request 1767265549
+
+ Waiting for request 1767265549
+
+ Waiting for request 1767265549
+
+ Waiting for request 1767265549
+
+ Waiting for request 1767265549
+
+ Waiting for request 1767265549
+
+ Waiting for request 1767265549
+
+ Waiting for request 1767265550
+
+ Waiting for request 1767265550
+
+ Waiting for request 1767265550
+
+ Waiting for request 1767265550
+
+ Waiting for request 1767265550
+
+ Waiting for request 1767265550
+
+ Waiting for request 1767265550
+
+ Waiting for request 1767265550
+
+ Waiting for request 1767265550
+
+ Waiting for request 1767265551
+
+ Waiting for request 1767265551
+
+ Waiting for request 1767265551
+
+ Waiting for request 1767265551
+
+ Waiting for request 1767265551
+
+ Waiting for request 1767265551
+
+ Waiting for request 1767265551
+
+ Waiting for request 1767265551
+
+ Waiting for request 1767265551
+
+ Waiting for request 1767265551
+
+ Waiting for request 1767265552
+
+ Waiting for request 1767265552
+
+ Waiting for request 1767265552
+
+ Waiting for request 1767265552
+
+ Waiting for request 1767265552
+
+ Waiting for request 1767265552
+
+ Waiting for request 1767265552
+
+ Waiting for request 1767265552
+
+ Waiting for request 1767265552
+
+ Waiting for request 1767265553
+
+ Waiting for request 1767265553
+
+ Waiting for request 1767265553
+
+ Waiting for request 1767265553
+
+ Waiting for request 1767265553
+
+ Waiting for request 1767265553
+
+ Waiting for request 1767265553
+
+ Waiting for request 1767265553
+
+ Waiting for request 1767265553
+
+ Waiting for request 1767265554
+
+ Waiting for request 1767265554
+
+ Waiting for request 1767265554
+
+ Waiting for request 1767265554
+
+ Waiting for request 1767265554
+
+ Waiting for request 1767265554
+
+ Waiting for request 1767265554
+
+ Waiting for request 1767265554
+
+ Waiting for request 1767265554
+
+ Waiting for request 1767265555
+
+ Waiting for request 1767265555
+
+ Waiting for request 1767265555
+
+ Waiting for request 1767265555
+
+ Waiting for request 1767265555
+
+ Waiting for request 1767265555
+
+ Waiting for request 1767265555
+
+ Waiting for request 1767265555
+
+ Waiting for request 1767265555
+
+ Waiting for request 1767265555
+
+ Waiting for request 1767265556
+
+ Waiting for request 1767265556
+
+ Waiting for request 1767265556
+
+ Waiting for request 1767265556
+
+ Waiting for request 1767265556
+
+ Waiting for request 1767265556
+
+ Waiting for request 1767265556
+
+ Waiting for request 1767265556
+
+ Waiting for request 1767265556
+
+ Waiting for request 1767265557
+
+ Waiting for request 1767265557
+
+ Waiting for request 1767265557
+
+ Waiting for request 1767265557
+
+ Waiting for request 1767265557
+
+ req= c2-15 startTime = 1038233811396 endTime= 1038233824356
+ req= c2-16 startTime = 1038233819261 endTime= 1038233839778
+ req= c2-13 startTime = 1038233794284 endTime= 1038233808691
+ req= c2-140 startTime = 1038234295714 endTime= 1038234305603
+ req= c2-14 startTime = 1038233800980 endTime= 1038233824356
+ req= c2-19 startTime = 1038233838183 endTime= 1038233852912
+ req= c2-17 startTime = 1038233826041 endTime= 1038233839778
+ req= c2-18 startTime = 1038233831982 endTime= 1038233852912
+ req= c2-22 startTime = 1038233859415 endTime= 1038233869731
+ req= c2-23 startTime = 1038233865665 endTime= 1038233884340
+ req= c2-20 startTime = 1038233845435 endTime= 1038233869731
+ req= c2-21 startTime = 1038233853067 endTime= 1038233869731
+ req= c2-26 startTime = 1038233882187 endTime= 1038233899732
+ req= c2-27 startTime = 1038233887616 endTime= 1038233899732
+ req= c2-24 startTime = 1038233872063 endTime= 1038233884340
+ req= c2-25 startTime = 1038233877388 endTime= 1038233884340
+ req= c2-28 startTime = 1038233893511 endTime= 1038233911873
+ req= c2-29 startTime = 1038233899872 endTime= 1038233911873
+ req= c2-30 startTime = 1038233905316 endTime= 1038233925233
+ req= c2-7 startTime = 1038233754033 endTime= 1038233766813
+ req= c2-33 startTime = 1038233920775 endTime= 1038233938148
+ req= c2-6 startTime = 1038233746956 endTime= 1038233766813
+ req= c2-34 startTime = 1038233925306 endTime= 1038233938148
+ req= c2-9 startTime = 1038233767140 endTime= 1038233779897
+ req= c2-31 startTime = 1038233911389 endTime= 1038233925233
+ req= c2-8 startTime = 1038233760467 endTime= 1038233779897
+ req= c2-32 startTime = 1038233916254 endTime= 1038233925233
+ req= c2-3 startTime = 1038233724648 endTime= 1038233737647
+ req= c2-2 startTime = 1038233710134 endTime= 1038233737647
+ req= c2-5 startTime = 1038233740445 endTime= 1038233753400
+ req= c2-4 startTime = 1038233732761 endTime= 1038233753400
+ req= c2-1 startTime = 1038233266062 endTime= 1038233725344
+ req= c2-37 startTime = 1038233940497 endTime= 1038233952830
+ req= c2-38 startTime = 1038233945281 endTime= 1038233952830
+ req= c2-35 startTime = 1038233930161 endTime= 1038233938148
+ req= c2-36 startTime = 1038233934915 endTime= 1038233952830
+ req= c2-39 startTime = 1038233949096 endTime= 1038233964946
+ req= c2-40 startTime = 1038233952692 endTime= 1038233964946
+ req= c2-124 startTime = 1038234238783 endTime= 1038234247322
+ req= c2-41 startTime = 1038233956902 endTime= 1038233964946
+ req= c2-123 startTime = 1038234234952 endTime= 1038234247322
+ req= c2-126 startTime = 1038234247247 endTime= 1038234259689
+ req= c2-125 startTime = 1038234242817 endTime= 1038234259689
+ req= c2-44 startTime = 1038233969371 endTime= 1038233977442
+ req= c2-120 startTime = 1038234224818 endTime= 1038234234121
+ req= c2-45 startTime = 1038233972620 endTime= 1038233989117
+ req= c2-42 startTime = 1038233960976 endTime= 1038233977442
+ req= c2-122 startTime = 1038234231529 endTime= 1038234247322
+ req= c2-43 startTime = 1038233965468 endTime= 1038233977442
+ req= c2-121 startTime = 1038234228306 endTime= 1038234234121
+ req= c2-128 startTime = 1038234258581 endTime= 1038234271228
+ req= c2-127 startTime = 1038234252598 endTime= 1038234271228
+ req= c2-129 startTime = 1038234265420 endTime= 1038234282220
+ req= c2-48 startTime = 1038233982623 endTime= 1038233989117
+ req= c2-49 startTime = 1038233985773 endTime= 1038233998881
+ req= c2-46 startTime = 1038233975630 endTime= 1038233989117
+ req= c2-47 startTime = 1038233979203 endTime= 1038233989117
+ req= c2-51 startTime = 1038233993819 endTime= 1038233998881
+ req= c2-135 startTime = 1038234283169 endTime= 1038234293658
+ req= c2-52 startTime = 1038233997168 endTime= 1038234014063
+ req= c2-134 startTime = 1038234280369 endTime= 1038234293658
+ req= c2-137 startTime = 1038234288419 endTime= 1038234293658
+ req= c2-50 startTime = 1038233990099 endTime= 1038233998881
+ req= c2-136 startTime = 1038234285886 endTime= 1038234293658
+ req= c2-55 startTime = 1038234010615 endTime= 1038234028040
+ req= c2-131 startTime = 1038234272856 endTime= 1038234282220
+ req= c2-56 startTime = 1038234015606 endTime= 1038234028040
+ req= c2-130 startTime = 1038234269450 endTime= 1038234282220
+ req= c2-53 startTime = 1038234001569 endTime= 1038234014063
+ req= c2-133 startTime = 1038234277918 endTime= 1038234293658
+ req= c2-54 startTime = 1038234006748 endTime= 1038234014063
+ req= c2-132 startTime = 1038234275538 endTime= 1038234282220
+ req= c2-139 startTime = 1038234293237 endTime= 1038234305603
+ req= c2-138 startTime = 1038234290817 endTime= 1038234305603
+ req= c2-59 startTime = 1038234027838 endTime= 1038234040141
+ req= c2-57 startTime = 1038234020055 endTime= 1038234028040
+ req= c2-58 startTime = 1038234024222 endTime= 1038234040141
+ req= c2-62 startTime = 1038234038049 endTime= 1038234054891
+ req= c2-102 startTime = 1038234170114 endTime= 1038234185917
+ req= c2-63 startTime = 1038234042846 endTime= 1038234054891
+ req= c2-101 startTime = 1038234167502 endTime= 1038234172848
+ req= c2-60 startTime = 1038234031280 endTime= 1038234040141
+ req= c2-104 startTime = 1038234176594 endTime= 1038234185917
+ req= c2-61 startTime = 1038234034496 endTime= 1038234040141
+ req= c2-103 startTime = 1038234173696 endTime= 1038234185917
+ req= c2-66 startTime = 1038234054417 endTime= 1038234067416
+ req= c2-67 startTime = 1038234057414 endTime= 1038234067416
+ req= c2-64 startTime = 1038234046774 endTime= 1038234054891
+ req= c2-100 startTime = 1038234165061 endTime= 1038234171749
+ req= c2-65 startTime = 1038234051045 endTime= 1038234067416
+ req= c2-109 startTime = 1038234190886 endTime= 1038234197558
+ req= c2-106 startTime = 1038234182087 endTime= 1038234197558
+ req= c2-105 startTime = 1038234179358 endTime= 1038234185917
+ req= c2-108 startTime = 1038234187676 endTime= 1038234197558
+ req= c2-107 startTime = 1038234184585 endTime= 1038234197558
+ req= c2-68 startTime = 1038234060171 endTime= 1038234067416
+ req= c2-69 startTime = 1038234062781 endTime= 1038234067416
+ req= c2-73 startTime = 1038234074521 endTime= 1038234080769
+ req= c2-113 startTime = 1038234202681 endTime= 1038234209556
+ req= c2-74 startTime = 1038234077325 endTime= 1038234092500
+ req= c2-112 startTime = 1038234199499 endTime= 1038234209556
+ req= c2-71 startTime = 1038234068220 endTime= 1038234080769
+ req= c2-115 startTime = 1038234208181 endTime= 1038234221477
+ req= c2-72 startTime = 1038234071398 endTime= 1038234080769
+ req= c2-114 startTime = 1038234205394 endTime= 1038234221477
+ req= c2-77 startTime = 1038234086759 endTime= 1038234092500
+ req= c2-78 startTime = 1038234090305 endTime= 1038234105959
+ req= c2-75 startTime = 1038234080090 endTime= 1038234092500
+ req= c2-111 startTime = 1038234196254 endTime= 1038234209556
+ req= c2-76 startTime = 1038234083598 endTime= 1038234092500
+ req= c2-110 startTime = 1038234193675 endTime= 1038234209556
+ req= c2-117 startTime = 1038234214862 endTime= 1038234221477
+ req= c2-70 startTime = 1038234065241 endTime= 1038234080769
+ req= c2-116 startTime = 1038234211804 endTime= 1038234221477
+ req= c2-119 startTime = 1038234221358 endTime= 1038234234121
+ req= c2-118 startTime = 1038234217933 endTime= 1038234234121
+ req= c2-79 startTime = 1038234093860 endTime= 1038234105959
+ req= c2-84 startTime = 1038234112183 endTime= 1038234120313
+ req= c2-85 startTime = 1038234116192 endTime= 1038234133185
+ req= c2-82 startTime = 1038234103853 endTime= 1038234120313
+ req= c2-83 startTime = 1038234108162 endTime= 1038234120313
+ req= c2-88 startTime = 1038234128638 endTime= 1038234133185
+ req= c2-89 startTime = 1038234131161 endTime= 1038234146873
+ req= c2-86 startTime = 1038234121095 endTime= 1038234133185
+ req= c2-87 startTime = 1038234125661 endTime= 1038234133185
+ req= c2-80 startTime = 1038234097088 endTime= 1038234105959
+ req= c2-81 startTime = 1038234100279 endTime= 1038234105959
+ req= c2-95 startTime = 1038234149276 endTime= 1038234158595
+ req= c2-96 startTime = 1038234152434 endTime= 1038234158595
+ req= c2-93 startTime = 1038234143057 endTime= 1038234158595
+ req= c2-94 startTime = 1038234145874 endTime= 1038234158595
+ req= c2-11 startTime = 1038233782387 endTime= 1038233796528
+ req= c2-99 startTime = 1038234162285 endTime= 1038234171749
+ req= c2-12 startTime = 1038233788168 endTime= 1038233808691
+ req= c2-97 startTime = 1038234155518 endTime= 1038234171749
+ req= c2-10 startTime = 1038233775136 endTime= 1038233796528
+ req= c2-98 startTime = 1038234159121 endTime= 1038234171749
+ req= c2-91 startTime = 1038234137407 endTime= 1038234146873
+ req= c2-92 startTime = 1038234140318 endTime= 1038234146873
+ req= c2-90 startTime = 1038234134352 endTime= 1038234146873
+ req= c2-15 endTime = 1038233824356
+ req= c2-16 endTime = 1038233839778
+ req= c2-13 endTime = 1038233808691
+ req= c2-140 endTime = 1038234305603
+ req= c2-14 endTime = 1038233824356
+ req= c2-19 endTime = 1038233852912
+ req= c2-17 endTime = 1038233839778
+ req= c2-18 endTime = 1038233852912
+ req= c2-22 endTime = 1038233869731
+ req= c2-23 endTime = 1038233884340
+ req= c2-20 endTime = 1038233869731
+ req= c2-21 endTime = 1038233869731
+ req= c2-26 endTime = 1038233899732
+ req= c2-27 endTime = 1038233899732
+ req= c2-24 endTime = 1038233884340
+ req= c2-25 endTime = 1038233884340
+ req= c2-28 endTime = 1038233911873
+ req= c2-29 endTime = 1038233911873
+ req= c2-30 endTime = 1038233925233
+ req= c2-7 endTime = 1038233766813
+ req= c2-33 endTime = 1038233938148
+ req= c2-6 endTime = 1038233766813
+ req= c2-34 endTime = 1038233938148
+ req= c2-9 endTime = 1038233779897
+ req= c2-31 endTime = 1038233925233
+ req= c2-8 endTime = 1038233779897
+ req= c2-32 endTime = 1038233925233
+ req= c2-3 endTime = 1038233737647
+ req= c2-2 endTime = 1038233737647
+ req= c2-5 endTime = 1038233753400
+ req= c2-4 endTime = 1038233753400
+ req= c2-1 endTime = 1038233725344
+ req= c2-37 endTime = 1038233952830
+ req= c2-38 endTime = 1038233952830
+ req= c2-35 endTime = 1038233938148
+ req= c2-36 endTime = 1038233952830
+ req= c2-39 endTime = 1038233964946
+ req= c2-40 endTime = 1038233964946
+ req= c2-124 endTime = 1038234247322
+ req= c2-41 endTime = 1038233964946
+ req= c2-123 endTime = 1038234247322
+ req= c2-126 endTime = 1038234259689
+ req= c2-125 endTime = 1038234259689
+ req= c2-44 endTime = 1038233977442
+ req= c2-120 endTime = 1038234234121
+ req= c2-45 endTime = 1038233989117
+ req= c2-42 endTime = 1038233977442
+ req= c2-122 endTime = 1038234247322
+ req= c2-43 endTime = 1038233977442
+ req= c2-121 endTime = 1038234234121
+ req= c2-128 endTime = 1038234271228
+ req= c2-127 endTime = 1038234271228
+ req= c2-129 endTime = 1038234282220
+ req= c2-48 endTime = 1038233989117
+ req= c2-49 endTime = 1038233998881
+ req= c2-46 endTime = 1038233989117
+ req= c2-47 endTime = 1038233989117
+ req= c2-51 endTime = 1038233998881
+ req= c2-135 endTime = 1038234293658
+ req= c2-52 endTime = 1038234014063
+ req= c2-134 endTime = 1038234293658
+ req= c2-137 endTime = 1038234293658
+ req= c2-50 endTime = 1038233998881
+ req= c2-136 endTime = 1038234293658
+ req= c2-55 endTime = 1038234028040
+ req= c2-131 endTime = 1038234282220
+ req= c2-56 endTime = 1038234028040
+ req= c2-130 endTime = 1038234282220
+ req= c2-53 endTime = 1038234014063
+ req= c2-133 endTime = 1038234293658
+ req= c2-54 endTime = 1038234014063
+ req= c2-132 endTime = 1038234282220
+ req= c2-139 endTime = 1038234305603
+ req= c2-138 endTime = 1038234305603
+ req= c2-59 endTime = 1038234040141
+ req= c2-57 endTime = 1038234028040
+ req= c2-58 endTime = 1038234040141
+ req= c2-62 endTime = 1038234054891
+ req= c2-102 endTime = 1038234185917
+ req= c2-63 endTime = 1038234054891
+ req= c2-101 endTime = 1038234172848
+ req= c2-60 endTime = 1038234040141
+ req= c2-104 endTime = 1038234185917
+ req= c2-61 endTime = 1038234040141
+ req= c2-103 endTime = 1038234185917
+ req= c2-66 endTime = 1038234067416
+ req= c2-67 endTime = 1038234067416
+ req= c2-64 endTime = 1038234054891
+ req= c2-100 endTime = 1038234171749
+ req= c2-65 endTime = 1038234067416
+ req= c2-109 endTime = 1038234197558
+ req= c2-106 endTime = 1038234197558
+ req= c2-105 endTime = 1038234185917
+ req= c2-108 endTime = 1038234197558
+ req= c2-107 endTime = 1038234197558
+ req= c2-68 endTime = 1038234067416
+ req= c2-69 endTime = 1038234067416
+ req= c2-73 endTime = 1038234080769
+ req= c2-113 endTime = 1038234209556
+ req= c2-74 endTime = 1038234092500
+ req= c2-112 endTime = 1038234209556
+ req= c2-71 endTime = 1038234080769
+ req= c2-115 endTime = 1038234221477
+ req= c2-72 endTime = 1038234080769
+ req= c2-114 endTime = 1038234221477
+ req= c2-77 endTime = 1038234092500
+ req= c2-78 endTime = 1038234105959
+ req= c2-75 endTime = 1038234092500
+ req= c2-111 endTime = 1038234209556
+ req= c2-76 endTime = 1038234092500
+ req= c2-110 endTime = 1038234209556
+ req= c2-117 endTime = 1038234221477
+ req= c2-70 endTime = 1038234080769
+ req= c2-116 endTime = 1038234221477
+ req= c2-119 endTime = 1038234234121
+ req= c2-118 endTime = 1038234234121
+ req= c2-79 endTime = 1038234105959
+ req= c2-84 endTime = 1038234120313
+ req= c2-85 endTime = 1038234133185
+ req= c2-82 endTime = 1038234120313
+ req= c2-83 endTime = 1038234120313
+ req= c2-88 endTime = 1038234133185
+ req= c2-89 endTime = 1038234146873
+ req= c2-86 endTime = 1038234133185
+ req= c2-87 endTime = 1038234133185
+ req= c2-80 endTime = 1038234105959
+ req= c2-81 endTime = 1038234105959
+ req= c2-95 endTime = 1038234158595
+ req= c2-96 endTime = 1038234158595
+ req= c2-93 endTime = 1038234158595
+ req= c2-94 endTime = 1038234158595
+ req= c2-11 endTime = 1038233796528
+ req= c2-99 endTime = 1038234171749
+ req= c2-12 endTime = 1038233808691
+ req= c2-97 endTime = 1038234171749
+ req= c2-10 endTime = 1038233796528
+ req= c2-98 endTime = 1038234171749
+ req= c2-91 endTime = 1038234146873
+ req= c2-92 endTime = 1038234146873
+ req= c2-90 endTime = 1038234146873
+ req= c2-1 execTime = 459282
+ req= c2-2 execTime = 27513
+ req= c2-3 execTime = 12999
+ req= c2-4 execTime = 20639
+ req= c2-5 execTime = 12955
+ req= c2-6 execTime = 19857
+ req= c2-7 execTime = 12780
+ req= c2-8 execTime = 19430
+ req= c2-9 execTime = 12757
+ req= c2-10 execTime = 21392
+ req= c2-11 execTime = 14141
+ req= c2-12 execTime = 20523
+ req= c2-13 execTime = 14407
+ req= c2-14 execTime = 23376
+ req= c2-15 execTime = 12960
+ req= c2-16 execTime = 20517
+ req= c2-17 execTime = 13737
+ req= c2-18 execTime = 20930
+ req= c2-19 execTime = 14729
+ req= c2-20 execTime = 24296
+ req= c2-21 execTime = 16664
+ req= c2-22 execTime = 10316
+ req= c2-23 execTime = 18675
+ req= c2-24 execTime = 12277
+ req= c2-25 execTime = 6952
+ req= c2-26 execTime = 17545
+ req= c2-27 execTime = 12116
+ req= c2-28 execTime = 18362
+ req= c2-29 execTime = 12001
+ req= c2-30 execTime = 19917
+ req= c2-31 execTime = 13844
+ req= c2-32 execTime = 8979
+ req= c2-33 execTime = 17373
+ req= c2-34 execTime = 12842
+ req= c2-35 execTime = 7987
+ req= c2-36 execTime = 17915
+ req= c2-37 execTime = 12333
+ req= c2-38 execTime = 7549
+ req= c2-39 execTime = 15850
+ req= c2-40 execTime = 12254
+ req= c2-41 execTime = 8044
+ req= c2-42 execTime = 16466
+ req= c2-43 execTime = 11974
+ req= c2-44 execTime = 8071
+ req= c2-45 execTime = 16497
+ req= c2-46 execTime = 13487
+ req= c2-47 execTime = 9914
+ req= c2-48 execTime = 6494
+ req= c2-49 execTime = 13108
+ req= c2-50 execTime = 8782
+ req= c2-51 execTime = 5062
+ req= c2-52 execTime = 16895
+ req= c2-53 execTime = 12494
+ req= c2-54 execTime = 7315
+ req= c2-55 execTime = 17425
+ req= c2-56 execTime = 12434
+ req= c2-57 execTime = 7985
+ req= c2-58 execTime = 15919
+ req= c2-59 execTime = 12303
+ req= c2-60 execTime = 8861
+ req= c2-61 execTime = 5645
+ req= c2-62 execTime = 16842
+ req= c2-63 execTime = 12045
+ req= c2-64 execTime = 8117
+ req= c2-65 execTime = 16371
+ req= c2-66 execTime = 12999
+ req= c2-67 execTime = 10002
+ req= c2-68 execTime = 7245
+ req= c2-69 execTime = 4635
+ req= c2-70 execTime = 15528
+ req= c2-71 execTime = 12549
+ req= c2-72 execTime = 9371
+ req= c2-73 execTime = 6248
+ req= c2-74 execTime = 15175
+ req= c2-75 execTime = 12410
+ req= c2-76 execTime = 8902
+ req= c2-77 execTime = 5741
+ req= c2-78 execTime = 15654
+ req= c2-79 execTime = 12099
+ req= c2-80 execTime = 8871
+ req= c2-81 execTime = 5680
+ req= c2-82 execTime = 16460
+ req= c2-83 execTime = 12151
+ req= c2-84 execTime = 8130
+ req= c2-85 execTime = 16993
+ req= c2-86 execTime = 12090
+ req= c2-87 execTime = 7524
+ req= c2-88 execTime = 4547
+ req= c2-89 execTime = 15712
+ req= c2-90 execTime = 12521
+ req= c2-91 execTime = 9466
+ req= c2-92 execTime = 6555
+ req= c2-93 execTime = 15538
+ req= c2-94 execTime = 12721
+ req= c2-95 execTime = 9319
+ req= c2-96 execTime = 6161
+ req= c2-97 execTime = 16231
+ req= c2-98 execTime = 12628
+ req= c2-99 execTime = 9464
+ req= c2-100 execTime = 6688
+ req= c2-101 execTime = 5346
+ req= c2-102 execTime = 15803
+ req= c2-103 execTime = 12221
+ req= c2-104 execTime = 9323
+ req= c2-105 execTime = 6559
+ req= c2-106 execTime = 15471
+ req= c2-107 execTime = 12973
+ req= c2-108 execTime = 9882
+ req= c2-109 execTime = 6672
+ req= c2-110 execTime = 15881
+ req= c2-111 execTime = 13302
+ req= c2-112 execTime = 10057
+ req= c2-113 execTime = 6875
+ req= c2-114 execTime = 16083
+ req= c2-115 execTime = 13296
+ req= c2-116 execTime = 9673
+ req= c2-117 execTime = 6615
+ req= c2-118 execTime = 16188
+ req= c2-119 execTime = 12763
+ req= c2-120 execTime = 9303
+ req= c2-121 execTime = 5815
+ req= c2-122 execTime = 15793
+ req= c2-123 execTime = 12370
+ req= c2-124 execTime = 8539
+ req= c2-125 execTime = 16872
+ req= c2-126 execTime = 12442
+ req= c2-127 execTime = 18630
+ req= c2-128 execTime = 12647
+ req= c2-129 execTime = 16800
+ req= c2-130 execTime = 12770
+ req= c2-131 execTime = 9364
+ req= c2-132 execTime = 6682
+ req= c2-133 execTime = 15740
+ req= c2-134 execTime = 13289
+ req= c2-135 execTime = 10489
+ req= c2-136 execTime = 7772
+ req= c2-137 execTime = 5239
+ req= c2-138 execTime = 14786
+ req= c2-139 execTime = 12366
+ req= c2-140 execTime = 9889
+Avggggg time taken: 15 microsec; countQ= 140
+Total time taken: 9052630 microsec
+ Waiting for request 1767265557
+
+ Waiting for request 1767265557
+
+ Waiting for request 1767265557
+
+ Waiting for request 1767265557
+
+ Waiting for request 1767265557
+
+ Waiting for request 1767265558
+
+ Waiting for request 1767265558
+

@@ -1,0 +1,504 @@
+Found /home/anant2040/git/ratis/ratis-examples/target/ratis-examples-3.2.0-SNAPSHOT.jar
+Starting Async write now 
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@799f10e1 size=221 contents="ggwX8rWewlbGl4EwBnf1Xb/KW+ReZ/e9r5tDGeysRDihIDi...">
+2026-01-07 17:23:12 INFO  ProducerConfig:370 - ProducerConfig values: 
+	acks = -1
+	auto.include.jmx.reporter = true
+	batch.size = 16384
+	bootstrap.servers = [10.129.148.129:9092]
+	buffer.memory = 33554432
+	client.dns.lookup = use_all_dns_ips
+	client.id = producer-1
+	compression.type = none
+	connections.max.idle.ms = 540000
+	delivery.timeout.ms = 120000
+	enable.idempotence = true
+	enable.metrics.push = true
+	interceptor.classes = []
+	key.serializer = class org.apache.kafka.common.serialization.StringSerializer
+	linger.ms = 0
+	max.block.ms = 60000
+	max.in.flight.requests.per.connection = 5
+	max.request.size = 1048576
+	metadata.max.age.ms = 300000
+	metadata.max.idle.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partitioner.adaptive.partitioning.enable = true
+	partitioner.availability.timeout.ms = 0
+	partitioner.class = null
+	partitioner.ignore.keys = false
+	receive.buffer.bytes = 32768
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retries = 2147483647
+	retry.backoff.max.ms = 1000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	transaction.timeout.ms = 60000
+	transactional.id = null
+	value.serializer = class org.apache.kafka.common.serialization.StringSerializer
+
+2026-01-07 17:23:12 INFO  KafkaMetricsCollector:297 - initializing Kafka metrics collector
+2026-01-07 17:23:12 INFO  KafkaProducer:597 - [Producer clientId=producer-1] Instantiated an idempotent producer.
+2026-01-07 17:23:12 INFO  AppInfoParser:124 - Kafka version: 3.7.0
+2026-01-07 17:23:12 INFO  AppInfoParser:125 - Kafka commitId: 2ae524ed625438c5
+2026-01-07 17:23:12 INFO  AppInfoParser:126 - Kafka startTimeMs: 1767786792562
+2026-01-07 17:23:12 INFO  ConsumerConfig:370 - ConsumerConfig values: 
+	allow.auto.create.topics = true
+	auto.commit.interval.ms = 5000
+	auto.include.jmx.reporter = true
+	auto.offset.reset = latest
+	bootstrap.servers = [10.129.148.129:9092]
+	check.crcs = true
+	client.dns.lookup = use_all_dns_ips
+	client.id = consumer-my-group-1
+	client.rack = 
+	connections.max.idle.ms = 540000
+	default.api.timeout.ms = 60000
+	enable.auto.commit = true
+	enable.metrics.push = true
+	exclude.internal.topics = true
+	fetch.max.bytes = 52428800
+	fetch.max.wait.ms = 500
+	fetch.min.bytes = 1
+	group.id = my-group
+	group.instance.id = null
+	group.protocol = classic
+	group.remote.assignor = null
+	heartbeat.interval.ms = 3000
+	interceptor.classes = []
+	internal.leave.group.on.close = true
+	internal.throw.on.fetch.stable.offset.unsupported = false
+	isolation.level = read_uncommitted
+	key.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+	max.partition.fetch.bytes = 1048576
+	max.poll.interval.ms = 300000
+	max.poll.records = 500
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partition.assignment.strategy = [class org.apache.kafka.clients.consumer.RangeAssignor, class org.apache.kafka.clients.consumer.CooperativeStickyAssignor]
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retry.backoff.max.ms = 1000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	session.timeout.ms = 45000
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	value.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+
+2026-01-07 17:23:12 INFO  KafkaMetricsCollector:297 - initializing Kafka metrics collector
+2026-01-07 17:23:12 INFO  AppInfoParser:124 - Kafka version: 3.7.0
+2026-01-07 17:23:12 INFO  AppInfoParser:125 - Kafka commitId: 2ae524ed625438c5
+2026-01-07 17:23:12 INFO  AppInfoParser:126 - Kafka startTimeMs: 1767786792626
+2026-01-07 17:23:12 INFO  LegacyKafkaConsumer:475 - [Consumer clientId=consumer-my-group-1, groupId=my-group] Subscribed to topic(s): topic2
+2026-01-07 17:23:12 INFO  Metadata:349 - [Producer clientId=producer-1] Cluster ID: KnaY91erT92QN5ly-M942w
+2026-01-07 17:23:12 INFO  TransactionManager:502 - [Producer clientId=producer-1] ProducerId set to 134 with epoch 0
+2026-01-07 17:23:12 INFO  Metadata:349 - [Consumer clientId=consumer-my-group-1, groupId=my-group] Cluster ID: KnaY91erT92QN5ly-M942w
+2026-01-07 17:23:12 INFO  ConsumerCoordinator:936 - [Consumer clientId=consumer-my-group-1, groupId=my-group] Discovered group coordinator 10.129.148.129:9092 (id: 2147483647 rack: null)
+2026-01-07 17:23:12 INFO  ConsumerCoordinator:604 - [Consumer clientId=consumer-my-group-1, groupId=my-group] (Re-)joining group
+ Waiting for request 1767786793
+
+2026-01-07 17:23:13 INFO  ConsumerCoordinator:1102 - [Consumer clientId=consumer-my-group-1, groupId=my-group] Request joining group due to: need to re-join with the given member-id: consumer-my-group-1-c2ed287e-2789-481d-9709-9bcaa42245ef
+2026-01-07 17:23:13 INFO  ConsumerCoordinator:604 - [Consumer clientId=consumer-my-group-1, groupId=my-group] (Re-)joining group
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@17a1e4ca size=221 contents="Tc9AUiabR+rDdurgAsCajKnH6xwNDIZX+aJ/4YhFnmHBx8i...">
+ Waiting for request 1767786793
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=219 cap=219] &&& <ByteString@4a194c39 size=219 contents="C1XH7gqDr46tqzhOevwzw2OeiEyQfwGS9Lsp1FGwNK6cWhd...">
+2026-01-07 17:23:13 INFO  ConsumerCoordinator:665 - [Consumer clientId=consumer-my-group-1, groupId=my-group] Successfully joined group with generation Generation{generationId=161, memberId='consumer-my-group-1-c2ed287e-2789-481d-9709-9bcaa42245ef', protocol='range'}
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@56113384 size=221 contents="HfncuJiCpRGdJQyPEPtA+kWPX8DYuTJ5Ec9MIJ5P9uhklyH...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=548 cap=548] &&& <ByteString@5f9678e1 size=548 contents="KX+4+XQ7aDj9N7TYoWgMtUJmnG3a2iXkPeVIwogvmGBg3xF...">
+2026-01-07 17:23:13 INFO  ConsumerCoordinator:659 - [Consumer clientId=consumer-my-group-1, groupId=my-group] Finished assignment for group at generation 161: {consumer-my-group-1-c2ed287e-2789-481d-9709-9bcaa42245ef=Assignment(partitions=[topic2-0])}
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@5a9d6f02 size=221 contents="gTHQulnH1QFJJmGbljW58e6D3e5SIDzRWBdurqf/UsjMmEw...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@5ccbeb64 size=221 contents="MmlhalQyJRLC180adJt99fQR2XYQ+xifmy96MHOwmr+OXu9...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@31d0e481 size=221 contents="ZTRNlVSHNH5kIEc3j96ETlZ6iayeGZWcz8YenjlrT0nPB0R...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=222 cap=222] &&& <ByteString@542e560f size=222 contents="El5iD6s885VukP/89QhaGSq9GbF7hjZa+XnGafgk0PS70Z+...">
+2026-01-07 17:23:13 INFO  ConsumerCoordinator:842 - [Consumer clientId=consumer-my-group-1, groupId=my-group] Successfully synced group in generation Generation{generationId=161, memberId='consumer-my-group-1-c2ed287e-2789-481d-9709-9bcaa42245ef', protocol='range'}
+2026-01-07 17:23:13 INFO  ConsumerCoordinator:319 - [Consumer clientId=consumer-my-group-1, groupId=my-group] Notifying assignor about the new Assignment(partitions=[topic2-0])
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=548 cap=548] &&& <ByteString@fade1fc size=548 contents="ARXR6EUV4rgPWROjP1nVQ4rQ9llyt2LVdBftBQhezkVljgK...">
+2026-01-07 17:23:13 INFO  ConsumerRebalanceListenerInvoker:56 - [Consumer clientId=consumer-my-group-1, groupId=my-group] Adding newly assigned partitions: topic2-0
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@613a8ee1 size=221 contents="QYrs2LPhGGyNYKMM58eMSjyR3BpEKxa4cl6ACNnarYIjt1o...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=548 cap=548] &&& <ByteString@6ebf0f36 size=548 contents="Ji0YcpU7C5YogpqupzJqc0vyB1XOYR84VXdUPd0ptg0ElIe...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@72c28d64 size=221 contents="C0SKAdZTKuvTVBla7Yv+7JJU6tzTGeGWVgG51E7xxTv2G69...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@39a8312f size=221 contents="YT6VQfO/tZjRRyFh+UxVZy8gnm20/4N3RxFyh3ZpUfyn9aE...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=548 cap=548] &&& <ByteString@294e5088 size=548 contents="OMB/aOvLVGe+uNR2r59HQAEJ5g/THOcBrQTkGSwpllXzswm...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@2002348 size=221 contents="f9hThAxCyyHD3E9LmWtxcBa/2Et4gOAu25gWQxoZZxmA0HH...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=465 cap=465] &&& <ByteString@1d470d0 size=465 contents="VM7/hx6JbE/xavfLbY1lKRW6o3XkRafljvn5HayhXdoOVNN...">
+2026-01-07 17:23:13 INFO  ConsumerUtils:199 - Setting offset for partition topic2-0 to the committed offset FetchPosition{offset=1086741, offsetEpoch=Optional[0], currentLeader=LeaderAndEpoch{leader=Optional[10.129.148.129:9092 (id: 0 rack: null)], epoch=0}}
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@65045a87 size=221 contents="UobebOk17prJNV3sAAIz3bV1/pS77YxY8YYDxt87uLzf8be...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=548 cap=548] &&& <ByteString@48d5f34e size=548 contents="HQLqZYrmuSh+CDwBDjLSyJzoBU5XBSG/ADFTKAmXRfAtTCZ...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@57ea113a size=221 contents="BoKGMuc+zB/JYu1AKR25SPlOpSg8sIj2muJ6Z2hWQxM/nG8...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@2b0f373b size=221 contents="JPhN+EhkaumlS/d4lHfFXAqdh81/0P5vpsJCQInB6F2P5Nu...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@7216fb24 size=221 contents="G6atxf7Jmaz1kTNqOYiGuwyx86zKq+bS3GZRKZsDTP4/x2O...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@35a9782c size=221 contents="d3zhQaASu+BKfwAEMUdteydEfADO3tzylAudI3sen18PENK...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@732f29af size=221 contents="btk7w0zXfymtxKdUV/+a71nXTgxpqgnPazSbWJiXCrB6J81...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=220 cap=220] &&& <ByteString@299321e2 size=220 contents="avSt/G4Omd1YZAraRKYMNTXnUQ6cicbwhNc6Z7Mq2zZhkvE...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=547 cap=547] &&& <ByteString@158a3b2e size=547 contents="DWMiG606F0viWa1aTpNayzsfL8cRk3yWI7CUdhPTT+qBp+3...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@6b00f608 size=221 contents="KkyPlU1g6jqpJ6SSl3qiukDs2c8MPAsFvOpL/q720D3eXxq...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@1d131e1b size=221 contents="QsuPehHMYsWBWLn4nVp3CAdLbcWo9vUWAfPXUcZYYWrIUeU...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=222 cap=222] &&& <ByteString@4fce136b size=222 contents="KfW95Ftv6S3XSUIiChETJ/+EWLKqNym0LEOjTm9tbMKiWMH...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=220 cap=220] &&& <ByteString@260e86a1 size=220 contents="Tb/QtufrqHAoDznoVXBM03YKGWuvk+zNnqSR0FTh7j8Nj5h...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=547 cap=547] &&& <ByteString@61e94def size=547 contents="BmeMFgmUXDQWTchRpVX1REn2KeiBhHuRWBJkPckM6m5oTH1...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=218 cap=218] &&& <ByteString@70ab2d48 size=218 contents="b8MREF2dHJxg1ieikEWbB/q8N+ubNGQJ+wBWGxt2Dae+lcf...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=548 cap=548] &&& <ByteString@3a393455 size=548 contents="ciFNB9Bl7jrtC7iYmb2fBtFKEE0OouECzSOZD/uQtJF+T35...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@3a6f2de3 size=221 contents="eZqbgCMKsSJDGpmk99UPLDojR22mvAl5jkI+rtvvmYgy0uQ...">
+ Waiting for request 1767786793
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=548 cap=548] &&& <ByteString@4b2a01d4 size=548 contents="RuokpVIjASnrxw2yxNHn6syugvwvwU9YVPNfFB7vUANu4AV...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=465 cap=465] &&& <ByteString@2f48b3d2 size=465 contents="HGLX6FO53pWwfYTYoGzFU1z07/5np/WLrQw68V4uZtmXLo2...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@23bff419 size=221 contents="Qh1aMjn9sm7kyul+vaBsER2u1cWtNVs5tkof3o8PzZiAA2d...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@101639ae size=221 contents="PkLKuRPCCjHz9T0TrT9H4JTSXwpKRJSGHXVvQ4cLYlOGC05...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@44040454 size=221 contents="FmTvelLHenqjyKBSBsEYZqh8HKaKrtq90hAMeeN5Ga/946T...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=220 cap=220] &&& <ByteString@42f8285e size=220 contents="f7niC9sdrX3SNhejP0xblBJbbLXzFMIYOrcWlKnS4y5swau...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=222 cap=222] &&& <ByteString@68ead359 size=222 contents="EqjBbOJfDegEI2DgmEoom//XB2iK0Pyr4o7tzb0M0ZgrKBz...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=219 cap=219] &&& <ByteString@a43ce46 size=219 contents="bPFPc0YzWhUJIisU49ge03NqHsXDGu364xjhL0yWEOV9kmp...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=222 cap=222] &&& <ByteString@37052337 size=222 contents="SHGIswYNOgr1p3ERy3UqJ6bp+INlunKS6+GTXhmc0YhbbmM...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@4d722ac9 size=221 contents="bFS/OyzVYN+VW3HrfLCFBJncOa+Zt9LGH00h/gUmhxk0W+b...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=548 cap=548] &&& <ByteString@3d97a632 size=548 contents="VZXLvHiG+KVXq5S/cQE0cs8S4QdQOIgOmhkqQpUtGFjmnkz...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=548 cap=548] &&& <ByteString@7e7b159b size=548 contents="JwDHyn3Oyh3t/fKot+/292Wk2J14jhfj99pqfSYnBdB7wT5...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@293a5f75 size=221 contents="LbMNIEDMpHzfLCwhoeUiJtlnmqWPzm7/pKguDDhFOZ3OYFn...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@56e8b606 size=221 contents="Ht/CZXE4bbm3a3+vvGId4NU0tauYWcYZ1e8ezUOSh+XJy2S...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@53142455 size=221 contents="I3KgPtJfFg2ThYC3HjSg/6YWJecqaptoe6DrBAb7kRAJBp9...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=222 cap=222] &&& <ByteString@60975100 size=222 contents="NlA+6us01S/OBOzv2aSup4dQqG4yV4q0Lgwzn6/M0/Oar1I...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@61c9c3fd size=221 contents="VZtzZTfzl/zVvwVE5i5GTN87NvjEO51vLAelpz3xe2IRKv8...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@2c7b5824 size=221 contents="CPi5HtQ2nDdz8H5wxozqD9yYMtYVz2taVN3/MIioBnZcjS5...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=548 cap=548] &&& <ByteString@8c11eee size=548 contents="JDsmuQxzQE/99C0SLNctiLKTrlJr4d5nbMx9jJeBm0lAqfQ...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@5cbe877d size=221 contents="JKWmuKHiQy7nTQqtkAxaqRRp7Tncl0mOq9KvoK3YOJ9Yzha...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=547 cap=547] &&& <ByteString@708400f6 size=547 contents="KDoYS3xVrMFqr5sPUn/t61CY4Lqgz2RPZl3m3ST3xFJ+OcU...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@4bff64c2 size=221 contents="MXX/m6I2Bp8aFfQbsvoFuSeBKdoKk2n7xVRQstOhnX7pcPg...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=548 cap=548] &&& <ByteString@c2db68f size=548 contents="M8PzJIyEi79Fk32f5qesMB2LFFNPn2FQyDyo0Z7asdDIKf7...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@61ce23ac size=221 contents="Dva47rTfjKDHTwlV8yPXFOt69eQAzbmvxR7Qh7I81NEOwAm...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@6f2cfcc2 size=221 contents="Saa5qlEYpadw3ThrNF8NLUkN9E91Stz9+fRWrGBizGw8lGt...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@ccb4b1b size=221 contents="bEnq4ZccEatYmphE7IBAQX2DfiGDKIUct4m4qiPNi5yljxf...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@2a5b3fee size=221 contents="hDWSwTrCBNaOzoQ3v8QDCfEw5Nd5FZBK+NhdOE3pfFZeReQ...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@52d645b1 size=221 contents="BgwshP+8nY3QbXOkYnebSdHhRdbrRXglLBVvF6sZ75xfDCr...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@710b18a6 size=221 contents="VyqK1dkBVTgTOH5u5K0fy99ewyQdLFrpAkMtfWgiGu+urtH...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@c055c54 size=221 contents="REIupQJYeCBRiUXeCqcNzTVsRn8pMuvhY79bWgR3b4XLUKP...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=465 cap=465] &&& <ByteString@73173f63 size=465 contents="QUrRNPpp6L7fYiEu1gbcStegUUxiyWRRHYDJXWcO+6+DThu...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=548 cap=548] &&& <ByteString@7e276594 size=548 contents="bSiAXvY3AU35xnahCV0G4iTfktCllYPCuSucqJrhp9/4k/F...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=548 cap=548] &&& <ByteString@4233e892 size=548 contents="J/6EXixgZL8OiXCahxD28dHyLJtQzqwGKZv6/x9g5SGQKP7...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@58ffcbd7 size=221 contents="H0BooWMQWPDsYQw1nUkr2+I3IHgQf3xSk0i1fPYGFRcvZaR...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=220 cap=220] &&& <ByteString@3c9bfddc size=220 contents="URbbtYDv5YC5B1f2Wxvsoja1t3p8EsrBiRhPSEuBaIfYzNf...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@4c5474f5 size=221 contents="T230cKqe+bIBK2nBpQBVk25QUdlM5PtuZQa9V2wcmZM6BBD...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=219 cap=219] &&& <ByteString@3bd418e4 size=219 contents="X9zmIp0wkSz1ksSrA0gwCPwacoiJ5zFVo0yOopQfoRy1JDP...">
+
+ pt... Kafka Consumer Record in braces:(c2-1 0 SELECT 1)
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=548 cap=548] &&& <ByteString@2e61d218 size=548 contents="QjgyNjD1UThshD+0l7RrpINvZ6sRc5Qy3sOxXq8G/gsFtmo...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@e84a8e1 size=221 contents="OuBh5RsnpwkEjeVwBg3ZargwKFpGVCizB3A97ARNrmKQ17q...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@7d42c224 size=221 contents="DE/MYbPYFy6UO3i6gvfWDeJfdyWa7wWNug9Tzam1dvjMl6M...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@35390ee3 size=221 contents="AX6gf0kkjUZUtWHf+xKTgwX68UCHI7Xw7vR0Hm+PENZhiuO...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@5ee2b6f9 size=221 contents="XnvfDXzmzlNM07oMJ38ZrEo6TiC6/RHtqbBByMf6GxQtpB5...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=220 cap=220] &&& <ByteString@58fb7731 size=220 contents="RJKMEOHIMysaUahLC3Sg5tguGlSXWo4tBu+82j8rvf60aXI...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@37ddb69a size=221 contents="WiX5lxavi4eHVidn8xefvk9Wm3HFD9CcD8Gs6p0dvg84Bza...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@4b9df8a size=221 contents="bH+gmZEiZSUCq4DffbUEbjxgZtmpx5t+KVVdPkqolZKIia/...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=548 cap=548] &&& <ByteString@6955cb39 size=548 contents="D7q5ha8A+Yor3aBqJJAaqFhh5coRuUw0PH1PzPxGmti/4bb...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=548 cap=548] &&& <ByteString@5f7b97da size=548 contents="MffqBJ0pIbZBEBYkV7vJXDHcstS9xlK0luGtfswT3q+Cih4...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=222 cap=222] &&& <ByteString@3a1dd365 size=222 contents="PSG7CMRyh5KWWh+lF4NcLQYtX6wdR7FkJpmcZjYdbsfXdXj...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@68044f4 size=221 contents="LokkSYgyaNIeEGvC1I/q3zm41VK5Ssv+rOOfy9jyWPqpLs/...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@68fa0ba8 size=221 contents="XJH1rk/ycJ9pSwqXr2W4yucBQ64NZNQ8Dz2j4ZDGdgdswcu...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=548 cap=548] &&& <ByteString@640f11a1 size=548 contents="Iu8E6PCT8dpwWhbiDVkbADywHp7Rf44mkAsP15u4zQWRXFT...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@78365cfa size=221 contents="cSfm3YLovD9NR/XPQ7+TMcW8r3/3Ofb4/0vV9fsXiJuN9yp...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=219 cap=219] &&& <ByteString@52de51b6 size=219 contents="HsvMImxqLE1hX7PLLzOv5B0vwec0Ol1SuacWzqmFQdNPi7H...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=465 cap=465] &&& <ByteString@68ad99fe size=465 contents="bYPSqDvFtY0lkteCPIZdHv/5gntua8vusemEYbzpGsCcqhY...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=465 cap=465] &&& <ByteString@2e9fda69 size=465 contents="KjQ/53/N75vq7BEVGV+16xiNIYbiAx5GJSqsghB2/Tq0AHS...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@736d6a5c size=221 contents="JgtLCC7k3zIb6K4riH4KgZ6CxAisjQmnsjkRgCGH2K0FwnI...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@63fdab07 size=221 contents="aMKBw0kP3rnzLAbnRlCqveCPSMoYr+Eba2Se/0hDvBFOtXY...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@1af687fe size=221 contents="fQ59UOWLqtLk5TWTTfAza4IRSKIpel4HtWP6VjoZLNBAQ2Y...">
+ Waiting for request 1767786793
+
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=548 cap=548] &&& <ByteString@74a6a609 size=548 contents="Z9ayZUAw7WFOd57epew/JaI2Qnes4k3vg3riWVabeZtn/N+...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@54d18072 size=221 contents="GaLEqD5tjJ4sTuURlYCHhR/ZA3ugYSKoMDEeTyO4Zr2Qmnu...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@424fd310 size=221 contents="KRVKZCCBzdhCT7ZdRnILRI1c+DjqkUviRHqjUvTFdcLSpIO...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@5286c33a size=221 contents="XVc8AraB9kTid9IqArWbsYoxjjQzPyK4IUjiBdtflV991FQ...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@6c25e6c4 size=221 contents="bXt+JELjocD6/f1pDgonQy/ai0RPU7eiw97gZgaW5JrK/ON...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@48a12036 size=221 contents="NGVdqAt7bCIO37wYfl8N+Ub2CBsg97SaaSD6Tbci4+f/ha+...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=221 cap=221] &&& <ByteString@b70da4c size=221 contents="GKtWgKnVvW3PR5NF5XqZ0puWPSMDceIPZtMujGwbITlE2ar...">
+safedb syserr  data=java.nio.HeapByteBuffer[pos=0 lim=222 cap=222] &&& <ByteString@435fb7b5 size=222 contents="SDxjQrxV5b9WO9p5ABQ/4zGyCL4qcpkyJT+WhucHvp0WJkE...">
+
+ txReplies num keys sz= 1
+ Waiting for request 1767786794
+
+2026-01-07 17:23:14 DEBUG RaftClient:484 - close client-4FAC5ADFE40F
+
+ pt... Kafka Consumer Record in braces:(c2-2 0 SELECT 1)
+
+ Waiting for request 1767786794
+
+ Waiting for request 1767786794
+
+
+ pt... Kafka Consumer Record in braces:(c2-3 0 DELETE 1)
+
+ Waiting for request 1767786794
+
+ Waiting for request 1767786794
+
+ Waiting for request 1767786795
+
+ Waiting for request 1767786795
+
+ Waiting for request 1767786795
+
+ Waiting for request 1767786795
+
+ Waiting for request 1767786795
+
+ Waiting for request 1767786796
+
+ Waiting for request 1767786796
+
+
+ pt... Kafka Consumer Record in braces:(c2-4 0 SELECT 1)
+
+ Waiting for request 1767786798
+
+ Waiting for request 1767786798
+
+ Waiting for request 1767786798
+
+ Waiting for request 1767786799
+
+ Waiting for request 1767786799
+
+ Waiting for request 1767786799
+
+ Waiting for request 1767786799
+
+ req= c2-15 startTime = 1559488074187 endTime= null
+ req= c2-16 startTime = 1559488085144 endTime= null
+ req= c2-13 startTime = 1559488057676 endTime= null
+ req= c2-14 startTime = 1559488065812 endTime= null
+ req= c2-19 startTime = 1559488119356 endTime= null
+ req= c2-17 startTime = 1559488095599 endTime= null
+ req= c2-18 startTime = 1559488109858 endTime= null
+ req= c2-22 startTime = 1559488145835 endTime= null
+ req= c2-23 startTime = 1559488156162 endTime= null
+ req= c2-20 startTime = 1559488129676 endTime= null
+ req= c2-21 startTime = 1559488137430 endTime= null
+ req= c2-26 startTime = 1559488173562 endTime= null
+ req= c2-27 startTime = 1559488187703 endTime= null
+ req= c2-24 startTime = 1559488161844 endTime= null
+ req= c2-25 startTime = 1559488169268 endTime= null
+ req= c2-28 startTime = 1559488194708 endTime= null
+ req= c2-29 startTime = 1559488204338 endTime= null
+ req= c2-30 startTime = 1559488213056 endTime= null
+ req= c2-7 startTime = 1559487945824 endTime= null
+ req= c2-33 startTime = 1559488246890 endTime= null
+ req= c2-6 startTime = 1559487935959 endTime= null
+ req= c2-34 startTime = 1559488258585 endTime= null
+ req= c2-9 startTime = 1559487964386 endTime= null
+ req= c2-31 startTime = 1559488220897 endTime= null
+ req= c2-8 startTime = 1559487954412 endTime= null
+ req= c2-32 startTime = 1559488230264 endTime= null
+ req= c2-3 startTime = 1559487904866 endTime= 1559489457156
+ req= c2-2 startTime = 1559487883191 endTime= 1559488946385
+ req= c2-5 startTime = 1559487921665 endTime= null
+ req= c2-4 startTime = 1559487915464 endTime= 1559493142057
+ req= c2-1 startTime = 1559487096440 endTime= 1559488623902
+ req= c2-37 startTime = 1559488286922 endTime= null
+ req= c2-38 startTime = 1559488295926 endTime= null
+ req= c2-35 startTime = 1559488272791 endTime= null
+ req= c2-36 startTime = 1559488279349 endTime= null
+ req= c2-39 startTime = 1559488302595 endTime= null
+ req= c2-40 startTime = 1559488306406 endTime= null
+ req= c2-41 startTime = 1559488312413 endTime= null
+ req= c2-44 startTime = 1559488346261 endTime= null
+ req= c2-45 startTime = 1559488355498 endTime= null
+ req= c2-42 startTime = 1559488325481 endTime= null
+ req= c2-43 startTime = 1559488333250 endTime= null
+ req= c2-48 startTime = 1559488388818 endTime= null
+ req= c2-49 startTime = 1559488403667 endTime= null
+ req= c2-46 startTime = 1559488366597 endTime= null
+ req= c2-47 startTime = 1559488376883 endTime= null
+ req= c2-51 startTime = 1559488421335 endTime= null
+ req= c2-52 startTime = 1559488432091 endTime= null
+ req= c2-50 startTime = 1559488412891 endTime= null
+ req= c2-55 startTime = 1559488470192 endTime= null
+ req= c2-56 startTime = 1559488474725 endTime= null
+ req= c2-53 startTime = 1559488442668 endTime= null
+ req= c2-54 startTime = 1559488458858 endTime= null
+ req= c2-59 startTime = 1559488541228 endTime= null
+ req= c2-57 startTime = 1559488518009 endTime= null
+ req= c2-58 startTime = 1559488535463 endTime= null
+ req= c2-62 startTime = 1559488556920 endTime= null
+ req= c2-63 startTime = 1559488562653 endTime= null
+ req= c2-60 startTime = 1559488545627 endTime= null
+ req= c2-61 startTime = 1559488550708 endTime= null
+ req= c2-66 startTime = 1559488607359 endTime= null
+ req= c2-67 startTime = 1559488613094 endTime= null
+ req= c2-64 startTime = 1559488570545 endTime= null
+ req= c2-100 startTime = 1559488803322 endTime= null
+ req= c2-65 startTime = 1559488577602 endTime= null
+ req= c2-68 startTime = 1559488622339 endTime= null
+ req= c2-69 startTime = 1559488629568 endTime= null
+ req= c2-73 startTime = 1559488645672 endTime= null
+ req= c2-74 startTime = 1559488651779 endTime= null
+ req= c2-71 startTime = 1559488636627 endTime= null
+ req= c2-72 startTime = 1559488641135 endTime= null
+ req= c2-77 startTime = 1559488664489 endTime= null
+ req= c2-78 startTime = 1559488672603 endTime= null
+ req= c2-75 startTime = 1559488655319 endTime= null
+ req= c2-76 startTime = 1559488661269 endTime= null
+ req= c2-70 startTime = 1559488632551 endTime= null
+ req= c2-79 startTime = 1559488676273 endTime= null
+ req= c2-84 startTime = 1559488710260 endTime= null
+ req= c2-85 startTime = 1559488715626 endTime= null
+ req= c2-82 startTime = 1559488694798 endTime= null
+ req= c2-83 startTime = 1559488703790 endTime= null
+ req= c2-88 startTime = 1559488732633 endTime= null
+ req= c2-89 startTime = 1559488738641 endTime= null
+ req= c2-86 startTime = 1559488720782 endTime= null
+ req= c2-87 startTime = 1559488726677 endTime= null
+ req= c2-80 startTime = 1559488680407 endTime= null
+ req= c2-81 startTime = 1559488690288 endTime= null
+ req= c2-95 startTime = 1559488772268 endTime= null
+ req= c2-96 startTime = 1559488784369 endTime= null
+ req= c2-93 startTime = 1559488762164 endTime= null
+ req= c2-94 startTime = 1559488766053 endTime= null
+ req= c2-11 startTime = 1559488035691 endTime= null
+ req= c2-99 startTime = 1559488798128 endTime= null
+ req= c2-12 startTime = 1559488046188 endTime= null
+ req= c2-97 startTime = 1559488788711 endTime= null
+ req= c2-10 startTime = 1559488025286 endTime= null
+ req= c2-98 startTime = 1559488794613 endTime= null
+ req= c2-91 startTime = 1559488746404 endTime= null
+ req= c2-92 startTime = 1559488755722 endTime= null
+ req= c2-90 startTime = 1559488743176 endTime= null
+ req= c2-3 endTime = 1559489457156
+ req= c2-2 endTime = 1559488946385
+ req= c2-4 endTime = 1559493142057
+ req= c2-1 endTime = 1559488623902
+ req= c2-1 execTime = 1527462
+ req= c2-2 execTime = 1063194
+ req= c2-3 execTime = 1552290
+ req= c2-4 execTime = 5226593
+Avggggg time taken: 2342 microsec; countQ= 4
+Total time taken: 2444212 microsec
+start time: 1559487079347784 nanosec  && msec=1767786792308
+ Waiting for request 1767786802
+
+ Waiting for request 1767786802
+
+ Waiting for request 1767786805
+
+ Waiting for request 1767786806
+
+ Waiting for request 1767786806
+
+ Waiting for request 1767786807
+
+ Waiting for request 1767786808
+
+2026-01-07 17:25:14 INFO  ConsumerCoordinator:999 - [Consumer clientId=consumer-my-group-1, groupId=my-group] Group coordinator 10.129.148.129:9092 (id: 2147483647 rack: null) is unavailable or invalid due to cause: session timed out without receiving a heartbeat response. isDisconnected: false. Rediscovery will be attempted.
+2026-01-07 17:25:24 INFO  ConsumerCoordinator:1012 - [Consumer clientId=consumer-my-group-1, groupId=my-group] Requesting disconnect from last known coordinator 10.129.148.129:9092 (id: 2147483647 rack: null)
+2026-01-07 17:25:58 INFO  NetworkClient:333 - [Consumer clientId=consumer-my-group-1, groupId=my-group] Client requested disconnect from node 2147483647
