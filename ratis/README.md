@@ -17,10 +17,8 @@ Steps to compile and run Ratis :
     bash$ ${BIN}/client.sh filestore loadgen --txInterval 10000 --storage /tmp/ratis1/loadgen2 --numClients 1 --peers ${PEERS} --queryFrom <filename>  --pollInterval 2000 --kafkaAddr <ip+port> --pollCount 100000  --numTerminals 1 --querySign 0 --clientId c2 
 
 
-'''
 
 
-'''
 
 
 
