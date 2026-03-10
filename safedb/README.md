@@ -2,6 +2,8 @@
 
 This repository contains the source code of database, i.e., the deterministic concurrency control implemented on top of AriaBC implementation of PostgreSQL provided by authors of HarmonyBC, available at github.com/zllai/AriaBC .
 
+Please check details of changes in README_files_modified.txt
+
 ## Compile and install
 
 ```sh
