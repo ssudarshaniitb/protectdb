@@ -23,7 +23,7 @@ initdb -D /tmp/safedir
 postgres -D /tmp/safedir
 ```
 
-3. Create the database and initialize the state
+3. Create the database and initialize with YCSB
 
 ```sh
 createdb safedb
