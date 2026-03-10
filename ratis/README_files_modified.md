@@ -1,17 +1,19 @@
 
-Changes:
+Ratis Source code Changes:
 
-(1) Receive requests from external client
+(1) Receive requests from external client (or input file)
 
-(2) Modified 'filestore' client to not save each message to separate file
+(2) (After consensus) When committing requests to Raft log, send requests to local database wrapper
 
-(3) Save requests to Raft log
+(3) Subscribe to Kafka result Topic and poll for transaction results from each replica
 
-(4) Send requests to local database wrapper
+(4) (optional) add digital signature to responses
 
-(5) (optional) add digital signature to responses
+(5) Modified 'filestore' client to not save each message to separate file
 
-Filed modified:
+
+
+Files modified:
 
 ratis-client/src/main/java/org/apache/ratis/client/impl/OrderedAsync.java 
 
@@ -46,4 +48,5 @@ ratis-grpc/src/main/java/org/apache/ratis/grpc/GrpcConfigKeys.java
 ratis-server-api/src/main/java/org/apache/ratis/server/RaftServer.java 
 
 ratis-server-api/src/main/java/org/apache/ratis/server/RaftServerConfigKeys.java 
+
 ratis-server/src/main/java/org/apache/ratis/server/impl/RaftServerProxy.java 
