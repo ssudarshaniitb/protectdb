@@ -4,7 +4,7 @@
 
 There are 2 directories in the project:
 
-1) safedb --> Modified Postgres database to also support deterministic execution of transactions  (See safedb/README_protectdb.md )
+1) safedb: contains Deterministic transaction execution modification of Postgres database  (See safedb/README_protectdb.md )
 
-2) ratis --> Used Apache Ratis package to provide consensus (See ratis/README.md for details)
+2) ratis : contains changes to Apache Ratis package, used to establish Raft consensus (See ratis/README.md for details)
 
