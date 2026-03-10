@@ -23,7 +23,7 @@ Steps to compile and run Ratis :
 
 
 
-Ratis Source code Changes:
+Ratis Source code Changes (based on ratis.apache.org):
 
 (1) Receive requests from external client (or input file)
 
