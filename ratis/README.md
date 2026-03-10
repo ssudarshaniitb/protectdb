@@ -10,7 +10,7 @@ Steps to compile and run Ratis :
 
 3) Run the server on each replica
 
-    bash$ ID=n2; cd ~/git/ratis; ${BIN}/server.sh filestore server --id ${ID} -kafkaAddr <ip+port>  --storage /tmp/ratis2/${ID} --peers ${PEERS} -bkndport 8585 --pyTpCpPort <db-wrapper-port>
+    bash$ ID=n2; cd ~/git/ratis; ${BIN}/server.sh filestore server --id ${ID} -kafkaAddr <ip+port>  --storage /tmp/ratis2/${ID} --peers ${PEERS} -bkndport 8585 --pyTpCpPort < db-wrapper-port >
 
 4) Run the client
 
