@@ -17,11 +17,11 @@ make install
 initdb -D /tmp/safedir
 ```
 
-2. Ensure postgresql.conf has following lines:
+2. Add following lines to postgresql.conf:
 
 ```sh
    enable_merkle_index = on
-  merkle_update_detection = on
+   merkle_update_detection = on
 ```
 
 3. Launch the database engine
@@ -30,7 +30,7 @@ initdb -D /tmp/safedir
 postgres -D /tmp/safedir
 ```
 
-4. Create the database and initialize with YCSB
+4. Create the database, initialize YCSB and create merkle index
 
 ```sh
 createdb safedb
