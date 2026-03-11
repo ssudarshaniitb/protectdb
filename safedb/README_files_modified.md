@@ -8,9 +8,14 @@
 /src/backend/bcdb/middleware.c
 /src/backend/bcdb/shm_block.c
 /src/backend/bcdb/shm_transaction.c
+
+[Conflict check with other transaction](https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/safedb/src/backend/bcdb/shm_transaction.c#L1678)
+
 /src/backend/bcdb/worker.c
 
-[Core worker logic] (https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/safedb/src/backend/bcdb/worker.c#L687)
+[Initialize worker](https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/safedb/src/backend/bcdb/worker.c#L345)
+[Core worker logic](https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/safedb/src/backend/bcdb/worker.c#L687)
+[Get write-set of transaction](https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/safedb/src/backend/bcdb/worker.c#L371)
 
 /src/backend/bcdb/worker_controller.c
 /src/backend/executor/execMain.c
@@ -34,14 +39,14 @@
 /src/include/bcdb/worker.h
 /src/backend/access/common/printtup.c
 
-Core files for merkle tree changes:
+#Core files for merkle tree changes:
 
 /src/include/access/merkle.h
 /src/backend/access/merkle/merkleinsert.c
 /src/backend/access/merkle/merkleutil.c
 /src/backend/access/merkle/merkleverify.c
 
-Blake 3 hash computation :
+#Blake 3 hash computation :
 
 /src/include/common/blake3.h
 /src/common/Makefile
