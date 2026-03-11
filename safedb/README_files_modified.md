@@ -4,6 +4,7 @@
 /src/backend/access/heap/heapam.c
 [apply merkle index ](https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/safedb/src/backend/access/heapam.c#L1851)
 
+/src/include/bcdb/shm_block.h
 /src/backend/bcdb/shm_block.c [File](https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/safedb/src/backend/bcdb/shm_block.c#L117)
 1. Initialize shared memory structures
 2. track last committed tx-ID
@@ -33,22 +34,11 @@ predicate.c [Read-set save](https://github.com/ssudarshaniitb/protectdb/blob/12f
 postgres.c [reset_xact_command, check if query is signed (and signature valid), and print debug trace](https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/backend/tcop/postgres.c#L3897)
 
 
-(https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/backend/utils/init/globals.c)
+guc.c [merkle index creation, update detection suppress](https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/backend/utils/misc/guc.c)
 
-(https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/backend/utils/misc/postgresql.conf.sample)
-
-(https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/backend/utils/resowner/resowner.c)
-
-(https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/backend/utils/time/snapmgr.c)
-
-(https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/bin/initdb/initdb.c)
-
-(https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/include/bcdb/globals.h)
-
-
-(https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/include/bcdb/shm_block.h)
-
-
+globals.c, globals.h
+[Hashtable switch threshold, condition var wait routines](https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/backend/utils/init/globals.c)
+[ debug flags] (https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/include/bcdb/globals.h)
 
 /src/backend/access/transam/xact.c
 [Reset transaction state ]
@@ -56,7 +46,7 @@ postgres.c [reset_xact_command, check if query is signed (and signature valid), 
 
 
 /src/backend/access/heap/heapam_visibility.c
-[minor Debug/comments/miscellaneous] (https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/backend/access/heap/heapam_visibility.c)
+[minor Debug/comments/miscellaneous](https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/backend/access/heap/heapam_visibility.c)
 
 /src/backend/access/common/printtup.c
 [minor Debug/comments/miscellaneous](https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/backend/access/common/printtup.c)
@@ -74,6 +64,17 @@ postmaster.c
 [minor Debug/comments/miscellaneous](https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/backend/postmaster/postmaster.c)
 
 pquery.c [minor Debug/comments/miscellaneous](https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/backend/tcop/pquery.c)
+
+postgres.conf.sample [minor Debug/comments/miscellaneous](https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/backend/utils/misc/postgresql.conf.sample)
+
+
+resowner.c [minor Debug/comments/miscellaneous](https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/backend/utils/resowner/resowner.c)
+
+initdb.c [minor Debug/comments/miscellaneous](https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/bin/initdb/initdb.c)
+
+
+
+snapmgr.c [minor Debug/comments/miscellaneous](https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/backend/utils/time/snapmgr.c)
 
 # ARIABC modifications (on top of postgres) for Deterministic execution:
 
