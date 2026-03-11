@@ -9,6 +9,9 @@ Files changed for Deterministic execution:
 /src/backend/bcdb/shm_block.c
 /src/backend/bcdb/shm_transaction.c
 /src/backend/bcdb/worker.c
+
+https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/safedb/src/backend/bcdb/worker.c#L687
+
 /src/backend/bcdb/worker_controller.c
 /src/backend/executor/execMain.c
 /src/backend/executor/nodeModifyTable.c
