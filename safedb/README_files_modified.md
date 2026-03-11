@@ -1,5 +1,5 @@
 
-# Files changed for Deterministic execution:
+# Our modifications (on top of ARIABC changes) for Deterministic execution :
 
 /src/backend/access/heap/heapam.c
 
@@ -69,9 +69,11 @@
 
 /src/backend/access/common/printtup.c
 
+# ARIABC modifications (on top of postgres) for Deterministic execution:
 
 
-# Core files for merkle tree changes (New files):
+
+# New files for merkle tree creation and updating :
 
 /src/include/access/merkle.h
 
@@ -81,7 +83,7 @@
 
 /src/backend/access/merkle/merkleverify.c
 
-# Blake 3 hash computation (New files) :
+# New files for Blake 3 hash computation :
 
 /src/include/common/blake3.h
 
