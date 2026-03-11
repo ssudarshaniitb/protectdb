@@ -1,5 +1,22 @@
 
-Steps to compile and run Ratis :
+
+# Ratis Source code Changes (based on ratis.apache.org):
+
+(1) Receive requests from external client (or input file)
+
+(2) (After consensus) When committing requests to Raft log, send requests to local database wrapper
+
+(3) Subscribe to Kafka result Topic and poll for transaction results from each replica
+
+(4) (optional) add digital signature to responses
+
+(5) Modified 'filestore' client to not save each message to separate file
+
+For details on files changed, please refer README_files_modified.txt
+
+
+
+# Steps to compile and run Ratis :
 
 1) ./mvnw clean package
 
@@ -20,21 +37,5 @@ Steps to compile and run Ratis :
 
 
 
-
-
-
-Ratis Source code Changes (based on ratis.apache.org):
-
-(1) Receive requests from external client (or input file)
-
-(2) (After consensus) When committing requests to Raft log, send requests to local database wrapper
-
-(3) Subscribe to Kafka result Topic and poll for transaction results from each replica
-
-(4) (optional) add digital signature to responses
-
-(5) Modified 'filestore' client to not save each message to separate file
-
-For details on files changed, please refer README_files_modified.txt
 
 
