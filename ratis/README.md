@@ -2,7 +2,7 @@
 
 
 
-# Steps to compile and run Ratis :
+# Steps to compile and run consensus :
 
 1) ./mvnw clean package
 
