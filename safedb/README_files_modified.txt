@@ -1,5 +1,5 @@
 
-Files changed for Deterministic execution:
+# Files changed for Deterministic execution:
 
 /src/backend/access/heap/heapam.c
 /src/backend/access/heap/heapam_visibility.c
