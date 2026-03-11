@@ -71,7 +71,7 @@
 
 
 
-# Core files for merkle tree changes:
+# Core files for merkle tree changes (New files):
 
 /src/include/access/merkle.h
 
@@ -81,7 +81,7 @@
 
 /src/backend/access/merkle/merkleverify.c
 
-# Blake 3 hash computation :
+# Blake 3 hash computation (New files) :
 
 /src/include/common/blake3.h
 
