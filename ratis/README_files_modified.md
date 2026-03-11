@@ -3,18 +3,12 @@
 
 # Ratis Source code Changes (based on ratis.apache.org):
 
-(1) Receive requests from external client (or input file)
-
-[Receive transaction message from user ](https://github.com/ssudarshaniitb/protectdb/blob/376c2553c2e5fc9a83a468a36162384e78974421/ratis/ratis-examples/src/main/java/org/apache/ratis/examples/filestore/cli/LoadGen.java#L278)
+(1) Receive requests from external client (or input file) [Receive transaction message from user ](https://github.com/ssudarshaniitb/protectdb/blob/376c2553c2e5fc9a83a468a36162384e78974421/ratis/ratis-examples/src/main/java/org/apache/ratis/examples/filestore/cli/LoadGen.java#L278)
 
 
-(2) (After consensus) When committing requests to Raft log, send requests to local database wrapper
+(2) (After consensus) When committing requests to Raft log, send requests to local database wrapper [Send transaction to DB](https://github.com/ssudarshaniitb/protectdb/blob/376c2553c2e5fc9a83a468a36162384e78974421/ratis/ratis-examples/src/main/java/org/apache/ratis/examples/filestore/FileStoreStateMachine.java#L468)
 
-[Send transaction to DB](https://github.com/ssudarshaniitb/protectdb/blob/376c2553c2e5fc9a83a468a36162384e78974421/ratis/ratis-examples/src/main/java/org/apache/ratis/examples/filestore/FileStoreStateMachine.java#L468)
-
-(3) Subscribe to Kafka result Topic and poll for transaction results from each replica
-
-[Poll Kafka for transaction results ](https://github.com/ssudarshaniitb/protectdb/blob/376c2553c2e5fc9a83a468a36162384e78974421/ratis/ratis-examples/src/main/java/org/apache/ratis/examples/filestore/cli/LoadGen.java#L403)
+(3) Subscribe to Kafka result Topic and poll for transaction results from each replica [Poll Kafka for transaction results ](https://github.com/ssudarshaniitb/protectdb/blob/376c2553c2e5fc9a83a468a36162384e78974421/ratis/ratis-examples/src/main/java/org/apache/ratis/examples/filestore/cli/LoadGen.java#L403)
 
 (4) (optional) add digital signature to responses
 
