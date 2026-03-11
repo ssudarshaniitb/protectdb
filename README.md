@@ -6,7 +6,7 @@ There are 3 directories in the project:
 
 1) safedb: contains Deterministic transaction execution modification of Postgres database  (See [README](https://github.com/ssudarshaniitb/protectdb/blob/50c7dcfb4aa7548517c3522e33075703a6c2bf1f/safedb/README_files_modified.md) for details)
 
-2) ratis : contains changes to Apache Ratis package, used to establish Raft consensus (See [README](https://github.com/ssudarshaniitb/protectdb/blob/c6c698d309e4c5a289042479e403acee44bb62df/ratis/README.md) for details)
+2) ratis : contains changes to Apache Ratis package, used to establish Raft consensus (See [README](https://github.com/ssudarshaniitb/protectdb/blob/a5343d47ef72c1c3d22d580e0b02bf2170e5793b/ratis/README_files_modified.md) for details)
 
 3) protectDB: contains database config files, traffic driver, recovery script, plotting etc.
 
