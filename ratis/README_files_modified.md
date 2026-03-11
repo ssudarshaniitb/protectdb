@@ -14,9 +14,21 @@
 
 (5) Modified 'filestore' client to not save each message to separate file
 
+[FileInfo](https://github.com/ssudarshaniitb/protectdb/blob/376c2553c2e5fc9a83a468a36162384e78974421/ratis/ratis-examples/src/main/java/org/apache/ratis/examples/filestore/FileInfo.java)
+
+[FileStore](https://github.com/ssudarshaniitb/protectdb/blob/376c2553c2e5fc9a83a468a36162384e78974421/ratis/ratis-examples/src/main/java/org/apache/ratis/examples/filestore/FileStore.java)
+
+[FileStoreClient](https://github.com/ssudarshaniitb/protectdb/blob/376c2553c2e5fc9a83a468a36162384e78974421/ratis/ratis-examples/src/main/java/org/apache/ratis/examples/filestore/FileStoreClient.java) 
+
+[FileStoreCommon](https://github.com/ssudarshaniitb/protectdb/blob/376c2553c2e5fc9a83a468a36162384e78974421/ratis/ratis-examples/src/main/java/org/apache/ratis/examples/filestore/FileStoreCommon.java)
+
+[Client](https://github.com/ssudarshaniitb/protectdb/blob/376c2553c2e5fc9a83a468a36162384e78974421/ratis/ratis-examples/src/main/java/org/apache/ratis/examples/filestore/cli/Client.java)
+
+[Server](https://github.com/ssudarshaniitb/protectdb/blob/376c2553c2e5fc9a83a468a36162384e78974421/ratis/ratis-examples/src/main/java/org/apache/ratis/examples/filestore/cli/Server.java)
 
 
-Files modified:
+
+Misc. Files modified:
 
 ratis-client/src/main/java/org/apache/ratis/client/impl/OrderedAsync.java 
 
@@ -29,19 +41,6 @@ ratis-client/src/main/java/org/apache/ratis/client/impl/UnorderedAsync.java
 ratis-common/src/main/java/org/apache/ratis/protocol/RaftClientRequest.java 
 
 ratis-examples/pom.xml 
-
-ratis-examples/src/main/java/org/apache/ratis/examples/filestore/FileInfo.java 
-
-ratis-examples/src/main/java/org/apache/ratis/examples/filestore/FileStore.java 
-
-ratis-examples/src/main/java/org/apache/ratis/examples/filestore/FileStoreClient.java 
-
-ratis-examples/src/main/java/org/apache/ratis/examples/filestore/FileStoreCommon.java 
-
-ratis-examples/src/main/java/org/apache/ratis/examples/filestore/cli/Client.java 
-
-
-ratis-examples/src/main/java/org/apache/ratis/examples/filestore/cli/Server.java 
 
 ratis-grpc/src/main/java/org/apache/ratis/grpc/GrpcConfigKeys.java 
 
