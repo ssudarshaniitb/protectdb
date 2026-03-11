@@ -1,5 +1,6 @@
+# Deterministic execution :
 
-# Our modifications (on top of ARIABC changes) for Deterministic execution :
+## ProtectDB modifications (on top of ARIABC changes) 
 
 /src/backend/access/heap/heapam.c
 [apply merkle index ](https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/safedb/src/backend/access/heapam.c#L1851)
@@ -76,7 +77,7 @@ initdb.c [minor Debug/comments/miscellaneous](https://github.com/ssudarshaniitb/
 
 snapmgr.c [minor Debug/comments/miscellaneous](https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/backend/utils/time/snapmgr.c)
 
-# ARIABC modifications (on top of postgres) for Deterministic execution:
+## ARIABC modifications (on top of postgres) for Deterministic execution:
 
 /src/backend/bcdb/shm_transaction.c
 /src/include/bcdb/shm_transaction.h [Each worker picks up one transaction from queue](https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/safedb/src/backend/bcdb/shm_transaction.c)
@@ -89,7 +90,7 @@ snapmgr.c [minor Debug/comments/miscellaneous](https://github.com/ssudarshaniitb
 /src/backend/bcdb/func.c
 
 
-# New files for merkle tree creation as index and updating it :
+## New files for merkle tree creation as index and updating it :
 
 /src/include/access/merkle.h
 
@@ -99,7 +100,7 @@ snapmgr.c [minor Debug/comments/miscellaneous](https://github.com/ssudarshaniitb
 
 /src/backend/access/merkle/merkleverify.c
 
-# New files for Blake 3 hash computation :
+## New files for Blake 3 hash computation :
 
 /src/include/common/blake3.h
 
