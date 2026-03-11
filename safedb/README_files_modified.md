@@ -9,7 +9,7 @@ minor /src/backend/access/heap/heapam_visibility.c
 Reset transaction state /src/backend/access/transam/xact.c
 
 /src/backend/bcdb/shm_block.c
-[Initialize shared memory structures, track last committed tx-ID](https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/safedb/src/backend/bcdb/shm_block.c#L10)
+[Initialize shared memory structures,"  " track last committed tx-ID](https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/safedb/src/backend/bcdb/shm_block.c#L117)
 
 /src/backend/bcdb/shm_transaction.c
 
