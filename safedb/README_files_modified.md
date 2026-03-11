@@ -4,10 +4,6 @@
 /src/backend/access/heap/heapam.c
 [apply merkle index ](https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/safedb/src/backend/access/heapam.c#L1851)
 
-minor /src/backend/access/heap/heapam_visibility.c
-
-Reset transaction state /src/backend/access/transam/xact.c
-
 /src/backend/bcdb/shm_block.c
 [Initialize shared memory structures,"  " track last committed tx-ID](https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/safedb/src/backend/bcdb/shm_block.c#L117)
 
@@ -26,43 +22,52 @@ Reset transaction state /src/backend/access/transam/xact.c
 3. [Get write-set of transaction](https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/safedb/src/backend/bcdb/worker.c#L371)
 
 
-/src/backend/executor/execMain.c
+(https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/backend/executor/execMain.c)
 
-/src/backend/executor/nodeModifyTable.c
+(https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/backend/executor/nodeModifyTable.c)
 
-/src/backend/libpq/pqmq.c
+(https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/backend/libpq/pqmq.c)
 
-/src/backend/main/main.c
+(https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/backend/main/main.c)
 
-/src/backend/nodes/tidbitmap.c
+(https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/backend/nodes/tidbitmap.c)
 
-/src/backend/postmaster/postmaster.c
+(https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/backend/postmaster/postmaster.c)
 
-/src/backend/storage/lmgr/predicate.c
+(https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/backend/storage/lmgr/predicate.c)
 
-/src/backend/tcop/postgres.c
+(https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/backend/tcop/postgres.c)
 
-/src/backend/tcop/pquery.c
+(https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/backend/tcop/pquery.c)
 
-/src/backend/utils/init/globals.c
+(https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/backend/utils/init/globals.c)
 
-/src/backend/utils/misc/postgresql.conf.sample
+(https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/backend/utils/misc/postgresql.conf.sample)
 
-/src/backend/utils/resowner/resowner.c
+(https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/backend/utils/resowner/resowner.c)
 
-/src/backend/utils/time/snapmgr.c
+(https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/backend/utils/time/snapmgr.c)
 
-/src/bin/initdb/initdb.c
+(https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/bin/initdb/initdb.c)
 
-/src/include/bcdb/globals.h
-
-
-/src/include/bcdb/shm_block.h
+(https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/include/bcdb/globals.h)
 
 
-/src/include/bcdb/worker.h
+(https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/include/bcdb/shm_block.h)
+
+
+(https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/include/bcdb/worker.h)
+
+/src/backend/access/transam/xact.c
+[Reset transaction state ]
+(https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/backend/access/transam/xact.c
+
+
+/src/backend/access/heap/heapam_visibility.c
+[minor Debug/comments/miscellaneous] (https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/backend/access/heap/heapam_visibility.c)
 
 /src/backend/access/common/printtup.c
+[minor Debug/comments/miscellaneous](https://github.com/ssudarshaniitb/protectdb/blob/12f9095e88fd4f60767ed3e44ebc55666f4ddcf1/src/backend/access/common/printtup.c)
 
 # ARIABC modifications (on top of postgres) for Deterministic execution:
 
