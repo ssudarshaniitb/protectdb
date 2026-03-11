@@ -10,7 +10,8 @@
 
 (3) Subscribe to Kafka result Topic and poll for transaction results from each replica [Poll Kafka for transaction results ](https://github.com/ssudarshaniitb/protectdb/blob/376c2553c2e5fc9a83a468a36162384e78974421/ratis/ratis-examples/src/main/java/org/apache/ratis/examples/filestore/cli/LoadGen.java#L403)
 
-(4) (optional) add digital signature to responses
+(4) (optional) verify digital signature to responses
+[Verify](https://github.com/ssudarshaniitb/protectdb/blob/869e0d5be7b4f49b2e9cc514ee2380423d948627/ratis/ratis-examples/src/main/java/org/apache/ratis/examples/filestore/cli/LoadGen.java#L205)
 
 (5) Modified 'filestore' client to not save each message to separate file
 
@@ -28,7 +29,7 @@
 
 
 
-Misc. Files modified:
+(6) Misc. tweaks - Files modified:
 
 [OrderedAsync](https://github.com/ssudarshaniitb/protectdb/blob/376c2553c2e5fc9a83a468a36162384e78974421/ratis/ratis-client/src/main/java/org/apache/ratis/client/impl/OrderedAsync.java)
 
