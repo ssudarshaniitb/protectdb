@@ -1,0 +1,28 @@
+
+if [ "$#" -ne 2 ];
+then
+  echo "Usage: <script> dbname dbpath"
+  exit
+fi
+
+> ycsb-drop-tables
+
+for i in `cat ycsb-tables`
+do
+   echo drop table if exists $i cascade ";">> ycsb-drop-tables
+done
+
+echo 'create role admin superuser; alter role admin with login ;' | psql -d $1
+
+cp ~/tpcc-setup/postgresql.conf $2
+cp ~/tpcc-setup/pg_hba.conf $2
+
+psql -d $1 < ~/tpcc-setup/ycsb-drop-tables
+
+psql -d $1 < ~/tpcc-setup/ycsb-tx-bchain/pgdump/ycsb-bb-pgdump-12k.sql
+
+
+echo ' alter table usertable drop constraint usertable_pkey;' | psql -d $1
+#echo 'set enable_merkle_index to on;' | psql -d $1
+echo 'create index on usertable using btree ( ycsb_key );' | psql -d $1
+echo 'create index ycsb_merk_index ON usertable USING merkle(ycsb_key) WITH (partitions = 200, leaves_per_partition = 16);' | psql -d $1

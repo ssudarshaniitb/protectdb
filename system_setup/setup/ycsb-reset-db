@@ -1,0 +1,15 @@
+
+if [ "$#" -ne 1 ];
+then
+  echo "Usage: <script> dbname"
+  exit
+fi
+
+> ycsb-drop-tables
+
+for i in `cat ycsb-tables`
+do
+   echo drop table if exists $i cascade ";">> ycsb-drop-tables
+done
+psql -d $1 < ~/tpcc-setup/ycsb-drop-tables
+
