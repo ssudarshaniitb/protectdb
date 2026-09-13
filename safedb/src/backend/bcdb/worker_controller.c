@@ -73,8 +73,8 @@ create_worker_controller(void)
 {
     static int worker_counter = 0;
     char config_string[258];
-    const char *keywords[]  = {"dbname","host","port","options",NULL};
-    const char *values[]    = {MyProcPort->database_name,bcdb_host,bcdb_port,config_string,NULL};
+    const char *keywords[]  = {"dbname","user","host","port","options",NULL};
+    const char *values[]    = {MyProcPort->database_name,MyProcPort->user_name,bcdb_host,bcdb_port,config_string,NULL};
     WorkerController* worker = palloc(sizeof(*worker));
     sprintf(config_string, "-c is_bcdb_worker=true -c OEP_mode=%s -c blocksize=%d -c worker_id=%d", OEP_mode ? "true":"false", blocksize, worker_counter++);
 
@@ -87,10 +87,11 @@ create_worker_controller(void)
 
     if (PQstatus(worker->conn) == CONNECTION_BAD)
     {
+        char *err = pstrdup(PQerrorMessage(worker->conn));
         PQfinish(worker->conn);
         pfree(worker);
         ereport(ERROR,
-                (errmsg("[ZL] Cannot start worker")));
+                (errmsg("[ZL] Cannot start worker: %s", err)));
         return NULL;
     }
 
@@ -137,8 +138,9 @@ worker_restart(WorkerController* worker)
     worker->conn = PQconnectdbParams(keywords, values, true);
     if (PQstatus(worker->conn) == CONNECTION_BAD)
     {
+        char *err = pstrdup(PQerrorMessage(worker->conn));
         ereport(ERROR, 
-            (errmsg("[ZL] Cannot restart worker")));
+            (errmsg("[ZL] Cannot restart worker: %s", err)));
         PQfinish(worker->conn);
         return false;
     }

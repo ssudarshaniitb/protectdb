@@ -477,7 +477,9 @@ HeapTupleSatisfiesUpdate(HeapTuple htup, CommandId curcid,
 		/* Used by pre-9.0 binary upgrades */
 		if (tuple->t_infomask & HEAP_MOVED_OFF)
 		{
-    printf("ariaMyDbg %s : %s: %d \n", __FILE__, __FUNCTION__, __LINE__ );
+#if SAFEDBG2
+	printf("ariaMyDbg %s : %s: %d \n", __FILE__, __FUNCTION__, __LINE__ );
+#endif
 			TransactionId xvac = HeapTupleHeaderGetXvac(tuple);
 
 			if (TransactionIdIsCurrentTransactionId(xvac))
@@ -517,7 +519,7 @@ HeapTupleSatisfiesUpdate(HeapTuple htup, CommandId curcid,
 		else if (TransactionIdIsCurrentTransactionId(HeapTupleHeaderGetRawXmin(tuple)))
 		{
 #if SAFEDBG2
-    printf("ariaMyDbg %s : %s: %d \n", __FILE__, __FUNCTION__, __LINE__ );
+	printf("ariaMyDbg %s : %s: %d \n", __FILE__, __FUNCTION__, __LINE__ );
 #endif
 			if (HeapTupleHeaderGetCmin(tuple) >= curcid)
 				return TM_Invisible;	/* inserted after scan started */
@@ -575,7 +577,9 @@ HeapTupleSatisfiesUpdate(HeapTuple htup, CommandId curcid,
 				}
 				else
 				{
-    printf("ariaMyDbg %s : %s: %d \n", __FILE__, __FUNCTION__, __LINE__ );
+#if SAFEDBG2
+	printf("ariaMyDbg %s : %s: %d \n", __FILE__, __FUNCTION__, __LINE__ );
+#endif
 					if (HeapTupleHeaderGetCmax(tuple) >= curcid)
 						return TM_SelfModified; /* updated after scan started */
 					else
@@ -591,7 +595,9 @@ HeapTupleSatisfiesUpdate(HeapTuple htup, CommandId curcid,
 				return TM_Ok;
 			}
 
-    printf("ariaMyDbg %s : %s: %d \n", __FILE__, __FUNCTION__, __LINE__ );
+#if SAFEDBG2
+	printf("ariaMyDbg %s : %s: %d \n", __FILE__, __FUNCTION__, __LINE__ );
+#endif
 			if (HeapTupleHeaderGetCmax(tuple) >= curcid)
 				return TM_SelfModified; /* updated after scan started */
 			else
@@ -607,7 +613,9 @@ HeapTupleSatisfiesUpdate(HeapTuple htup, CommandId curcid,
 			/* it must have aborted or crashed */
 			SetHintBits(tuple, buffer, HEAP_XMIN_INVALID,
 						InvalidTransactionId);
-    printf("ariaMyDbg %s : %s: %d \n", __FILE__, __FUNCTION__, __LINE__ );
+#if SAFEDBG2
+			printf("ariaMyDbg %s : %s: %d \n", __FILE__, __FUNCTION__, __LINE__ );
+#endif
 			return TM_Invisible;
 		}
 	}
@@ -622,7 +630,9 @@ HeapTupleSatisfiesUpdate(HeapTuple htup, CommandId curcid,
 
 	if (tuple->t_infomask & HEAP_XMAX_COMMITTED)
 	{
-    printf("ariaMyDbg %s : %s: %d \n", __FILE__, __FUNCTION__, __LINE__ );
+#if SAFEDBG2
+		printf("ariaMyDbg %s : %s: %d \n", __FILE__, __FUNCTION__, __LINE__ );
+#endif
 		if (HEAP_XMAX_IS_LOCKED_ONLY(tuple->t_infomask))
 			return TM_Ok;
 		if (!ItemPointerEquals(&htup->t_self, &tuple->t_ctid) ||
@@ -634,7 +644,9 @@ HeapTupleSatisfiesUpdate(HeapTuple htup, CommandId curcid,
 
 	if (tuple->t_infomask & HEAP_XMAX_IS_MULTI)
 	{
-    printf("ariaMyDbg %s : %s: %d \n", __FILE__, __FUNCTION__, __LINE__ );
+#if SAFEDBG2
+		printf("ariaMyDbg %s : %s: %d \n", __FILE__, __FUNCTION__, __LINE__ );
+#endif
 		TransactionId xmax;
 
 		if (HEAP_LOCKED_UPGRADED(tuple->t_infomask))
@@ -661,7 +673,9 @@ HeapTupleSatisfiesUpdate(HeapTuple htup, CommandId curcid,
 
 		if (TransactionIdIsCurrentTransactionId(xmax))
 		{
-    printf("ariaMyDbg %s : %s: %d \n", __FILE__, __FUNCTION__, __LINE__ );
+#if SAFEDBG2
+			printf("ariaMyDbg %s : %s: %d \n", __FILE__, __FUNCTION__, __LINE__ );
+#endif
 			if (HeapTupleHeaderGetCmax(tuple) >= curcid)
 				return TM_SelfModified; /* updated after scan started */
 			else
@@ -735,7 +749,9 @@ HeapTupleSatisfiesUpdate(HeapTuple htup, CommandId curcid,
 
 	SetHintBits(tuple, buffer, HEAP_XMAX_COMMITTED,
 				HeapTupleHeaderGetRawXmax(tuple));
-    printf("ariaMyDbg %s : %s: %d \n", __FILE__, __FUNCTION__, __LINE__ );
+#if SAFEDBG2
+	printf("ariaMyDbg %s : %s: %d \n", __FILE__, __FUNCTION__, __LINE__ );
+#endif
 	if (!ItemPointerEquals(&htup->t_self, &tuple->t_ctid) ||
 		HeapTupleHeaderIndicatesMovedPartitions(tuple))
 		return TM_Updated;		/* updated by other */

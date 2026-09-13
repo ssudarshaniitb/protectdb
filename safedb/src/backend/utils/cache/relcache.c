@@ -5585,6 +5585,7 @@ load_relcache_init_file(bool shared)
 			Assert(rel->rd_indextuple == NULL);
 			Assert(rel->rd_indexcxt == NULL);
 			Assert(rel->rd_indam == NULL);
+			Assert(rel->rd_indexinfo == NULL);
 			Assert(rel->rd_opfamily == NULL);
 			Assert(rel->rd_opcintype == NULL);
 			Assert(rel->rd_support == NULL);

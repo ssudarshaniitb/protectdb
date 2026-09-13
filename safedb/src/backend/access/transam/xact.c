@@ -19,6 +19,7 @@
 
 #include <time.h>
 #include <unistd.h>
+#include <signal.h>
 
 #include "access/commit_ts.h"
 #include "access/multixact.h"
@@ -68,6 +69,21 @@
 #include "utils/timestamp.h"
 #include "bcdb/shm_transaction.h"
 #include "bcdb/shm_block.h"
+#include "bcdb/raft_apply_ledger.h"
+
+#define EMIT_SAFE_XACT_LOG(tx, _phase) \
+	elog(LOG, "SAFE_LEDGER_XACT phase=%s\n" \
+			  "log=%llu ord=%u\n" \
+			  "top_xid=%u\n" \
+			  "nest_level=%d\n" \
+			  "subxid=%u", \
+		 (_phase), \
+		 (unsigned long long) (tx)->raft_log_index, \
+		 (unsigned) (tx)->raft_item_ordinal, \
+		 (unsigned) GetTopTransactionIdIfAny(), \
+		 GetCurrentTransactionNestLevel(), \
+		 (unsigned) GetCurrentSubTransactionId())
+
 /*
  *	User-tweakable parameters
  */
@@ -1227,6 +1243,11 @@ RecordTransactionCommit(void)
 	SharedInvalidationMessage *invalMessages = NULL;
 	bool		RelcacheInitFileInval = false;
 	bool		wrote_xlog;
+	instr_time	t_rec_start, t_rec1, t_rec2, t_rec3, t_rec4, t_rec5, t_rec6, t_rec_end;
+	bool		do_prof = merkle_recovery_profile_enabled;
+
+	if (do_prof)
+		INSTR_TIME_SET_CURRENT(t_rec_start);
 
 	/* Get data needed for commit record */
 	nrels = smgrGetPendingDeletes(true, &rels);
@@ -1235,6 +1256,9 @@ RecordTransactionCommit(void)
 		nmsgs = xactGetCommittedInvalidationMessages(&invalMessages,
 													 &RelcacheInitFileInval);
 	wrote_xlog = (XactLastRecEnd != 0);
+
+	if (do_prof)
+		INSTR_TIME_SET_CURRENT(t_rec1);
 
 	/*
 	 * If we haven't been assigned an XID yet, we neither can, nor do we want
@@ -1298,6 +1322,9 @@ RecordTransactionCommit(void)
 		/* Tell bufmgr and smgr to prepare for commit */
 		BufmgrCommit();
 
+		if (do_prof)
+			INSTR_TIME_SET_CURRENT(t_rec2);
+
 		/*
 		 * Mark ourselves as within our "commit critical section".  This
 		 * forces any concurrent checkpoint to wait until we've updated
@@ -1327,6 +1354,9 @@ RecordTransactionCommit(void)
 							MyXactFlags,
 							InvalidTransactionId, NULL /* plain commit */ );
 
+		if (do_prof)
+			INSTR_TIME_SET_CURRENT(t_rec3);
+
 		if (replorigin)
 			/* Move LSNs forward for this replication origin */
 			replorigin_session_advance(replorigin_session_origin_lsn,
@@ -1348,6 +1378,9 @@ RecordTransactionCommit(void)
 		TransactionTreeSetCommitTsData(xid, nchildren, children,
 									   replorigin_session_origin_timestamp,
 									   replorigin_session_origin, false);
+
+		if (do_prof)
+			INSTR_TIME_SET_CURRENT(t_rec4);
 	}
 
 	/*
@@ -1381,11 +1414,17 @@ RecordTransactionCommit(void)
 	{
 		XLogFlush(XactLastRecEnd);
 
+		if (do_prof)
+			INSTR_TIME_SET_CURRENT(t_rec5);
+
 		/*
 		 * Now we may update the CLOG, if we wrote a COMMIT record above
 		 */
 		if (markXidCommitted)
 			TransactionIdCommitTree(xid, nchildren, children);
+
+		if (do_prof)
+			INSTR_TIME_SET_CURRENT(t_rec6);
 	}
 	else
 	{
@@ -1402,6 +1441,9 @@ RecordTransactionCommit(void)
 		 */
 		XLogSetAsyncXactLSN(XactLastRecEnd);
 
+		if (do_prof)
+			INSTR_TIME_SET_CURRENT(t_rec5);
+
 		/*
 		 * We must not immediately update the CLOG, since we didn't flush the
 		 * XLOG. Instead, we store the LSN up to which the XLOG must be
@@ -1409,6 +1451,9 @@ RecordTransactionCommit(void)
 		 */
 		if (markXidCommitted)
 			TransactionIdAsyncCommitTree(xid, nchildren, children, XactLastRecEnd);
+
+		if (do_prof)
+			INSTR_TIME_SET_CURRENT(t_rec6);
 	}
 
 	/*
@@ -1419,6 +1464,33 @@ RecordTransactionCommit(void)
 	{
 		MyPgXact->delayChkpt = false;
 		END_CRIT_SECTION();
+	}
+
+cleanup:
+	if (do_prof)
+	{
+		uint64 start_us = INSTR_TIME_GET_MICROSEC(t_rec_start);
+		uint64 t1_us = INSTR_TIME_GET_MICROSEC(t_rec1);
+		uint64 t2_us = markXidCommitted ? INSTR_TIME_GET_MICROSEC(t_rec2) : t1_us;
+		uint64 t3_us = markXidCommitted ? INSTR_TIME_GET_MICROSEC(t_rec3) : t2_us;
+		uint64 t4_us = markXidCommitted ? INSTR_TIME_GET_MICROSEC(t_rec4) : t3_us;
+		uint64 t5_us = INSTR_TIME_GET_MICROSEC(t_rec5);
+		uint64 t6_us = INSTR_TIME_GET_MICROSEC(t_rec6);
+		uint64 end_us;
+
+		INSTR_TIME_SET_CURRENT(t_rec_end);
+		end_us = INSTR_TIME_GET_MICROSEC(t_rec_end);
+
+		merkle_recovery_profile_state.commit_rec_prep_us += (t1_us > start_us) ? (t1_us - start_us) : 0;
+		if (markXidCommitted)
+		{
+			merkle_recovery_profile_state.commit_rec_bufmgr_us += (t2_us > t1_us) ? (t2_us - t1_us) : 0;
+			merkle_recovery_profile_state.commit_rec_xlog_us += (t3_us > t2_us) ? (t3_us - t2_us) : 0;
+			merkle_recovery_profile_state.commit_rec_ts_us += (t4_us > t3_us) ? (t4_us - t3_us) : 0;
+		}
+		merkle_recovery_profile_state.commit_rec_sync_us += (t5_us > t4_us) ? (t5_us - t4_us) : 0;
+		merkle_recovery_profile_state.commit_rec_clog_us += (t6_us > t5_us) ? (t6_us - t5_us) : 0;
+		merkle_recovery_profile_state.commit_rec_cleanup_us += (end_us > t6_us) ? (end_us - t6_us) : 0;
 	}
 
 	/* Compute latestXid while we have the child XIDs handy */
@@ -1441,7 +1513,7 @@ RecordTransactionCommit(void)
 
 	/* Reset XactLastRecEnd until the next transaction writes something */
 	XactLastRecEnd = 0;
-cleanup:
+
 	/* Clean up local data */
 	if (rels)
 		pfree(rels);
@@ -2056,6 +2128,12 @@ CommitTransaction(void)
 	TransactionState s = CurrentTransactionState;
 	TransactionId latestXid;
 	bool		is_parallel_worker;
+	instr_time	t_commit_start, t_mark1, t_mark2, t_mark3, t_mark4, t_mark5, t_mark6, t_mark7, t_mark8, t_mark9, t_commit_end;
+	bool		do_prof;
+
+	do_prof = merkle_recovery_profile_enabled;
+	if (do_prof)
+		INSTR_TIME_SET_CURRENT(t_commit_start);
 
 	is_parallel_worker = (s->blockState == TBLOCK_PARALLEL_INPROGRESS);
 
@@ -2145,6 +2223,9 @@ CommitTransaction(void)
 	/* Commit updates to the relation map --- do this as late as possible */
 	AtEOXact_RelationMap(true, is_parallel_worker);
 
+	if (do_prof)
+		INSTR_TIME_SET_CURRENT(t_mark1);
+
 	/*
 	 * set the current transaction state information appropriately during
 	 * commit processing
@@ -2158,7 +2239,33 @@ CommitTransaction(void)
 		 * We need to mark our XIDs as committed in pg_xact.  This is where we
 		 * durably commit.
 		 */
+		if (is_bcdb_worker)
+		{
+			bcdb_maybe_trigger_safe_failpoint(
+				"ARIABC_FAILPOINT_BEFORE_WORKER_TOPLEVEL_COMMIT",
+				activeTx,
+				"before_worker_toplevel_commit");
+			if (activeTx && activeTx->raft_ledger_enabled)
+				EMIT_SAFE_XACT_LOG(activeTx, "SAFE_XACT_TOP_COMMIT_BEGIN");
+		}
 		latestXid = RecordTransactionCommit();
+		if (is_bcdb_worker)
+		{
+			if (activeTx && activeTx->raft_ledger_enabled)
+				elog(LOG,
+					 "SAFE_XACT_TOP_COMMIT_RECORDED "
+					 "log=%llu ord=%u top_xid=%u nest_level=%d subxid=%u committed_xid=%u",
+					 (unsigned long long) activeTx->raft_log_index,
+					 (unsigned) activeTx->raft_item_ordinal,
+					 (unsigned) GetTopTransactionIdIfAny(),
+					 GetCurrentTransactionNestLevel(),
+					 (unsigned) GetCurrentSubTransactionId(),
+					 (unsigned) latestXid);
+			bcdb_maybe_trigger_safe_failpoint(
+				"ARIABC_FAILPOINT_AFTER_WORKER_TOPLEVEL_COMMIT",
+				activeTx,
+				"after_worker_toplevel_commit_before_result_ring");
+		}
 	}
 	else
 	{
@@ -2175,6 +2282,9 @@ CommitTransaction(void)
 		ParallelWorkerReportLastRecEnd(XactLastRecEnd);
 	}
 
+	if (do_prof)
+		INSTR_TIME_SET_CURRENT(t_mark2);
+
 	TRACE_POSTGRESQL_TRANSACTION_COMMIT(MyProc->lxid);
 
 	/*
@@ -2183,6 +2293,9 @@ CommitTransaction(void)
 	 * RecordTransactionCommit.
 	 */
 	ProcArrayEndTransaction(MyProc, latestXid);
+
+	if (do_prof)
+		INSTR_TIME_SET_CURRENT(t_mark3);
 
 	/*
 	 * This is all post-commit cleanup.  Note that if an error is raised here,
@@ -2210,8 +2323,14 @@ CommitTransaction(void)
 	/* Check we've released all buffer pins */
 	AtEOXact_Buffers(true);
 
+	if (do_prof)
+		INSTR_TIME_SET_CURRENT(t_mark4);
+
 	/* Clean up the relation cache */
 	AtEOXact_RelationCache(true);
+
+	if (do_prof)
+		INSTR_TIME_SET_CURRENT(t_mark5);
 
 	/*
 	 * Make catalog changes visible to all backends.  This has to happen after
@@ -2222,6 +2341,9 @@ CommitTransaction(void)
 	 */
 	AtEOXact_Inval(true);
 
+	if (do_prof)
+		INSTR_TIME_SET_CURRENT(t_mark6);
+
 	AtEOXact_MultiXact();
 
 	ResourceOwnerRelease(TopTransactionResourceOwner,
@@ -2230,6 +2352,9 @@ CommitTransaction(void)
 	ResourceOwnerRelease(TopTransactionResourceOwner,
 						 RESOURCE_RELEASE_AFTER_LOCKS,
 						 true, true);
+
+	if (do_prof)
+		INSTR_TIME_SET_CURRENT(t_mark7);
 
 	/*
 	 * Likewise, dropping of files deleted during the transaction is best done
@@ -2244,6 +2369,10 @@ CommitTransaction(void)
 
 	AtCommit_Notify();
 	AtEOXact_GUC(true, 1);
+
+	if (do_prof)
+		INSTR_TIME_SET_CURRENT(t_mark8);
+
 	AtEOXact_SPI(true);
 	AtEOXact_Enum();
 	AtEOXact_on_commit_actions(true);
@@ -2265,6 +2394,9 @@ CommitTransaction(void)
 
 	AtCommit_Memory();
 
+	if (do_prof)
+		INSTR_TIME_SET_CURRENT(t_mark9);
+
 	s->fullTransactionId = InvalidFullTransactionId;
 	s->subTransactionId = InvalidSubTransactionId;
 	s->nestingLevel = 0;
@@ -2283,6 +2415,36 @@ CommitTransaction(void)
 	s->state = TRANS_DEFAULT;
 
 	RESUME_INTERRUPTS();
+
+	if (do_prof)
+	{
+		uint64 start_us = INSTR_TIME_GET_MICROSEC(t_commit_start);
+		uint64 m1_us = INSTR_TIME_GET_MICROSEC(t_mark1);
+		uint64 m2_us = INSTR_TIME_GET_MICROSEC(t_mark2);
+		uint64 m3_us = INSTR_TIME_GET_MICROSEC(t_mark3);
+		uint64 m4_us = INSTR_TIME_GET_MICROSEC(t_mark4);
+		uint64 m5_us = INSTR_TIME_GET_MICROSEC(t_mark5);
+		uint64 m6_us = INSTR_TIME_GET_MICROSEC(t_mark6);
+		uint64 m7_us = INSTR_TIME_GET_MICROSEC(t_mark7);
+		uint64 m8_us = INSTR_TIME_GET_MICROSEC(t_mark8);
+		uint64 m9_us = INSTR_TIME_GET_MICROSEC(t_mark9);
+		uint64 end_us;
+
+		INSTR_TIME_SET_CURRENT(t_commit_end);
+		end_us = INSTR_TIME_GET_MICROSEC(t_commit_end);
+
+		merkle_recovery_profile_state.commit_pre_commit_us += (m1_us > start_us) ? (m1_us - start_us) : 0;
+		merkle_recovery_profile_state.commit_wal_flush_us += (m2_us > m1_us) ? (m2_us - m1_us) : 0;
+		merkle_recovery_profile_state.commit_proc_array_us += (m3_us > m2_us) ? (m3_us - m2_us) : 0;
+		merkle_recovery_profile_state.commit_buffers_us += (m4_us > m3_us) ? (m4_us - m3_us) : 0;
+		merkle_recovery_profile_state.commit_relcache_us += (m5_us > m4_us) ? (m5_us - m4_us) : 0;
+		merkle_recovery_profile_state.commit_inval_us += (m6_us > m5_us) ? (m6_us - m5_us) : 0;
+		merkle_recovery_profile_state.commit_locks_us += (m7_us > m6_us) ? (m7_us - m6_us) : 0;
+		merkle_recovery_profile_state.commit_guc_us += (m8_us > m7_us) ? (m8_us - m7_us) : 0;
+		merkle_recovery_profile_state.commit_memory_us += (m9_us > m8_us) ? (m9_us - m8_us) : 0;
+		merkle_recovery_profile_state.commit_remaining_us += (end_us > m9_us) ? (end_us - m9_us) : 0;
+		merkle_recovery_profile_state.commit_total_us += (end_us > start_us) ? (end_us - start_us) : 0;
+	}
 }
 
 
@@ -2923,6 +3085,8 @@ CommitTransactionCommand(void)
 {
 	TransactionState s = CurrentTransactionState;
 
+	// bcdb_emit_ledger_boundary("commit");
+
 	if (s->chain)
 		SaveTransactionCharacteristics();
 
@@ -3186,6 +3350,11 @@ void
 AbortCurrentTransaction(void)
 {
 	TransactionState s = CurrentTransactionState;
+
+	if (is_bcdb_worker && activeTx && activeTx->raft_ledger_enabled)
+		EMIT_SAFE_XACT_LOG(activeTx, "SAFE_XACT_TOP_ABORT");
+
+	// bcdb_emit_ledger_boundary("abort");
 
 	switch (s->blockState)
 	{
@@ -4384,6 +4553,8 @@ BeginInternalSubTransaction(const char *name)
 {
 	TransactionState s = CurrentTransactionState;
 
+	// bcdb_emit_ledger_boundary("claim");
+
 	/*
 	 * Workers synchronize transaction state at the beginning of each parallel
 	 * operation, so we can't account for new subtransactions after that
@@ -4455,6 +4626,11 @@ ReleaseCurrentSubTransaction(void)
 {
 	TransactionState s = CurrentTransactionState;
 
+	if (is_bcdb_worker && activeTx && activeTx->raft_ledger_enabled)
+		EMIT_SAFE_XACT_LOG(activeTx, "SAFE_XACT_SUBRELEASE");
+
+	// bcdb_emit_ledger_boundary("finalize");
+
 	/*
 	 * Workers synchronize transaction state at the beginning of each parallel
 	 * operation, so we can't account for commit of subtransactions after that
@@ -4488,6 +4664,11 @@ void
 RollbackAndReleaseCurrentSubTransaction(void)
 {
 	TransactionState s = CurrentTransactionState;
+
+	if (is_bcdb_worker && activeTx && activeTx->raft_ledger_enabled)
+		EMIT_SAFE_XACT_LOG(activeTx, "SAFE_XACT_SUBROLLBACK");
+
+	// bcdb_emit_ledger_boundary("abort");
 
 	/*
 	 * Unlike ReleaseCurrentSubTransaction(), this is nominally permitted

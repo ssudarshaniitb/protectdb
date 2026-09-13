@@ -453,8 +453,8 @@ printtup(TupleTableSlot *slot, DestReceiver *self)
 	StringInfo	buf = &myState->buf;
 	int			natts = typeinfo->natts;
 	int			i;
-    char  rowStr[1024] = "";
-    int offset = 0;
+	char		rowStr[1024] = "";
+	int		offset = 0;
 
 	/* Set or update my derived attribute info, if needed */
 	if (myState->attrinfo != typeinfo || myState->nattrs != natts)
@@ -505,11 +505,22 @@ printtup(TupleTableSlot *slot, DestReceiver *self)
 			char	   *outputstr;
 
 			outputstr = OutputFunctionCall(&thisState->finfo, attr);
-            if(is_bcdb_worker) {
-                //printf("bcdb-worker %s !!! \n", outputstr);
-                sprintf(rowStr+offset, " %s ;", outputstr);
-                offset += strlen(outputstr) +3 ;
-            }
+			if (is_bcdb_worker)
+			{
+				/* Keep the transient BCDB row buffer bounded. */
+				int avail = (int) sizeof(rowStr) - offset;
+				if (avail > 0)
+				{
+					int n = snprintf(rowStr + offset, (size_t) avail, " %s ;", outputstr);
+					if (n > 0)
+					{
+						if (n >= avail)
+							offset = (int) sizeof(rowStr) - 1;
+						else
+							offset += n;
+					}
+				}
+			}
 			pq_sendcountedtext(buf, outputstr, strlen(outputstr), false);
     //printf("safedb pid %d %s : %s: %d \n", getpid(), __FILE__, __FUNCTION__, __LINE__);
 		}
@@ -531,15 +542,18 @@ printtup(TupleTableSlot *slot, DestReceiver *self)
 #endif
 	pq_endmessage_reuse(buf);
 
-    if(is_bcdb_worker) {
-        BCBlock* blk = get_block_by_id(1, false);
-        strcpy(&blk->result[(activeTx->tx_id)%(2*blk->blksize)], rowStr);
+	if (is_bcdb_worker)
+	{
+		if (activeTx != NULL)
+		{
+			strlcpy(activeTx->select_result, rowStr, sizeof(activeTx->select_result));
 #if SAFEDBG2
-        printf("bcdb-worker blk id %d blksz %d myID %d !!! \n", blk->id, blk->blksize, activeTx->tx_id);
+		printf("bcdb-worker myID %d !!! \n", activeTx->tx_id);
         printf("bcdb-worker %s !!! \n", rowStr);
-        printf("blk printup result at %d= %s\n", ((activeTx->tx_id)%(2*blk->blksize)), blk->result[(activeTx->tx_id)%(2*blk->blksize)]);
+		printf("activeTx select_result = %s\n", activeTx->select_result);
 #endif
-        //print_trace();
+		}
+		//print_trace();
 	// ReadyForQuery(DestRemoteExecute); // didnt work...
 	//safeOut("sri ganesh", DestRemoteExecute, CMD_SELECT, typeinfo);
     }

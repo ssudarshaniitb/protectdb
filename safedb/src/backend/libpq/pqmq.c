@@ -21,6 +21,13 @@
 #include "tcop/tcopprot.h"
 #include "utils/builtins.h"
 
+/*
+ * Silence raw stdout debug prints so shared-memory protocol redirection does
+ * not inject text into frontend clients.
+ */
+#undef printf
+#define printf(...) ((void) 0)
+
 static shm_mq_handle *pq_mq_handle;
 static bool pq_mq_busy = false;
 static pid_t pq_mq_parallel_master_pid = 0;

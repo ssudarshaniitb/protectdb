@@ -19,6 +19,7 @@
 
 #include "access/amapi.h"
 #include "access/heapam.h"
+#include "access/merkle.h"
 #include "access/multixact.h"
 #include "access/relscan.h"
 #include "access/tableam.h"
@@ -293,6 +294,10 @@ cluster_rel(Oid tableOid, Oid indexOid, int options)
 		pgstat_progress_end_command();
 		return;
 	}
+
+	merkle_reject_ddl(OldHeap,
+					  OidIsValid(indexOid) ? "CLUSTER a table with a Merkle index" :
+					  "VACUUM FULL a table with a Merkle index");
 
 	/*
 	 * Since we may open a new transaction for each relation, we have to check

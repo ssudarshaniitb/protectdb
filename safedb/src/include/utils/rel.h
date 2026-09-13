@@ -202,6 +202,8 @@ typedef struct RelationData
 
 	/* use "struct" here to avoid needing to include pgstat.h: */
 	struct PgStat_TableStatus *pgstat_info; /* statistics collection area */
+
+	struct IndexInfo *rd_indexinfo;	/* cached IndexInfo for this index relation */
 } RelationData;
 
 

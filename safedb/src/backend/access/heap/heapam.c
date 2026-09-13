@@ -71,6 +71,7 @@
 #include "catalog/index.h"
 #include "catalog/pg_am_d.h"
 #include "access/htup_details.h"
+#include "executor/executor.h"
 #include "bcdb/worker.h"
 
 
@@ -1908,16 +1909,28 @@ heap_apply_index_phase(Relation relation, TupleTableSlot *slot,
 				continue;
 			}
 
-			indexInfo = BuildIndexInfo(indexRelation);
+			bool		free_index_info = false;
+			EState	   *estate = NULL;
+
+			indexInfo = RelationGetIndexInfo(indexRelation);
 
 			if (unique_check && indexRelation->rd_index->indisunique)
 				indexUniqueCheck = UNIQUE_CHECK_YES;
 			else
 				indexUniqueCheck = UNIQUE_CHECK_NO;
 
+			if (indexInfo->ii_Expressions != NIL ||
+				indexInfo->ii_Predicate != NIL)
+			{
+				indexInfo = BuildIndexInfo(indexRelation);
+				free_index_info = true;
+				estate = CreateExecutorState();
+				GetPerTupleExprContext(estate)->ecxt_scantuple = slot;
+			}
+
 			FormIndexDatum(indexInfo,
 					slot,
-					NULL,
+					estate,
 					index_values,
 					isNull);
 
@@ -1928,6 +1941,17 @@ heap_apply_index_phase(Relation relation, TupleTableSlot *slot,
 					relation,
 					indexUniqueCheck,
 					indexInfo);
+
+			if (estate != NULL)
+				FreeExecutorState(estate);
+
+			if (free_index_info)
+			{
+				pfree(indexInfo);
+				if (indexRelation->rd_indexinfo != NULL)
+					indexRelation->rd_indexinfo->ii_ExpressionsState = NIL;
+			}
+
 			RelationClose(indexRelation);
 		}
 	}

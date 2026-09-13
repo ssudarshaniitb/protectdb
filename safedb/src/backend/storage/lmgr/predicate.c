@@ -2428,6 +2428,7 @@ PredicateLockAcquire(const PREDICATELOCKTARGETTAG *targettag)
 	bool		found;
 	LOCALPREDICATELOCK *locallock;
 
+
 	if (is_bcdb_worker)
 	{
 		/*
@@ -2576,6 +2577,24 @@ PredicateLockTuple(Relation relation, HeapTuple tuple, Snapshot snapshot)
 									 ItemPointerGetBlockNumber(tid),
 									 ItemPointerGetOffsetNumber(tid));
 	PredicateLockAcquire(&tag);
+
+	if (is_bcdb_worker && activeTx != NULL && bcdb_tx_context != NULL &&
+		relation->rd_index == NULL && !IsSystemRelation(relation) &&
+		tuple != NULL && tuple->t_data != NULL)
+	{
+		TupleDesc tupdesc = RelationGetDescr(relation);
+		if (tupdesc && tupdesc->natts >= 1)
+		{
+			bool isNull;
+			Datum keyVal = heap_getattr(tuple, 1, tupdesc, &isNull);
+			if (!isNull)
+			{
+				PREDICATELOCKTARGETTAG key_tag;
+				bcdb_compute_intkey_tag(&key_tag, RelationGetRelid(relation), DatumGetInt32(keyVal));
+				rs_table_reserveDT(&key_tag);
+			}
+		}
+	}
 }
 
 
@@ -4045,8 +4064,6 @@ CheckForSerializableConflictOut(bool visible, Relation relation,
 	if (!SerializationNeededForRead(relation, snapshot))
 		return false;
 
-	if (is_bcdb_worker)
-		return false;
 
 	/* Check if someone else has already decided that we need to die */
 	if (SxactIsDoomed(MySerializableXact))
@@ -4278,6 +4295,7 @@ CheckTargetForConflictsIn(PREDICATELOCKTARGETTAG *targettag)
 	PREDICATELOCKTAG mypredlocktag;
 
 	Assert(MySerializableXact != InvalidSerializableXact);
+
 	/*
 	 * The same hash and LW lock apply to the lock target and the lock itself.
 	 */
@@ -4290,6 +4308,7 @@ CheckTargetForConflictsIn(PREDICATELOCKTARGETTAG *targettag)
 									HASH_FIND, NULL);
 	if (!target)
 	{
+
 		/* Nothing has this target locked; we're done here. */
 		LWLockRelease(partitionLock);
 		return;
@@ -4309,6 +4328,9 @@ CheckTargetForConflictsIn(PREDICATELOCKTARGETTAG *targettag)
 		SHM_QUEUE  *predlocktargetlink;
 		PREDICATELOCK *nextpredlock;
 		SERIALIZABLEXACT *sxact;
+
+		sxact = predlock->tag.myXact;
+
 
 		predlocktargetlink = &(predlock->targetLink);
 		nextpredlock = (PREDICATELOCK *)
@@ -4502,7 +4524,7 @@ CheckForSerializableConflictIn(Relation relation, HeapTuple tuple,
 		CheckTargetForConflictsIn(&targettag);
 	}
 
-	if (activeTx && activeTx->pred_lock)
+	if (!is_bcdb_worker || (activeTx && activeTx->pred_lock))
 	{
 		if (BufferIsValid(buffer))
 		{
@@ -4510,7 +4532,7 @@ CheckForSerializableConflictIn(Relation relation, HeapTuple tuple,
 											relation->rd_node.dbNode,
 											relation->rd_id,
 											BufferGetBlockNumber(buffer));
-		       DEBUGMSG("[ZL] tx %s checking conflict page %d", activeTx->hash, BufferGetBlockNumber(buffer));
+			DEBUGMSG("[ZL] tx %s checking conflict page %d", activeTx ? activeTx->hash : "none", BufferGetBlockNumber(buffer));
 			CheckTargetForConflictsIn(&targettag);
 		}
 
@@ -4645,17 +4667,20 @@ FlagRWConflict(SERIALIZABLEXACT *reader, SERIALIZABLEXACT *writer)
 {
 	Assert(reader != writer);
 
-    DEBUGMSG("[ZL] tx %s flaging %s -> %s", activeTx->hash, BCDB_TX(reader)->hash, BCDB_TX(writer)->hash);
-
-	if (is_bcdb_worker)
+	if (reader->bcdb_tx != NULL && writer->bcdb_tx != NULL)
 	{
-		if(BCDB_TX(reader)->tx_id > BCDB_TX(writer)->tx_id)
+		BCDBShmXact *bcdb_reader = (BCDBShmXact *) reader->bcdb_tx;
+		BCDBShmXact *bcdb_writer = (BCDBShmXact *) writer->bcdb_tx;
+
+		DEBUGMSG("[ZL] tx %s flaging %s -> %s", activeTx->hash, bcdb_reader->hash, bcdb_writer->hash);
+
+		if (bcdb_reader->tx_id > bcdb_writer->tx_id)
 		{
-			BCDB_TX(reader)->has_raw = true;
+			bcdb_reader->has_raw = true;
 		}
-		else if (BCDB_TX(reader)->tx_id < BCDB_TX(writer)->tx_id)
+		else if (bcdb_reader->tx_id < bcdb_writer->tx_id)
 		{
-			BCDB_TX(writer)->has_war = true;
+			bcdb_writer->has_war = true;
 		}
 		return;
 	}
@@ -4701,10 +4726,6 @@ OnConflict_CheckForSerializationFailure(SERIALIZABLEXACT *reader,
 
 	failure = false;
 
-	if (is_bcdb_worker)
-	{
-		return;
-	}
 
 	/*------------------------------------------------------------------------
 	 * Check for already-committed writer with rw-conflict out flagged
@@ -4878,9 +4899,6 @@ PreCommit_CheckForSerializationFailure(void)
 	if (MySerializableXact == InvalidSerializableXact)
 		return;
 
-	if (is_bcdb_worker)
-		return;
-
 	Assert(IsolationIsSerializable());
 	LWLockAcquire(SerializableXactHashLock, LW_EXCLUSIVE);
 
@@ -4932,7 +4950,7 @@ PreCommit_CheckForSerializationFailure(void)
 					if (SxactIsPrepared(nearConflict->sxactOut))
 					{
 						LWLockRelease(SerializableXactHashLock);
-						if (is_bcdb_worker)
+						if (is_bcdb_worker && activeTx && nearConflict->sxactOut->bcdb_tx != NULL)
 							ereport(ERROR,
 									(errcode(ERRCODE_T_R_SERIALIZATION_FAILURE),
 									 errmsg("tx %s aborted, pivot is %s is prepared", activeTx->hash, BCDB_TX(nearConflict->sxactOut)->hash)));
@@ -4944,8 +4962,12 @@ PreCommit_CheckForSerializationFailure(void)
 									 errhint("The transaction might succeed if retried.")));
 					}
 					nearConflict->sxactOut->flags |= SXACT_FLAG_DOOMED;
-					if (is_bcdb_worker)
+					if (is_bcdb_worker && activeTx &&
+						nearConflict->sxactOut->bcdb_tx != NULL &&
+						farConflict->sxactOut->bcdb_tx != NULL)
+					{
 						sprintf(BCDB_TX(nearConflict->sxactOut)->why_doomed, "%s->%s->%s", BCDB_TX(farConflict->sxactOut)->hash, BCDB_TX(nearConflict->sxactOut)->hash, activeTx->hash);
+					}
 					break;
 				}
 				farConflict = (RWConflict)

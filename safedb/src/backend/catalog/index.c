@@ -2325,6 +2325,32 @@ BuildIndexInfo(Relation index)
 }
 
 /* ----------------
+ *		RelationGetIndexInfo
+ *			Fetch or build cached IndexInfo record for an open index relation
+ * ----------------
+ */
+IndexInfo *
+RelationGetIndexInfo(Relation index)
+{
+	if (index == NULL)
+		return NULL;
+
+	if (index->rd_indexinfo != NULL)
+		return index->rd_indexinfo;
+
+	MemoryContext oldcxt;
+	if (index->rd_indexcxt != NULL)
+		oldcxt = MemoryContextSwitchTo(index->rd_indexcxt);
+	else
+		oldcxt = MemoryContextSwitchTo(CacheMemoryContext);
+
+	index->rd_indexinfo = BuildIndexInfo(index);
+
+	MemoryContextSwitchTo(oldcxt);
+	return index->rd_indexinfo;
+}
+
+/* ----------------
  *		BuildDummyIndexInfo
  *			Construct a dummy IndexInfo record for an open index
  *

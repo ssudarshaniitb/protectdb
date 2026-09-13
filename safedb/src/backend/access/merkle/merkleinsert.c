@@ -20,7 +20,10 @@
 #include "access/table.h"
 #include "access/xact.h"
 #include "catalog/index.h"
+#include "catalog/pg_type.h"
+#include "executor/spi.h"
 #include "storage/bufmgr.h"
+#include "utils/builtins.h"
 #include "utils/rel.h"
 
 /*
@@ -43,27 +46,26 @@ merkleInsert(Relation indexRel, Datum *values, bool *isnull,
              struct IndexInfo *indexInfo)
 {
     MerkleHash  hash;
-    int         partitionId;
-    TupleDesc   tupdesc;
+	MerkleRoute route;
     int         nkeys;
-    int         totalLeaves;
     
-    /* GUC: Check if Merkle index updates are enabled */
+	/* The executor briefly suppresses the generic AM callback for UPDATE so
+	 * it can apply the full-row Merkle delta exactly once below.  A normal
+	 * INSERT/DELETE with maintenance disabled must fail closed instead of
+	 * silently leaving the aggregate stale. */
     if (!enable_merkle_index)
-        return false;
+	{
+		if (merkle_index_maintenance_suppress)
+			return false;
+		ereport(ERROR,
+				(errcode(ERRCODE_OBJECT_NOT_IN_PREREQUISITE_STATE),
+				 errmsg("Merkle maintenance is disabled for index \"%s\"",
+						RelationGetRelationName(indexRel)),
+				 errhint("Set enable_merkle_index=on before modifying a Merkle-indexed table.")));
+	}
 
-    tupdesc = RelationGetDescr(indexRel);
     nkeys = indexInfo->ii_NumIndexKeyAttrs;
-
-    /* Read tree configuration from metadata */
-    merkle_read_meta(indexRel, NULL, NULL, NULL, NULL, &totalLeaves, NULL, NULL, NULL);
-    
-    /*
-     * Compute partition ID from the indexed key values (supports multi-column)
-     */
-    partitionId = merkle_compute_partition_id(values, isnull,
-                                                     nkeys, tupdesc,
-                                                     totalLeaves);
+	merkle_compute_route(indexRel, values, isnull, nkeys, &route);
     
     /*
      * Compute hash of the full row data
@@ -82,10 +84,10 @@ merkleInsert(Relation indexRel, Datum *values, bool *isnull,
 
     merkle_compute_row_hash(heapRel, ht_ctid, &hash);
     
-    /*
-     * Update the Merkle tree path from leaf to root
-     */
-    merkle_update_tree_path(indexRel, partitionId, &hash, true);
+	/*
+	 * Stage the Merkle delta event for this insert.
+	 */
+	merkle_stage_delta_event(indexRel, MERKLE_DELTA_INSERT, NULL, route.route_digest, &hash);
     
     /*
      * We don't detect duplicates - merkle index doesn't enforce uniqueness
@@ -115,134 +117,63 @@ merkleInsert(Relation indexRel, Datum *values, bool *isnull,
  * tuples in the index to enable proper VACUUM cleanup, but that would significantly
  * increase storage overhead and complexity.
  */
+static void
+merkle_populate_index_stats(Oid index_oid, IndexBulkDeleteResult *stats)
+{
+    if (SPI_connect() == SPI_OK_CONNECT)
+    {
+        Oid argtypes[1] = {OIDOID};
+        Datum values[1] = {ObjectIdGetDatum(index_oid)};
+        int spi_rc = SPI_execute_with_args(
+            "SELECT COALESCE(sum(tuple_count), 0)::float8, count(*)::float8 "
+            "  FROM ariabc_internal.merkle_node "
+            " WHERE index_oid = $1 AND is_leaf = true",
+            1, argtypes, values, NULL, true, 0);
+
+        if (spi_rc == SPI_OK_SELECT && SPI_processed > 0 && SPI_tuptable != NULL)
+        {
+            bool isnull;
+            Datum tuples_datum = SPI_getbinval(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 1, &isnull);
+            Datum count_datum = SPI_getbinval(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 2, &isnull);
+
+            if (!isnull)
+                stats->num_index_tuples = DatumGetFloat8(tuples_datum);
+            if (!isnull)
+                stats->num_pages = (int) Max(1.0, DatumGetFloat8(count_datum));
+            SPI_freetuptable(SPI_tuptable);
+        }
+        SPI_finish();
+    }
+}
+
 IndexBulkDeleteResult *
 merkleBulkdelete(IndexVacuumInfo *info,
                  IndexBulkDeleteResult *stats,
                  IndexBulkDeleteCallback callback,
                  void *callback_state)
 {
-    Relation        indexRel = info->index;
-    Relation        heapRel;
-    int             i;
-    int             totalNodes;
-    int             nodesPerPage;
-    int             numTreePages;
-    int             nodeIdx;
-    int             pageNum;
-    
-    /* Allocate stats if not provided */
+    (void) callback;
+    (void) callback_state;
+
     if (stats == NULL)
         stats = (IndexBulkDeleteResult *) palloc0(sizeof(IndexBulkDeleteResult));
-    
-    /*
-     * We only collect statistics here. The actual Merkle tree updates happen in:
-     * - ExecDeleteMerkleIndexes() - called during DELETE/UPDATE to XOR out old hash
-     * - ExecInsertMerkleIndexes() - called during UPDATE to XOR in new hash
-     * Both are in src/backend/executor/nodeModifyTable.c
-     *
-     * This ensures hash removal happens BEFORE the tuple is deleted from the heap,
-     * guaranteeing we can always access the full row data needed for hashing.
-     */
-    
-    heapRel = table_open(IndexGetRelation(RelationGetRelid(indexRel), false),
-                         AccessShareLock);
 
-    /* Read tree configuration from metadata */
-    merkle_read_meta(indexRel, NULL, NULL, NULL, &totalNodes, NULL,
-                     &nodesPerPage, &numTreePages, NULL);
+    if (info && info->index)
+        merkle_populate_index_stats(RelationGetRelid(info->index), stats);
 
-    /* Count non-zero nodes across all tree pages */
-    nodeIdx = 0;
-    for (pageNum = 0; pageNum < numTreePages; pageNum++)
-    {
-        Buffer      treebuf;
-        Page        treepage;
-        MerkleNode *nodes;
-        int         nodesThisPage;
-
-        treebuf = ReadBuffer(indexRel, MERKLE_TREE_START_BLKNO + pageNum);
-        LockBuffer(treebuf, BUFFER_LOCK_SHARE);
-        treepage = BufferGetPage(treebuf);
-        nodes = (MerkleNode *) PageGetContents(treepage);
-
-        nodesThisPage = Min(nodesPerPage, totalNodes - nodeIdx);
-        for (i = 0; i < nodesThisPage; i++)
-        {
-            if (!merkle_hash_is_zero(&nodes[i].hash))
-                stats->num_index_tuples++;
-        }
-
-        nodeIdx += nodesThisPage;
-        UnlockReleaseBuffer(treebuf);
-    }
-
-    table_close(heapRel, AccessShareLock);
-    
     return stats;
 }
 
-/*
- * merkleVacuumcleanup() - Post-VACUUM index statistics update
- *
- * Called after bulk deletion to perform any necessary cleanup and update
- * index statistics. Like merkleBulkdelete(), this function does NOT modify
- * the Merkle tree structure - it only reports current index statistics.
- *
- * The Merkle tree is always kept up-to-date by synchronous insert/delete
- * operations in the executor layer, so no cleanup is needed here.
- */
 IndexBulkDeleteResult *
 merkleVacuumcleanup(IndexVacuumInfo *info, IndexBulkDeleteResult *stats)
 {
-    Relation    indexRel = info->index;
-    int         nodesPerPartition;
-    int         totalNodes;
-    int         nodesPerPage;
-    int         numTreePages;
-    int         nodeIdx;
-    int         pageNum;
-    
-    /* Allocate stats if not provided (no deletions occurred) */
     if (stats == NULL)
         stats = (IndexBulkDeleteResult *) palloc0(sizeof(IndexBulkDeleteResult));
-    
-    /*
-     * Update index statistics
-     */
-    merkle_read_meta(indexRel, NULL, NULL, &nodesPerPartition, &totalNodes, NULL,
-                     &nodesPerPage, &numTreePages, NULL);
 
-    stats->num_pages = numTreePages + 1;  /* metadata + tree pages */
-    stats->num_index_tuples = 0;
+    if (info && info->index)
+        merkle_populate_index_stats(RelationGetRelid(info->index), stats);
+    else
+        stats->num_pages = 1;
 
-    nodeIdx = 0;
-    for (pageNum = 0; pageNum < numTreePages; pageNum++)
-    {
-        Buffer      buf;
-        Page        page;
-        MerkleNode *nodes;
-        int         nodesThisPage;
-        int         j;
-
-        buf = ReadBuffer(indexRel, MERKLE_TREE_START_BLKNO + pageNum);
-        LockBuffer(buf, BUFFER_LOCK_SHARE);
-        page = BufferGetPage(buf);
-        nodes = (MerkleNode *) PageGetContents(page);
-
-        nodesThisPage = Min(nodesPerPage, totalNodes - nodeIdx);
-        for (j = 0; j < nodesThisPage; j++)
-        {
-            int globalIdx = nodeIdx + j;
-
-            /* Root of each partition is the first node in the partition */
-            if (globalIdx % nodesPerPartition == 0 &&
-                !merkle_hash_is_zero(&nodes[j].hash))
-                stats->num_index_tuples++;
-        }
-
-        nodeIdx += nodesThisPage;
-        UnlockReleaseBuffer(buf);
-    }
-    
     return stats;
 }

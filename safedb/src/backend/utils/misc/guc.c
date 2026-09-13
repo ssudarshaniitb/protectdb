@@ -401,6 +401,12 @@ static const struct config_enum_entry synchronous_commit_options[] = {
 	{NULL, 0, false}
 };
 
+static const struct config_enum_entry merkle_read_lag_policy_options[] = {
+	{"error", MERKLE_READ_LAG_ERROR, false},
+	{"wait", MERKLE_READ_LAG_WAIT, false},
+	{NULL, 0, false}
+};
+
 /*
  * Although only "on", "off", "try" are documented, we accept all the likely
  * variants of "on" and "off".
@@ -890,20 +896,38 @@ static const unit_conversion time_unit_conversion_table[] =
 static struct config_bool ConfigureNamesBool[] =
 {
 	{
-		{"enable_merkle_index", PGC_USERSET, DEVELOPER_OPTIONS,
+		{"enable_merkle_index", PGC_SUSET, DEVELOPER_OPTIONS,
 			gettext_noop("Enables Merkle index maintenance operations."),
-			gettext_noop("When disabled, Merkle indexes will not be updated by data modifications, leading to inconsistency. Use with caution.")
+			gettext_noop("Merkle-indexed tables reject writes while maintenance is disabled; controls are superuser-only.")
 		},
 		&enable_merkle_index,
 		true,
 		NULL, NULL, NULL
 	},
 	{
+		{"merkle_apply_synchronous_direct", PGC_SUSET, DEVELOPER_OPTIONS,
+			gettext_noop("Apply dynamic Merkle index updates synchronously in the same transaction as the heap mutation."),
+			gettext_noop("When off, Merkle-indexed writes are rejected; deferred local-delta apply is not supported. Raft-ledger transactions use the synchronous ledger applier.")
+		},
+		&merkle_apply_synchronous_direct,
+		true,
+		NULL, NULL, NULL
+	},
+	{
 		{"merkle_update_detection", PGC_USERSET, DEVELOPER_OPTIONS,
-			gettext_noop("Emit NOTICE lines for touched Merkle nodes on commit."),
-			gettext_noop("When enabled, INSERT/UPDATE/DELETE that touch Merkle indexes will emit a table of updated (partition, node_in_partition) hashes at transaction commit.")
+			gettext_noop("Emit NOTICE lines for Merkle build roots."),
+			gettext_noop("When enabled, CREATE INDEX/REINDEX emits the built partition roots; committed DML is reported through the durable applier status path.")
 		},
 		&merkle_update_detection,
+		false,
+		NULL, NULL, NULL
+	},
+	{
+		{"merkle_recovery_profile_enabled", PGC_USERSET, DEVELOPER_OPTIONS,
+			gettext_noop("Enable backend-local Merkle recovery profiling."),
+			gettext_noop("When enabled, the backend accumulates Merkle recovery helper counters for the current session only.")
+		},
+		&merkle_recovery_profile_enabled,
 		false,
 		NULL, NULL, NULL
 	},
@@ -946,9 +970,64 @@ static struct config_bool ConfigureNamesBool[] =
 		false,
 		NULL, NULL, NULL
 	},
-	{
-		{"enable_seqscan", PGC_USERSET, QUERY_TUNING_METHOD,
-			gettext_noop("Enables the planner's use of sequential-scan plans."),
+		{
+			{"bcdb_dt_conflict_tracking", PGC_POSTMASTER, DEVELOPER_OPTIONS,
+				gettext_noop("Enable BCDB deterministic conflict tracking."),
+				gettext_noop("When enabled, DT conflict checks and write-set publication are active at runtime.")
+			},
+			&bcdb_dt_conflict_tracking,
+			false,
+			NULL, NULL, NULL
+		},
+		{
+			{"bcdb_dt_completion_only_skip_reads", PGC_POSTMASTER, DEVELOPER_OPTIONS,
+				gettext_noop("Skip SELECT executor work in BCDB completion-only deterministic block mode."),
+				gettext_noop("When enabled, SELECT transactions in completion-only block-submit runs publish an empty completion result and advance ordered watermarks without reading row payloads.")
+			},
+			&bcdb_dt_completion_only_skip_reads,
+			false,
+			NULL, NULL, NULL
+		},
+		{
+			{"bcdb_enforce_signatures", PGC_USERSET, CLIENT_CONN_STATEMENT,
+				gettext_noop("Reject BCDB signed queries whose RSA verification fails."),
+				gettext_noop("When off, verification failures are logged but execution continues.")
+			},
+			&bcdb_enforce_signatures,
+			false,
+			NULL, NULL, NULL
+		},
+		{
+			{"bcdb_advance_commit_watermark", PGC_POSTMASTER, DEVELOPER_OPTIONS,
+				gettext_noop("Use non-blocking CAS watermark advance on deterministic commit."),
+				gettext_noop("On: advance_last_committed_txid (lock-free CAS prefix-scan). "
+							 "Off: legacy bcdb_wait_for_prev_committed + set_last_committed_txid (blocking).")
+			},
+			&bcdb_advance_commit_watermark,
+			true,
+			NULL, NULL, NULL
+		},
+		{
+			{"bcdb_gate_snapshot_each_block", PGC_POSTMASTER, DEVELOPER_OPTIONS,
+				gettext_noop("Log shared-memory gate snapshot after each deterministic block completion."),
+				NULL
+			},
+			&bcdb_gate_snapshot_each_block,
+			false,
+			NULL, NULL, NULL
+		},
+		{
+			{"bcdb_gate_telemetry", PGC_POSTMASTER, DEVELOPER_OPTIONS,
+				gettext_noop("Enable aggregate BCDB gate diagnostics."),
+				NULL
+			},
+			&bcdb_gate_telemetry_enabled,
+			false,
+			NULL, NULL, NULL
+		},
+		{
+			{"enable_seqscan", PGC_USERSET, QUERY_TUNING_METHOD,
+				gettext_noop("Enables the planner's use of sequential-scan plans."),
 			NULL,
 			GUC_EXPLAIN
 		},
@@ -2027,6 +2106,88 @@ static struct config_bool ConfigureNamesBool[] =
 
 static struct config_int ConfigureNamesInt[] =
 {
+	{
+		{"merkle_apply_batch_items", PGC_USERSET, DEVELOPER_OPTIONS,
+			gettext_noop("Maximum committed Merkle delta items applied per batch."),
+			gettext_noop("A larger value amortizes WAL setup; zero is not permitted.")
+		},
+		&merkle_apply_batch_items,
+		MERKLE_APPLY_DEFAULT_BATCH_ITEMS, 1, 4096,
+		NULL, NULL, NULL
+	},
+	{
+		{"merkle_apply_batch_bytes", PGC_USERSET, DEVELOPER_OPTIONS,
+			gettext_noop("Maximum decoded bytes applied in one Merkle batch."),
+			gettext_noop("A single oversized delta is still applied so progress cannot wedge.")
+		},
+		&merkle_apply_batch_bytes,
+		MERKLE_APPLY_DEFAULT_BATCH_BYTES, 4096, 64 * 1024 * 1024,
+		NULL, NULL, NULL
+	},
+	{
+		{"merkle_apply_batch_pages", PGC_USERSET, DEVELOPER_OPTIONS,
+			gettext_noop("Maximum Merkle pages touched by one apply batch."),
+			gettext_noop("Bounds lock/WAL duration for synchronous recovery.")
+		},
+		&merkle_apply_batch_pages,
+		MERKLE_APPLY_DEFAULT_BATCH_PAGES, 1, 4096,
+		NULL, NULL, NULL
+	},
+	{
+		{"merkle_apply_batch_time_ms", PGC_USERSET, DEVELOPER_OPTIONS,
+			gettext_noop("Target maximum elapsed time for one Merkle apply batch."),
+			gettext_noop("The first item is always admitted so a single oversized delta cannot wedge recovery.")
+		},
+		&merkle_apply_batch_time_ms,
+		MERKLE_APPLY_DEFAULT_BATCH_TIME_MS, 1, 1000,
+		NULL, NULL, NULL
+	},
+	{
+		{"bcdb_worker_count", PGC_POSTMASTER, DEVELOPER_OPTIONS,
+			gettext_noop("Number of BCDB deterministic workers."),
+			gettext_noop("Used as the default deterministic worker count and queue partition width.")
+		},
+		&bcdb_worker_count,
+		BCDB_DEFAULT_WORKER_COUNT, 1, 1024,
+		NULL, NULL, NULL
+	},
+	{
+		{"bcdb_serial_gate_mode", PGC_POSTMASTER, DEVELOPER_OPTIONS,
+			gettext_noop("BCDB serial gate waiting mode."),
+			gettext_noop("0=poll, 1=condition-variable wait.")
+		},
+		&bcdb_serial_gate_mode,
+		BCDB_SERIAL_GATE_MODE_POLL, BCDB_SERIAL_GATE_MODE_POLL, BCDB_SERIAL_GATE_MODE_CONDVAR,
+		NULL, NULL, NULL
+	},
+	{
+		{"bcdb_serial_gate_source", PGC_POSTMASTER, DEVELOPER_OPTIONS,
+			gettext_noop("Deterministic serial gate source watermark."),
+			gettext_noop("0=published_max_tx_id (Lever D v2, default). "
+						 "1=last_committed_tx_id (paper-style baseline: blocks conflict-check until predecessor fully commits).")
+		},
+		&bcdb_serial_gate_source,
+		BCDB_GATE_SRC_PUBLISHED_MAX, BCDB_GATE_SRC_PUBLISHED_MAX, BCDB_GATE_SRC_LAST_COMMITTED,
+		NULL, NULL, NULL
+	},
+	{
+		{"bcdb_dt_hashtab_switch_threshold", PGC_POSTMASTER, DEVELOPER_OPTIONS,
+			gettext_noop("BCDB DT hash-table shard switch threshold."),
+			gettext_noop("Controls epoch rotation frequency for DT write-set hash tables.")
+		},
+		&bcdb_dt_hashtab_switch_threshold,
+		BCDB_DEFAULT_HASHTAB_SWITCH_THRESHOLD, 1, INT_MAX,
+		NULL, NULL, NULL
+	},
+	{
+		{"bcdb_result_ring_slots", PGC_POSTMASTER, DEVELOPER_OPTIONS,
+			gettext_noop("BCDB deterministic result-ring slot count."),
+			gettext_noop("Number of slots used for deterministic result handoff.")
+		},
+		&bcdb_result_ring_slots,
+		BCDB_DEFAULT_RESULT_RING_SLOTS, 2, BCDB_RESULT_RING_CAPACITY,
+		NULL, NULL, NULL
+	},
 	{
 		{"blocksize", PGC_BACKEND, CLIENT_CONN,
 			gettext_noop("BCDB block size."),
@@ -3602,18 +3763,27 @@ static struct config_string ConfigureNamesString[] =
 		NULL, NULL, NULL
 	},
 
-	{
-		{"recovery_end_command", PGC_SIGHUP, WAL_ARCHIVE_RECOVERY,
-			gettext_noop("Sets the shell command that will be executed once at the end of recovery."),
-			NULL
+		{
+			{"recovery_end_command", PGC_SIGHUP, WAL_ARCHIVE_RECOVERY,
+				gettext_noop("Sets the shell command that will be executed once at the end of recovery."),
+				NULL
+			},
+			&recoveryEndCommand,
+			"",
+			NULL, NULL, NULL
 		},
-		&recoveryEndCommand,
-		"",
-		NULL, NULL, NULL
-	},
+		{
+			{"bcdb_client_public_key", PGC_USERSET, CLIENT_CONN_STATEMENT,
+				gettext_noop("Base64 DER public key used by postgres.c BCDB signature verification."),
+				gettext_noop("If empty, postgres.c falls back to its built-in development key.")
+			},
+			&bcdb_client_public_key,
+			"",
+			NULL, NULL, NULL
+		},
 
-	{
-		{"recovery_target_timeline", PGC_POSTMASTER, WAL_RECOVERY_TARGET,
+		{
+			{"recovery_target_timeline", PGC_POSTMASTER, WAL_RECOVERY_TARGET,
 			gettext_noop("Specifies the timeline to recover into."),
 			NULL
 		},
@@ -4340,6 +4510,16 @@ static struct config_string ConfigureNamesString[] =
 
 static struct config_enum ConfigureNamesEnum[] =
 {
+	{
+		{"merkle_read_lag_policy", PGC_SUSET, DEVELOPER_OPTIONS,
+			gettext_noop("Controls reads while committed Merkle deltas are pending."),
+			gettext_noop("error rejects stale roots; wait catches up the committed prefix; apply runs privileged catch-up inline.")
+		},
+		&merkle_read_lag_policy,
+		MERKLE_READ_LAG_ERROR, merkle_read_lag_policy_options,
+		NULL, NULL, NULL
+	},
+
 	{
 		{"backslash_quote", PGC_USERSET, COMPAT_OPTIONS_PREVIOUS,
 			gettext_noop("Sets whether \"\\'\" is allowed in string literals."),

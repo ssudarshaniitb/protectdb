@@ -118,6 +118,16 @@ typedef struct SERIALIZABLEXACT
 
 #define BCDB_TX(sxact) ((BCDBShmXact*)(sxact)->bcdb_tx)
 
+static inline bool
+BothBCDBSxacts(const SERIALIZABLEXACT *reader,
+			   const SERIALIZABLEXACT *writer)
+{
+	return reader != NULL &&
+		   writer != NULL &&
+		   reader->bcdb_tx != NULL &&
+		   writer->bcdb_tx != NULL;
+}
+
 #define SXACT_FLAG_COMMITTED			0x00000001	/* already committed */
 #define SXACT_FLAG_PREPARED				0x00000002	/* about to commit */
 #define SXACT_FLAG_ROLLED_BACK			0x00000004	/* already rolled back */

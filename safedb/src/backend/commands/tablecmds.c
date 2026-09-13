@@ -18,6 +18,7 @@
 #include "access/heapam.h"
 #include "access/heapam_xlog.h"
 #include "access/multixact.h"
+#include "access/merkle.h"
 #include "access/reloptions.h"
 #include "access/relscan.h"
 #include "access/sysattr.h"
@@ -34,6 +35,7 @@
 #include "catalog/objectaccess.h"
 #include "catalog/partition.h"
 #include "catalog/pg_am.h"
+#include "catalog/pg_am_d.h"
 #include "catalog/pg_collation.h"
 #include "catalog/pg_constraint.h"
 #include "catalog/pg_depend.h"
@@ -1328,6 +1330,21 @@ RemoveRelations(DropStmt *drop)
 			continue;
 		}
 
+		{
+			Relation drop_rel = relation_open(relOid, NoLock);
+
+			if (drop->concurrent && merkle_relation_has_index(drop_rel))
+				ereport(ERROR,
+						(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
+						 errmsg("DROP INDEX CONCURRENTLY is not supported for Merkle indexes"),
+						 errhint("Synchronize Merkle recovery and use DROP INDEX without CONCURRENTLY.")));
+			merkle_reject_ddl(drop_rel,
+										  drop->removeType == OBJECT_INDEX ?
+										  "drop a Merkle index" :
+										  "drop a table with a Merkle index");
+		relation_close(drop_rel, NoLock);
+		}
+
 		/* OK, we're ready to delete this one */
 		obj.classId = RelationRelationId;
 		obj.objectId = relOid;
@@ -1524,6 +1541,8 @@ ExecuteTruncate(TruncateStmt *stmt)
 
 		/* open the relation, we already hold a lock on it */
 		rel = table_open(myrelid, NoLock);
+		merkle_reject_ddl(rel,
+									 "truncate a table with a Merkle index");
 
 		/* don't throw error for "TRUNCATE foo, foo" */
 		if (list_member_oid(relids, myrelid))
@@ -1560,6 +1579,8 @@ ExecuteTruncate(TruncateStmt *stmt)
 
 				/* find_all_inheritors already got lock */
 				rel = table_open(childrelid, NoLock);
+				merkle_reject_ddl(rel,
+										 "truncate a table with a Merkle index");
 
 				/*
 				 * It is possible that the parent table has children that are
@@ -3505,6 +3526,8 @@ AlterTable(Oid relid, LOCKMODE lockmode, AlterTableStmt *stmt)
 
 	/* Caller is required to provide an adequate lock. */
 	rel = relation_open(relid, NoLock);
+	merkle_reject_ddl(rel,
+									 "alter a table with a Merkle index");
 
 	CheckTableNotInUse(rel, "ALTER TABLE");
 
@@ -3529,6 +3552,8 @@ AlterTableInternal(Oid relid, List *cmds, bool recurse)
 	LOCKMODE	lockmode = AlterTableGetLockLevel(cmds);
 
 	rel = relation_open(relid, lockmode);
+	merkle_reject_ddl(rel,
+									 "alter a table with a Merkle index");
 
 	EventTriggerAlterTableRelid(relid);
 

@@ -352,5 +352,8 @@
   opcintype => 'int4', opcdefault => 't' },
 { opcmethod => 'merkle', opcname => 'int8_ops', opcfamily => 'merkle/int8_ops',
   opcintype => 'int8', opcdefault => 't' },
+{ opcmethod => 'merkle', opcname => 'timestamptz_ops',
+  opcfamily => 'merkle/timestamptz_ops', opcintype => 'timestamptz',
+  opcdefault => 't' },
 
 ]

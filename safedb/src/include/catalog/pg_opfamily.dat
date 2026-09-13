@@ -232,5 +232,6 @@
 { oid => '9911', opfmethod => 'merkle', opfname => 'varchar_ops' },
 { oid => '9912', opfmethod => 'merkle', opfname => 'int4_ops' },
 { oid => '9913', opfmethod => 'merkle', opfname => 'int8_ops' },
+{ oid => '9924', opfmethod => 'merkle', opfname => 'timestamptz_ops' },
 
 ]

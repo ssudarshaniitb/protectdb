@@ -21,11 +21,15 @@
 #include "storage/condition_variable.h"
 #include "storage/predicate_internals.h"
 #include "utils/hsearch.h"
+#include "port/atomics.h"
 #include <sys/types.h>
 #include <semaphore.h>
 #include "storage/spin.h"
 #include "openssl/sha.h"
 #include "access/merkle.h"
+
+/* Raft ledger metadata constants (D1) */
+#define BCDB_RAFT_DIGEST_BYTES 32
 
 typedef enum 
 {
@@ -89,13 +93,22 @@ typedef struct _OptimWriteEntry
 } OptimWriteEntry;
 
 #define      TX_MAP_SZ  ((2 * NUM_WORKERS) - 1)
+
+typedef struct _WSPartitionLock
+{
+	slock_t lock;
+} pg_attribute_aligned(PG_CACHE_LINE_SIZE) WSPartitionLock;
+
 typedef struct _WSTable
 {
-    /* partition the available list and HTAB to avoid contention */
-    HTAB               *map;
-    HTAB               *mapB;
-    HTAB               *mapActive;
-    slock_t             map_locks[WRITE_CONFLICT_MAP_NUM_PARTITIONS];
+	/* partition the available list and HTAB to avoid contention */
+	HTAB			   *map;
+	HTAB			   *mapB;
+	HTAB			   *mapActive;
+	/* mapB emptiness cache for DT conflict probes */
+	pg_atomic_uint32	mapB_nonempty;
+	WSPartitionLock		map_locks[WRITE_CONFLICT_MAP_NUM_PARTITIONS];
+	WSPartitionLock		mapB_locks[WRITE_CONFLICT_MAP_NUM_PARTITIONS];
 } WSTable;
 
 /* to do: move non-shared element out */
@@ -105,6 +118,7 @@ typedef struct _BCDBShmXact
     char               hash[TX_HASH_SIZE];
     BCTxID             tx_id;
     BCTxID             tx_id_committed;
+    TransactionId      snap_xmin;     /* xmin of snapshot taken at portal_run start; T3-v2 */
 
     WSTable       *ws_table;
     WSTable       *rs_table;
@@ -135,6 +149,7 @@ typedef struct _BCDBShmXact
     SHA256_CTX      state_hash;
     bool            has_war;
     bool            has_raw;
+	char            select_result[1024];
 
     uint64          create_time;
     uint64          start_simulation_time;
@@ -146,6 +161,26 @@ typedef struct _BCDBShmXact
     uint64          start_local_copy_time;
     uint64          end_local_copy_time;
     uint64          commit_time;
+
+	/* Raft apply ledger metadata (Commit D1).
+		* Populated by the executor before enqueuing the transaction.
+		* Workers use these to write ledger rows atomically with business SQL.
+		* All fields are zero/false when raft_ledger_enabled is false (legacy mode).
+		*/
+	bool            raft_ledger_enabled;
+	uint64          raft_log_index;            /* NuRaft log index of containing entry */
+	uint32          raft_item_ordinal;         /* 0-based position within the entry */
+	uint32          raft_item_count;           /* total items in the entry */
+	uint8           raft_epoch_id[BCDB_RAFT_DIGEST_BYTES];     /* cluster epoch (32 bytes) */
+	uint8           raft_entry_digest[BCDB_RAFT_DIGEST_BYTES]; /* SHA-256 of raw entry bytes */
+	uint8           raft_item_digest[BCDB_RAFT_DIGEST_BYTES];  /* SHA-256 of item sql+req_id */
+	uint8           raft_terminal_digest[BCDB_RAFT_DIGEST_BYTES]; /* SHA-256 of the terminal result/error payload */
+	int             raft_terminal_format_version;   /* format version stored in ledger row; propagated to result-ring envelope */
+	int             raft_terminal_state;            /* RAFT_ITEM_STATE_APPLIED_* once finalize/replay reaches a terminal row */
+	bool            raft_terminal_update_confirmed; /* true only after terminal ledger row update/replay validation succeeds */
+	bool            raft_terminal_returning_verified; /* true only after UPDATE ... RETURNING validation succeeds */
+	TransactionId   raft_terminal_verified_top_xid; /* top-level xid observed during terminal verification */
+	int             raft_terminal_verified_nest_level; /* nest level observed during terminal verification */
 } BCDBShmXact;
 
 typedef struct _TxQueue
@@ -155,7 +190,7 @@ typedef struct _TxQueue
     ConditionVariable                        empty_cond;
     ConditionVariable                        full_cond;
     int32 volatile                           size;
-} TxQueue;
+} pg_attribute_aligned(PG_CACHE_LINE_SIZE) TxQueue;
 
 /*typedef struct _TxResult
 {
@@ -201,6 +236,7 @@ typedef LIST_HEAD(_MerkleChangeSet, _PendingMerkleUpdate) MerkleChangeSet;
 
 extern BCDBShmXact  *activeTx;
 extern slock_t      *restart_counter_lock;
+extern pg_atomic_uint32 *bcdb_safe_failpoint_fired;
 
 extern HTAB         *tx_pool;
 extern TxQueue      *tx_queues;
@@ -215,8 +251,10 @@ extern void         clear_tx_pool(void);
 extern Size         tx_pool_size(void);
 extern BCDBShmXact* get_tx_by_hash(const char *hash);
 /* get_tx_by_xid and get_tx_by_xid_locked removed — no callers; see shm_transaction.c */
+extern BCDBShmXact* get_tx_by_xid(TransactionId xid);
 extern void         add_tx_xid_map(TransactionId id, BCDBShmXact *tx);
 extern void         remove_tx_xid_map(TransactionId id);
+extern void         bcdb_emit_ledger_boundary(const char *phase);
 extern BCDBShmXact* create_tx(char *hash, char *sql, BCTxID tx_id, BCBlockID snapshot_block, int isolation, bool pred_lock);
 extern void         delete_tx(BCDBShmXact* tx);
 
@@ -227,11 +265,15 @@ extern void store_optim_update(TupleTableSlot* slot, ItemPointer old_tid);
 extern void store_optim_insert(TupleTableSlot* slot);
 extern void store_optim_delete(Oid relOid, ItemPointer tupleid, TupleTableSlot *slot);
 extern void store_optim_delete_by_key(Oid relOid, int32 keyval, CommandId cid);
-extern void apply_optim_update(ItemPointer tid, TupleTableSlot* slot, CommandId cid);
+extern bool apply_optim_update(ItemPointer tid, TupleTableSlot* slot, CommandId cid);
 extern bool apply_optim_insert(TupleTableSlot* slot, CommandId cid);
-extern void apply_optim_delete(Oid relOid, ItemPointer tupleid, TupleTableSlot *storedSlot, CommandId cid);
-extern void apply_deferred_delete_by_key(Oid relOid, int keyval);
+extern bool apply_optim_delete(Oid relOid, ItemPointer tupleid, TupleTableSlot *storedSlot, CommandId cid, int32 keyval);
+extern bool apply_deferred_delete_by_key(Oid relOid, int keyval);
 extern bool apply_optim_writes(void);
+extern void bcdb_reset_apply_error_flags(void);
+extern bool bcdb_apply_had_unique_violation(void);
+extern void bcdb_set_apply_unique_violation(bool val);
+extern void bcdb_reset_tupledesc_cache(void);
 /* check_stale_read removed — SSI stale-read check that was never called; see shm_transaction.c */
 /* clean_ws_table_record, clean_rs_table_record removed — non-DT per-entry cleanup with no callers;
  * use clean_rs_ws_table() (bulk clear) instead */
@@ -243,10 +285,13 @@ extern void clean_rs_ws_table(void);
 extern bool ws_table_check(PREDICATELOCKTARGETTAG *tag);
 extern void conflict_check(void);
 
+extern void bcdb_compute_intkey_tag(PREDICATELOCKTARGETTAG *tag, Oid relOid, int32 intKey);
 extern void rs_table_reserveDT( const PREDICATELOCKTARGETTAG *tag);
 extern void ws_table_reserveDT( PREDICATELOCKTARGETTAG *tag);
 extern bool ws_table_checkDT(PREDICATELOCKTARGETTAG *tag);
 extern int conflict_checkDT(void);
+extern void bcdb_reset_last_conflict_txid(void);
+extern BCTxID bcdb_get_last_conflict_txid(void);
 extern void publish_ws_tableDT(int id);
 
 /* Merkle change set functions */

@@ -21,7 +21,8 @@ OBJS = \
 	worker.o \
 	middleware.o \
 	func.o \
-	bcdb_dsa.o
+	bcdb_dsa.o \
+	raft_apply_ledger.o
 
 include $(top_srcdir)/src/backend/common.mk
 

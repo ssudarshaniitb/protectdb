@@ -9,8 +9,8 @@
 #include "bcdb/globals.h"
 
 /* connection parameters for worker backend */
-#define WORKER_KEYWORDS {"dbname","host","port","options",NULL}
-#define WORKER_VALUES {MyProcPort->database_name,bcdb_host,bcdb_port,"-c is_bcdb_worker=true",NULL}
+#define WORKER_KEYWORDS {"dbname","user","host","port","options",NULL}
+#define WORKER_VALUES {MyProcPort->database_name,MyProcPort->user_name,bcdb_host,bcdb_port,"-c is_bcdb_worker=true",NULL}
 
 typedef enum _worker_status
 {

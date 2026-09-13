@@ -44,6 +44,7 @@
 #include "access/xact.h"
 #include "access/merkle.h"
 #include "catalog/catalog.h"
+#include "catalog/namespace.h"
 #include "catalog/pg_am_d.h"
 #include "commands/trigger.h"
 #include "executor/execPartition.h"
@@ -57,6 +58,7 @@
 #include "storage/lmgr.h"
 #include "utils/builtins.h"
 #include "utils/datum.h"
+#include "utils/lsyscache.h"
 #include "utils/memutils.h"
 #include "utils/rel.h"
 #include "catalog/index.h"
@@ -83,30 +85,73 @@
  */
 static void
 bcdb_compute_key_tag(PREDICATELOCKTARGETTAG *tag, Oid relOid,
-                     TupleTableSlot *slot)
+					 TupleTableSlot *slot)
 {
-    Datum   keyVal;
-    bool    isNull;
-    uint32  h;
+	Datum	keyVal;
+	bool	isNull;
 
-    /* Extract the first column (primary key) from the slot */
-    keyVal = slot_getattr(slot, 1, &isNull);
-    if (isNull)
-        h = 0;
-    else
-    {
-        int32 intKey = DatumGetInt32(keyVal);
-        h = hash_any((unsigned char *) &intKey, sizeof(int32));
-    }
+	/* Extract the first column (primary key) from the slot */
+	keyVal = slot_getattr(slot, 1, &isNull);
+	if (isNull)
+		bcdb_compute_intkey_tag(tag, relOid, 0);
+	else
+		bcdb_compute_intkey_tag(tag, relOid, DatumGetInt32(keyVal));
+}
 
-    /*
-     * Pack into tag.  We use a fixed dbOid of 0 (same as existing code)
-     * and the table's relOid.  The hash is split so that the lower 16-bit
-     * field (offsetNumber) is always >= 1 to keep ItemPointer-like validity.
-     */
-    SET_PREDICATELOCKTARGETTAG_TUPLE(*tag, 0, relOid,
-                                     (BlockNumber)(h >> 16),
-                                     (OffsetNumber)((h & 0xFFFF) | 1));
+static bool
+bcdb_is_safe_ledger_relation(Relation relation)
+{
+	Oid			internal_namespace;
+	const char *relname;
+
+	if (relation == NULL)
+		return false;
+
+	internal_namespace = get_namespace_oid("ariabc_internal", true);
+	if (!OidIsValid(internal_namespace))
+		return false;
+
+	if (RelationGetNamespace(relation) != internal_namespace)
+		return false;
+
+	relname = RelationGetRelationName(relation);
+
+	return strcmp(relname, "raft_apply_schema_meta") == 0 ||
+		   strcmp(relname, "merkle_apply_counter") == 0 ||
+		   strcmp(relname, "merkle_apply_state") == 0 ||
+		   strcmp(relname, "raft_apply_epoch") == 0 ||
+		   strcmp(relname, "raft_apply_entry") == 0 ||
+		   strcmp(relname, "raft_apply_entry_item") == 0 ||
+		   strcmp(relname, "raft_apply_item") == 0;
+}
+
+static bool
+bcdb_should_defer_dml(Relation relation)
+{
+	return is_bcdb_worker && !bcdb_is_safe_ledger_relation(relation);
+}
+
+static void
+bcdb_log_dml_route(const char *operation,
+				   Relation relation,
+				   bool defer_bcdb_dml)
+{
+	const char *trace = getenv("ARIABC_SAFE_TRACE");
+	char	   *nspname;
+
+	if (trace == NULL || trace[0] == '\0' || trace[0] == '0' || relation == NULL)
+		return;
+
+	nspname = get_namespace_name(RelationGetNamespace(relation));
+	elog(LOG,
+		 "BCDB_DML_ROUTE op=%s relation=%s.%s mode=%s is_bcdb_worker=%d",
+		 operation,
+		 nspname ? nspname : "<unknown>",
+		 RelationGetRelationName(relation),
+		 defer_bcdb_dml ? "deferred" : "direct",
+		 is_bcdb_worker ? 1 : 0);
+	if (nspname)
+		pfree(nspname);
 }
 
 static bool ExecOnConflictUpdate(ModifyTableState *mtstate,
@@ -130,7 +175,7 @@ static TupleConversionMap *tupconv_map_for_subplan(ModifyTableState *node,
 typedef struct MerkleDeleteDelta
 {
 	Oid			indexOid;
-	int			partitionId;
+	uint8		key_hash[8];
 	MerkleHash	hash;
 } MerkleDeleteDelta;
 
@@ -149,6 +194,8 @@ CaptureMerkleDeletePlan(Relation heapRel, ItemPointer tupleid)
 	ListCell   *lc;
 	TupleTableSlot *slot;
 	MerkleHash  hash;
+	bool		hash_ready = false;
+	bool		has_merkle_index = false;
 	int			maxItems;
 
 	plan.count = 0;
@@ -165,6 +212,24 @@ CaptureMerkleDeletePlan(Relation heapRel, ItemPointer tupleid)
 		ItemPointerGetBlockNumberNoCheck(tupleid) == InvalidBlockNumber)
 		return plan;
 
+	/* Avoid fetching and hashing rows for ordinary PostgreSQL tables. */
+	indexList = RelationGetIndexList(heapRel);
+	foreach(lc, indexList)
+	{
+		Relation indexRel = index_open(lfirst_oid(lc), AccessShareLock);
+
+		has_merkle_index = (indexRel->rd_rel->relam == MERKLE_AM_OID);
+		index_close(indexRel, AccessShareLock);
+		if (has_merkle_index)
+			break;
+	}
+	if (!has_merkle_index)
+	{
+		list_free(indexList);
+		plan.ready = true;
+		return plan;
+	}
+
 	slot = table_slot_create(heapRel, NULL);
 	if (!table_tuple_fetch_row_version(heapRel, tupleid, SnapshotSelf, slot))
 	{
@@ -172,15 +237,6 @@ CaptureMerkleDeletePlan(Relation heapRel, ItemPointer tupleid)
 		return plan;
 	}
 
-	merkle_compute_slot_hash(heapRel, slot, &hash);
-	if (merkle_hash_is_zero(&hash))
-	{
-		ExecDropSingleTupleTableSlot(slot);
-		plan.ready = true;
-		return plan;
-	}
-
-	indexList = RelationGetIndexList(heapRel);
 	maxItems = list_length(indexList);
 	if (maxItems > 0)
 		plan.items = (MerkleDeleteDelta *) palloc0(sizeof(MerkleDeleteDelta) * maxItems);
@@ -196,19 +252,26 @@ CaptureMerkleDeletePlan(Relation heapRel, ItemPointer tupleid)
 			IndexInfo  *indexInfo;
 			Datum       values[INDEX_MAX_KEYS];
 			bool        isnull[INDEX_MAX_KEYS];
-			int         totalLeaves;
-			int         partitionId;
+			MerkleRoute route;
+
+			if (!hash_ready)
+			{
+				merkle_compute_slot_hash(heapRel, slot, &hash);
+				if (merkle_hash_is_zero(&hash))
+				{
+					index_close(indexRel, RowExclusiveLock);
+					break;
+				}
+				hash_ready = true;
+			}
 
 			indexInfo = BuildIndexInfo(indexRel);
 			FormIndexDatum(indexInfo, slot, NULL, values, isnull);
-			merkle_read_meta(indexRel, NULL, NULL, NULL, NULL, &totalLeaves, NULL, NULL, NULL);
-			partitionId = merkle_compute_partition_id(values, isnull,
-											 indexInfo->ii_NumIndexKeyAttrs,
-											 RelationGetDescr(indexRel),
-											 totalLeaves);
+			merkle_compute_route(indexRel, values, isnull,
+							 indexInfo->ii_NumIndexKeyAttrs, &route);
 
 			plan.items[plan.count].indexOid = indexOid;
-			plan.items[plan.count].partitionId = partitionId;
+			memcpy(plan.items[plan.count].key_hash, route.route_digest, 8);
 			plan.items[plan.count].hash = hash;
 			plan.count++;
 		}
@@ -233,10 +296,11 @@ ApplyMerkleDeletePlan(MerkleDeletePlan *plan)
 	{
 		Relation indexRel = index_open(plan->items[i].indexOid, RowExclusiveLock);
 		if (indexRel->rd_rel->relam == MERKLE_AM_OID)
-			merkle_update_tree_path(indexRel,
-							plan->items[i].partitionId,
-							&plan->items[i].hash,
-							false);
+			merkle_stage_delta_event(indexRel,
+									 MERKLE_DELTA_DELETE,
+									 plan->items[i].key_hash,
+									 NULL,
+									 &plan->items[i].hash);
 		index_close(indexRel, RowExclusiveLock);
 	}
 }
@@ -265,9 +329,17 @@ ExecDeleteMerkleIndexes(Relation heapRel, ItemPointer tupleid)
         return;
     }
 
-    /* GUC: Check if Merkle index updates are enabled */
-    if (!enable_merkle_index)
-        return;
+	/* Never silently create a stale tree when a Merkle index exists. */
+	if (!enable_merkle_index)
+	{
+		if (merkle_relation_has_index(heapRel))
+			ereport(ERROR,
+					(errcode(ERRCODE_OBJECT_NOT_IN_PREREQUISITE_STATE),
+					 errmsg("Merkle maintenance is disabled for table \"%s\"",
+							RelationGetRelationName(heapRel)),
+					 errhint("Set enable_merkle_index=on before modifying a Merkle-indexed table.")));
+		return;
+	}
     
     /* Get list of indexes on this table */
     indexList = RelationGetIndexList(heapRel);
@@ -283,23 +355,17 @@ ExecDeleteMerkleIndexes(Relation heapRel, ItemPointer tupleid)
         if (indexRel->rd_rel->relam == MERKLE_AM_OID)
         {
             MerkleHash      hash;
-            TupleDesc       indexTupdesc;
-            int             partitionId;
             TupleTableSlot *slot;
             int             nkeys;
             int16          *indkey;
             Datum          *keyValues;
             bool           *keyNulls;
             int             i;
-            int             totalLeaves;
+			MerkleRoute	 route;
             
             /* Get index structure info */
-            indexTupdesc = RelationGetDescr(indexRel);
             nkeys = indexRel->rd_index->indnkeyatts;
             indkey = indexRel->rd_index->indkey.values;
-            
-            /* Read tree configuration from metadata */
-            merkle_read_meta(indexRel, NULL, NULL, NULL, NULL, &totalLeaves, NULL, NULL, NULL);
             
             /* Allocate key value arrays */
             keyValues = (Datum *) palloc(nkeys * sizeof(Datum));
@@ -345,13 +411,10 @@ ExecDeleteMerkleIndexes(Relation heapRel, ItemPointer tupleid)
                             keyValues[i] = slot_getattr(slot, heapAttr, &keyNulls[i]);
                         }
                         
-                        /* Compute partition ID using multi-column function */
-                        partitionId = merkle_compute_partition_id(keyValues, keyNulls,
-                                                                         nkeys, indexTupdesc,
-                                                                         totalLeaves);
+						merkle_compute_route(indexRel, keyValues, keyNulls,
+											 nkeys, &route);
                         
-                        /* XOR the hash OUT of the tree (same as XOR in, since XOR is its own inverse) */
-                        merkle_update_tree_path(indexRel, partitionId, &hash, false);
+						merkle_stage_delta_event(indexRel, MERKLE_DELTA_DELETE, route.route_digest, NULL, &hash);
                     }
                 }
                 PG_CATCH();
@@ -387,16 +450,21 @@ ExecInsertMerkleIndexes(Relation heapRel, TupleTableSlot *slot)
     List       *indexList;
     ListCell   *lc;
 	MerkleHash  hash;
+	bool		hash_ready = false;
 
 	if (slot == NULL || TTS_EMPTY(slot))
-        return;
-
-    if (!enable_merkle_index)
-        return;
-
-	merkle_compute_slot_hash(heapRel, slot, &hash);
-	if (merkle_hash_is_zero(&hash))
 		return;
+
+	if (!enable_merkle_index)
+	{
+		if (merkle_relation_has_index(heapRel))
+			ereport(ERROR,
+					(errcode(ERRCODE_OBJECT_NOT_IN_PREREQUISITE_STATE),
+					 errmsg("Merkle maintenance is disabled for table \"%s\"",
+							RelationGetRelationName(heapRel)),
+					 errhint("Set enable_merkle_index=on before modifying a Merkle-indexed table.")));
+		return;
+	}
 
     indexList = RelationGetIndexList(heapRel);
 
@@ -412,18 +480,25 @@ ExecInsertMerkleIndexes(Relation heapRel, TupleTableSlot *slot)
             IndexInfo  *indexInfo;
             Datum       values[INDEX_MAX_KEYS];
             bool        isnull[INDEX_MAX_KEYS];
-			int         totalLeaves;
-			int         partitionId;
+			MerkleRoute route;
+
+			if (!hash_ready)
+			{
+				merkle_compute_slot_hash(heapRel, slot, &hash);
+				if (merkle_hash_is_zero(&hash))
+				{
+					index_close(indexRel, RowExclusiveLock);
+					break;
+				}
+				hash_ready = true;
+			}
 
             indexInfo = BuildIndexInfo(indexRel);
 
             FormIndexDatum(indexInfo, slot, NULL, values, isnull);
-			merkle_read_meta(indexRel, NULL, NULL, NULL, NULL, &totalLeaves, NULL, NULL, NULL);
-			partitionId = merkle_compute_partition_id(values, isnull,
-													 indexInfo->ii_NumIndexKeyAttrs,
-													 RelationGetDescr(indexRel),
-													 totalLeaves);
-			merkle_update_tree_path(indexRel, partitionId, &hash, true);
+			merkle_compute_route(indexRel, values, isnull,
+							 indexInfo->ii_NumIndexKeyAttrs, &route);
+			merkle_stage_delta_event(indexRel, MERKLE_DELTA_INSERT, NULL, route.route_digest, &hash);
         }
 
         index_close(indexRel, RowExclusiveLock);
@@ -709,6 +784,7 @@ ExecInsert(ModifyTableState *mtstate,
 	TransitionCaptureState *ar_insert_trig_tcs;
 	ModifyTable *node = (ModifyTable *) mtstate->ps.plan;
 	OnConflictAction onconflict = node->onConflictAction;
+	bool		defer_bcdb_dml;
 
 	ExecMaterializeSlot(slot);
 
@@ -717,6 +793,8 @@ ExecInsert(ModifyTableState *mtstate,
 	 */
 	resultRelInfo = estate->es_result_relation_info;
 	resultRelationDesc = resultRelInfo->ri_RelationDesc;
+	defer_bcdb_dml = bcdb_should_defer_dml(resultRelationDesc);
+	bcdb_log_dml_route("INSERT", resultRelationDesc, defer_bcdb_dml);
 	/*
 	 * BEFORE ROW INSERT Triggers.
 	 *
@@ -937,7 +1015,7 @@ ExecInsert(ModifyTableState *mtstate,
 		}
 		else
 		{
-			if (is_bcdb_worker)
+			if (defer_bcdb_dml)
 			{
 				/*
 				 * BCDB WORKER: Register INSERT in the write-set using a
@@ -1064,6 +1142,8 @@ ExecDelete(ModifyTableState *mtstate,
 	TM_FailureData tmfd;
 	TupleTableSlot *slot = NULL;
 	TransitionCaptureState *ar_delete_trig_tcs;
+	bool		defer_bcdb_dml;
+	MerkleDeletePlan merkleDeletePlan;
 
 	if (tupleDeleted)
 		*tupleDeleted = false;
@@ -1073,6 +1153,8 @@ ExecDelete(ModifyTableState *mtstate,
 	 */
 	resultRelInfo = estate->es_result_relation_info;
 	resultRelationDesc = resultRelInfo->ri_RelationDesc;
+	defer_bcdb_dml = bcdb_should_defer_dml(resultRelationDesc);
+	bcdb_log_dml_route("DELETE", resultRelationDesc, defer_bcdb_dml);
 
 	/* BEFORE ROW DELETE Triggers */
 	if (resultRelInfo->ri_TrigDesc &&
@@ -1144,7 +1226,7 @@ ldelete:;
 		 * XOR-out from happening during the parallel phase, which would
 		 * cause hash corruption due to concurrent unprotected access.
 		 */
-		if (is_bcdb_worker)
+		if (defer_bcdb_dml)
 		{
 			PREDICATELOCKTARGETTAG tag;
 			PREDICATELOCKTARGETTAG tid_tag;
@@ -1208,7 +1290,7 @@ ldelete:;
 		 * We need to do this before the tuple is gone so we can
 		 * read the row data to compute the hash to XOR out.
 		 */
-		MerkleDeletePlan merkleDeletePlan = CaptureMerkleDeletePlan(resultRelationDesc, tupleid);
+		merkleDeletePlan = CaptureMerkleDeletePlan(resultRelationDesc, tupleid);
 	
 		result = table_tuple_delete(resultRelationDesc, tupleid,
 								estate->es_output_cid,
@@ -1502,6 +1584,7 @@ ExecUpdate(ModifyTableState *mtstate,
 	TM_FailureData tmfd;
 	List	   *recheckIndexes = NIL;
 	TupleConversionMap *saved_tcs_map = NULL;
+	bool		defer_bcdb_dml;
 
 	/*
 	 * abort the operation if not running transactions
@@ -1516,6 +1599,8 @@ ExecUpdate(ModifyTableState *mtstate,
 	 */
 	resultRelInfo = estate->es_result_relation_info;
 	resultRelationDesc = resultRelInfo->ri_RelationDesc;
+	defer_bcdb_dml = bcdb_should_defer_dml(resultRelationDesc);
+	bcdb_log_dml_route("UPDATE", resultRelationDesc, defer_bcdb_dml);
 
 	/* BEFORE ROW UPDATE Triggers */
 	if (resultRelInfo->ri_TrigDesc &&
@@ -1567,6 +1652,10 @@ ExecUpdate(ModifyTableState *mtstate,
 		bool		partition_constraint_failed;
 		bool		update_indexes;
 		MerkleDeletePlan merkleDeletePlan;
+		bool		saved_enable_merkle_index = enable_merkle_index;
+		bool		saved_merkle_index_maintenance_suppress =
+			merkle_index_maintenance_suppress;
+		bool		need_exec_update_merkle_insert = false;
 		merkleDeletePlan.count = 0;
 		merkleDeletePlan.items = NULL;
 		merkleDeletePlan.ready = true;
@@ -1771,7 +1860,7 @@ lreplace:;
   	       * needed for referential integrity updates in transaction-snapshot
   	       * mode transactions.
   	       */
-			if (is_bcdb_worker)
+			if (defer_bcdb_dml)
 			{
 			//print_trace();
 			//debugtup(slot, NULL);
@@ -1982,21 +2071,41 @@ lreplace:;
 					return NULL;
 			}
 
-			/* insert index entries for tuple if necessary */
-			if (resultRelInfo->ri_NumIndices > 0 && update_indexes)
-				recheckIndexes = ExecInsertIndexTuples(slot, estate, false, NULL, NIL);
-					
 			/*
-			* For Merkle indexes: always insert the NEW row's hash, even if
-			* update_indexes is false (HOT update). Merkle indexes hash ALL
-			* columns, not just the indexed key, so data changes always need
-			* to be tracked even when the key doesn't change.
-			*
-			* Note: ExecInsertIndexTuples may also call merkleInsert if
-			* update_indexes is true, but that's okay because we only call
-			* ExecInsertMerkleIndexes when update_indexes is false.
-			*/
-			if (!is_bcdb_worker && !update_indexes)
+			 * Exact-once Merkle UPDATE maintenance:
+			 * - old-row XOR-out is handled by ApplyMerkleDeletePlan() above
+			 * - new-row XOR-in must happen exactly once regardless of HOT/non-HOT
+			 *
+			 * The generic ExecInsertIndexTuples() path also invokes the Merkle
+			 * AM on non-HOT updates. Suppress that temporarily so UPDATE owns the
+			 * Merkle insert path uniformly, then apply ExecInsertMerkleIndexes()
+			 * exactly once below.
+			 */
+			if (!defer_bcdb_dml && update_indexes && saved_enable_merkle_index)
+			{
+				enable_merkle_index = false;
+				merkle_index_maintenance_suppress = true;
+			}
+			PG_TRY();
+			{
+				/* insert non-Merkle index entries for tuple if necessary */
+				if (resultRelInfo->ri_NumIndices > 0 && update_indexes)
+					recheckIndexes = ExecInsertIndexTuples(slot, estate, false, NULL, NIL);
+			}
+			PG_CATCH();
+			{
+				enable_merkle_index = saved_enable_merkle_index;
+				merkle_index_maintenance_suppress =
+					saved_merkle_index_maintenance_suppress;
+				PG_RE_THROW();
+			}
+			PG_END_TRY();
+			enable_merkle_index = saved_enable_merkle_index;
+			merkle_index_maintenance_suppress =
+				saved_merkle_index_maintenance_suppress;
+
+			need_exec_update_merkle_insert = (!defer_bcdb_dml && saved_enable_merkle_index);
+			if (need_exec_update_merkle_insert)
 				ExecInsertMerkleIndexes(resultRelationDesc, slot);
 		}
 	}

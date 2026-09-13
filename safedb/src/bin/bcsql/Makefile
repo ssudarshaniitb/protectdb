@@ -26,7 +26,11 @@ bcsql: $(OBJS) | submake-libpgport
 	$(CC) $(CFLAGS) $(OBJS) $(LDFLAGS) $(LDFLAGS_EX) $(LIBS) -o $@$(X)
 
 install: all installdirs
-	$(INSTALL_SCRIPT) bcsql$(X) '$(DESTDIR)$(bindir)/bcsql$(X)'
+	@if test -f bcsql$(X); then \
+		$(INSTALL_SCRIPT) bcsql$(X) '$(DESTDIR)$(bindir)/bcsql$(X)'; \
+	else \
+		$(INSTALL_SCRIPT) '$(srcdir)/bcsql$(X)' '$(DESTDIR)$(bindir)/bcsql$(X)'; \
+	fi
 
 installdirs:
 	$(MKDIR_P) '$(DESTDIR)$(bindir)'

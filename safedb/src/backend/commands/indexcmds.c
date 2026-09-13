@@ -17,6 +17,7 @@
 
 #include "access/amapi.h"
 #include "access/heapam.h"
+#include "access/merkle.h"
 #include "access/htup_details.h"
 #include "access/reloptions.h"
 #include "access/sysattr.h"
@@ -724,6 +725,11 @@ DefineIndex(Oid relationId,
 	}
 	accessMethodForm = (Form_pg_am) GETSTRUCT(tuple);
 	accessMethodId = accessMethodForm->oid;
+	if (accessMethodId == MERKLE_AM_OID && stmt->concurrent)
+		ereport(ERROR,
+				(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
+				 errmsg("CREATE INDEX CONCURRENTLY is not supported for Merkle indexes"),
+				 errhint("Use CREATE INDEX after synchronizing Merkle recovery.")));
 	amRoutine = GetIndexAmRoutine(accessMethodForm->amhandler);
 
 	pgstat_progress_update_param(PROGRESS_CREATEIDX_ACCESS_METHOD_OID,
@@ -2339,6 +2345,11 @@ ReindexIndex(RangeVar *indexRelation, int options, bool concurrent)
 	 * lock on the index.
 	 */
 	irel = index_open(indOid, NoLock);
+	if (concurrent && irel->rd_rel->relam == MERKLE_AM_OID)
+		ereport(ERROR,
+				(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
+				 errmsg("REINDEX CONCURRENTLY is not supported for Merkle indexes"),
+				 errhint("Use non-concurrent REINDEX after Merkle recovery is synchronized.")));
 
 	if (irel->rd_rel->relkind == RELKIND_PARTITIONED_INDEX)
 	{

@@ -106,6 +106,8 @@ extern void index_drop(Oid indexId, bool concurrent, bool concurrent_lock_mode);
 
 extern IndexInfo *BuildIndexInfo(Relation index);
 
+extern IndexInfo *RelationGetIndexInfo(Relation index);
+
 extern IndexInfo *BuildDummyIndexInfo(Relation index);
 
 extern bool CompareIndexInfo(IndexInfo *info1, IndexInfo *info2,

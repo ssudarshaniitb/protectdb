@@ -763,5 +763,10 @@ max_pred_locks_per_page =  512           # min 0
 
 # AriaBC / Merkle index options
 #enable_merkle_index = on			# update Merkle indexes on DML
+#merkle_apply_batch_items = 256		# committed delta items per apply batch
+#merkle_apply_batch_bytes = 1048576		# decoded delta bytes per batch
+#merkle_apply_batch_pages = 128		# page budget per batch
+#merkle_apply_batch_time_ms = 1		# elapsed-time target per batch
 #merkle_update_detection = off		# emit touched-node hash report at commit
+#merkle_recovery_profile_enabled = off	# accumulate backend-local Merkle recovery counters
 #merkle_update_detection_suppress = on	# suppress report during CREATE INDEX/REINDEX
