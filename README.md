@@ -1,10 +1,10 @@
-# AriaBC: PostgreSQL-Based Deterministic Database Engine with Native Dynamic Merkle Data Integrity & Distributed Consensus
+# ProtectDB: PostgreSQL-Based Deterministic Database Engine with Native Dynamic Merkle Data Integrity & Distributed Consensus
 
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-12%2B-blue.svg)](https://www.postgresql.org/)
 [![License](https://img.shields.io/badge/License-PostgreSQL-lightgrey.svg)](LICENSE)
 [![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg)]()
 
-**AriaBC** is a deterministic concurrency control database system built into the core of PostgreSQL. It combines deterministic transaction execution based on the Aria protocol with native, dynamic Merkle tree indexing for high-performance cryptographic data integrity, state verification, fast fault-recovery, and distributed Raft/Kafka-backed consensus replication.
+**ProtectDB** is a deterministic concurrency control database system built into the core of PostgreSQL. It combines deterministic transaction execution based on the Aria protocol with native, dynamic Merkle tree indexing for high-performance cryptographic data integrity, state verification, fast fault-recovery, and distributed Raft/Kafka-backed consensus replication.
 
 ---
 
@@ -38,10 +38,10 @@
 ## 📁 Repository Structure
 
 ```text
-AriaBC/
+ProtectDB/
 ├── src/
 │   ├── backend/
-│   │   ├── bcdb/          # Core AriaBC deterministic concurrency engine
+│   │   ├── bcdb/          # Core  deterministic concurrency engine
 │   │   └── access/merkle/ # Native Dynamic Merkle Tree access method
 │   └── include/
 │       ├── bcdb/          # Header files for BCDB executor
@@ -73,11 +73,11 @@ Ensure the following system dependencies are installed:
 - **Libraries**: `librdkafka-dev` (or `librdkafka-devel` on RHEL/CentOS).
 - **Python**: Python 3.8+ with virtualenv support (`pip install pytest matplotlib pandas numpy`).
 
-### 1. Build & Install PostgreSQL / AriaBC Kernel
+### 1. Build & Install PostgreSQL / ProtectDB Kernel
 
 ```bash
 # Configure PostgreSQL/BCDB installation directory
-./configure --prefix=/work/ARIABC/install
+./configure --prefix=/work/ProtectDB/install
 
 # Build and install PostgreSQL backend
 make -j$(nproc)
@@ -245,8 +245,3 @@ Open `http://127.0.0.1:8787` in your browser to inspect live physical page layou
 - **[Distributed Sweep Harness Guide](scripts/distributed/RUN_SWEEP_README.md)**: Instructions for running automated cluster benchmark sweeps.
 - **[Repository Guidelines](AGENTS.md)**: Guidelines for contributing code, benchmark standards, and pull requests.
 
----
-
-## 📄 License
-
-AriaBC is released under the standard PostgreSQL License. See the `LICENSE` file for full details.
